@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1142.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="635.0" minWidth="10.0" prefWidth="611.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" prefWidth="340.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="451.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="561.0" minHeight="0.0" prefHeight="561.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="284.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <VBox prefHeight="561.0" prefWidth="526.0" GridPane.rowIndex="1">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <TextField prefHeight="45.0" prefWidth="130.0" text="texte" />
+                  <TextField prefHeight="46.0" prefWidth="257.0" text="Temps Restant Section" />
+                  <TextField prefHeight="46.0" prefWidth="207.0" text="99:99">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField prefHeight="47.0" prefWidth="237.0" text="Temps restant total" />
+                  <TextField prefHeight="46.0" prefWidth="202.0" text="99:99">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <TabPane prefHeight="800.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Section 1">
+                     <content>
+                        <VBox prefHeight="399.0" prefWidth="431.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Texte" />
+                              <TextField prefHeight="154.0" prefWidth="635.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition" />
+                              <TextArea prefHeight="430.0" prefWidth="635.0" />
+                              <BorderPane prefHeight="140.0" prefWidth="431.0">
+                                 <right>
+                                    <Button mnemonicParsing="false" text="Solution" BorderPane.alignment="CENTER" />
+                                 </right>
+                                 <center>
+                                    <Button mnemonicParsing="false" text="Valider" BorderPane.alignment="CENTER" />
+                                 </center>
+                              </BorderPane>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </VBox>
+      <VBox prefHeight="561.0" prefWidth="335.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
+            <TextField prefHeight="145.0" prefWidth="507.0" text="enter ici la consigne" />
+            <BorderPane prefHeight="268.0" prefWidth="468.0">
+               <center>
+                  <MediaView fitHeight="200.0" fitWidth="200.0" nodeOrientation="RIGHT_TO_LEFT" scaleX="2.2" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="394.0">
+               <children>
+                  <Button mnemonicParsing="false" text="play/pause" />
+                  <Slider prefHeight="16.0" prefWidth="256.0" />
+                  <Button mnemonicParsing="false" text="plein ecran" />
+                  <Button mnemonicParsing="false" text="Volume" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" text="Nouveau" />
+                        <MenuItem mnemonicParsing="false" text="Ouvrir" />
+                        <MenuItem mnemonicParsing="false" text="Sauvegarder" />
+                    <MenuItem mnemonicParsing="false" text="Quitter" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="A propos">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="A propos" />
+                    </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <Text scaleX="2.0" scaleY="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version Etudiant" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+         </children>
+      </VBox>
+   </children>
+</GridPane>
