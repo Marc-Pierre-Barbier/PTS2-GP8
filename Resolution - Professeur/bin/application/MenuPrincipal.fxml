@@ -9,10 +9,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="400.0" maxWidth="400.0" minHeight="200.0" minWidth="200.0" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
+<AnchorPane maxHeight="450.0" maxWidth="450.0" minHeight="450.0" minWidth="450.0" prefHeight="450.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
    <children>
-      <MenuBar layoutY="1.0" prefHeight="26.0" prefWidth="400.0">
+      <MenuBar layoutY="1.0" prefHeight="26.0" prefWidth="450.0">
         <menus>
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
@@ -32,7 +31,7 @@
             </Menu>
         </menus>
       </MenuBar>
-      <BorderPane layoutX="2.0" layoutY="27.0" prefHeight="375.0" prefWidth="400.0">
+      <BorderPane layoutX="2.0" layoutY="27.0" prefHeight="426.0" prefWidth="450.0">
          <center>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aucun exercice chargée. Commencez par charger/créer un exercice. Pour plus d'aide rendez-vous dans l'onglet aide." textAlignment="CENTER" wrappingWidth="361.0035705566406" BorderPane.alignment="CENTER">
                <BorderPane.margin>

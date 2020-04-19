@@ -45,9 +45,9 @@
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Texte" />
-                              <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Entrez le texte de la vidéo..." />
+                              <TextArea fx:id="texte" prefHeight="200.0" prefWidth="200.0" promptText="Entrez le texte de la vidéo..." />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aide" />
-                              <TextArea minWidth="400.0" prefHeight="200.0" prefWidth="200.0" promptText="Entrer l'aide pour cette exercice..." />
+                              <TextArea fx:id="aide" minWidth="400.0" prefHeight="200.0" prefWidth="200.0" promptText="Entrer l'aide pour cette exercice..." />
                            </children>
                         </VBox>
                      </content>
@@ -62,13 +62,13 @@
             <VBox prefHeight="341.0" prefWidth="446.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
-                  <TextField prefHeight="45.0" prefWidth="468.0" text="Entrer la consigne" />
+                  <TextField fx:id="consigne" prefHeight="45.0" prefWidth="468.0" promptText="Entrez la consigne de l'exercice..." />
                   <BorderPane prefHeight="268.0" prefWidth="468.0">
                      <center>
-                        <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" nodeOrientation="RIGHT_TO_LEFT" scaleX="2.2" BorderPane.alignment="CENTER" />
+                        <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" scaleX="2.2" BorderPane.alignment="CENTER" />
                      </center>
                      <top>
-                        <Label text="Aucune vidéo chargée" BorderPane.alignment="CENTER" />
+                        <Label fx:id="aucuneVideoChargee" text="Aucune vidéo chargée" BorderPane.alignment="CENTER" />
                      </top>
                      <bottom>
                         <Button mnemonicParsing="false" onAction="#chargerUneVideo" text="Charger une vidéo" BorderPane.alignment="CENTER" />
@@ -93,7 +93,7 @@
                            </padding></Slider>
                         <Button mnemonicParsing="false" onAction="#stopVideo" prefHeight="26.0" prefWidth="54.0" text="Stop">
                            <HBox.margin>
-                              <Insets left="10.0" right="15.0" />
+                              <Insets left="10.0" right="5.0" />
                            </HBox.margin>
                         </Button>
                         <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
@@ -133,7 +133,7 @@
                   </MenuBar>
                   <BorderPane prefHeight="70.0" prefWidth="881.0">
                      <center>
-                        <TextField alignment="CENTER" promptText="Titre de l'exercice..." BorderPane.alignment="CENTER" />
+                        <TextField fx:id="titre" alignment="CENTER" promptText="Titre de l'exercice..." BorderPane.alignment="CENTER" />
                      </center>
                   </BorderPane>
                </children>
@@ -142,11 +142,11 @@
                <children>
                   <VBox prefHeight="191.0" prefWidth="292.0">
                      <children>
-                        <CheckBox mnemonicParsing="false" text="Sensibilite a la casse">
+                        <CheckBox fx:id="sensibiliteCase" mnemonicParsing="false" text="Sensibilite a la casse">
                            <VBox.margin>
                               <Insets top="15.0" />
                            </VBox.margin></CheckBox>
-                        <RadioButton mnemonicParsing="false" text="Mode apprentissage">
+                        <RadioButton fx:id="modeApprentissage" mnemonicParsing="false" text="Mode apprentissage">
                            <padding>
                               <Insets top="5.0" />
                            </padding></RadioButton>
@@ -154,16 +154,16 @@
                            <right>
                               <VBox prefHeight="80.0" prefWidth="253.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <CheckBox mnemonicParsing="false" text="Mot incomplet(autoriser)">
+                                    <CheckBox fx:id="motIncomplet" mnemonicParsing="false" text="Mot incomplet(autoriser)">
                                        <padding>
                                           <Insets top="5.0" />
                                        </padding></CheckBox>
-                                    <CheckBox mnemonicParsing="false" prefHeight="26.0" prefWidth="236.0" text="Autoriser l'affichage de la solution" />
+                                    <CheckBox fx:id="affichageSolution" mnemonicParsing="false" prefHeight="26.0" prefWidth="236.0" text="Autoriser l'affichage de la solution" />
                                  </children>
                               </VBox>
                            </right>
                         </BorderPane>
-                        <RadioButton mnemonicParsing="false" text="Mode evaluation" />
+                        <RadioButton fx:id="modeEvaluation" mnemonicParsing="false" text="Mode evaluation" />
                      </children>
                   </VBox>
                   <BorderPane prefHeight="174.0" prefWidth="168.0">
@@ -209,7 +209,7 @@
                                     <Insets left="2.0" top="20.0" />
                                  </HBox.margin>
                               </Text>
-                              <Button mnemonicParsing="false" text="Sauvegarder">
+                              <Button mnemonicParsing="false" onAction="#sauvegarderExercice" text="Sauvegarder">
                                  <HBox.margin>
                                     <Insets left="10.0" top="15.0" />
                                  </HBox.margin>

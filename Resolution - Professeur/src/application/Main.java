@@ -36,11 +36,6 @@ public class Main extends Application {
 		return stage;
 	}
 	
-	public Object getElement(String elementId) {
-		Scene actualScene = getStage().getScene();
-		return actualScene.lookup(elementId);
-	}
-	
 	public void chargerUnePage(String nomPage) throws IOException {
 		AnchorPane pane = FXMLLoader.load(getClass().getResource(nomPage));
 		pagePrincipale.getChildren().setAll(pane);

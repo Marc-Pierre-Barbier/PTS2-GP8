@@ -2,23 +2,16 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import javafx.beans.InvalidationListener;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -26,20 +19,42 @@ import javafx.stage.FileChooser;
 
 public class ApplicationController extends Main{
 	
+	private final String DEFAULT_EXTENSION = ".res";
+	private final String DEFAULT_NAME_EXTENSION = "Résolution";
+	
+	@FXML
+	private TextField titre;
+	@FXML
+	private TextArea texte;
+	@FXML
+	private TextArea aide;
+	@FXML
+	private CheckBox sensibiliteCase;
+	@FXML
+	private RadioButton modeApprentissage;
+	@FXML
+	private CheckBox motIncomplet;
+	@FXML
+	private CheckBox affichageSolution;
+	@FXML
+	private RadioButton modeEvaluation;
+	@FXML
+	private TextField consigne;
 	@FXML
 	private Slider volume;
 	@FXML
 	private MediaView mediaView;
 	@FXML
 	private Button interactionVideoBtn;
+	@FXML
+	private Label aucuneVideoChargee;
 	
-	private boolean videoCharger = false;
+	private boolean videoChargee = false;
 	
 	public void nouvelleExercice() throws IOException {
 		System.out.println("Création d'un exercice");
 		super.setHauteur(720);
 		super.setLargeur(910);
-		System.out.println("Titre : " + super.getStage().getTitle());
 		super.chargerUnePage("NouvelleExercice.fxml");
 	}
 	
@@ -50,7 +65,6 @@ public class ApplicationController extends Main{
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		if (selectedFile != null) {
-			System.out.println(selectedFile.getAbsolutePath());
 			Media media = new Media(new File(selectedFile.getAbsolutePath()).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaView.setMediaPlayer(mediaPlayer);
@@ -63,12 +77,14 @@ public class ApplicationController extends Main{
 						mediaPlayer.setVolume(volume.getValue() / 100);			
 				}
 			});
-			videoCharger = true;
+			aucuneVideoChargee.setVisible(false);
+			mediaView.setFitHeight(300);
+			videoChargee = true;
 		}
 	}
 	
 	public void interactionVideo() {
-		if(videoCharger) {
+		if(videoChargee) {
 			if(interactionVideoBtn.getText().equalsIgnoreCase("Jouer")) {
 				mediaView.getMediaPlayer().pause();
 				interactionVideoBtn.setText("Pause");
@@ -83,6 +99,19 @@ public class ApplicationController extends Main{
 		interactionVideoBtn.setText("Jouer");
 		mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStopTime());
 		mediaView.getMediaPlayer().stop();
+	}
+	
+	public void sauvegarderExercice() {
+		final FileChooser dialog = new FileChooser(); 
+		dialog.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION)); 
+	    final File file = dialog.showSaveDialog(super.getStage()); 
+	    if (file != null) { 
+	    	if(videoChargee) {
+	    		JsonController.JSONCreation(file.getAbsoluteFile().toString(), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), mediaView.getMediaPlayer().getMedia().getSource().toString(), 0, 0);
+	    	}else {
+	    		JsonController.JSONCreation(file.getAbsoluteFile().toString(), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, 0, 0);
+	    	}
+	    }
 	}
 
 
