@@ -74,7 +74,7 @@ public class ApplicationController extends Main{
 	private boolean videoChargee = false;
 	
 	public void nouvelleExercice() throws IOException {
-		System.out.println("Cr�ation d'un exercice");
+		System.out.println("Création d'un exercice");
 		super.setHauteur(720);
 		super.setLargeur(910);
 		super.chargerUnePage("NouvelleExercice.fxml");
@@ -88,6 +88,7 @@ public class ApplicationController extends Main{
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		if (selectedFile != null) {
 			Media media = new Media(new File(selectedFile.getAbsolutePath()).toURI().toString());
+			System.out.println(selectedFile.getAbsolutePath());
 			mediaPlayer = new MediaPlayer(media);
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setVisible(true);

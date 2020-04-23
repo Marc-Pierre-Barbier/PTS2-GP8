@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalTime;
 import java.util.Timer;
 import org.json.simple.JSONObject;
@@ -82,35 +84,34 @@ public class ApplicationController extends Main{
 	            texte.setText(texteCache);
 	            consigne.setText((String) jsonObject.get("consigne"));
 	            String cheminVideo = (String) jsonObject.get("cheminVideo");
-	            String cheminModifie = "";
-	            for (int i = 6; i < cheminVideo.length(); i++) {
-	            	cheminModifie += cheminVideo.charAt(i);
-				}	
-	            chargerUneVideo(new File(cheminModifie));
+	            
+	            System.out.println(cheminVideo);
+	            
+	            chargerUneVideo(new File(new URI(cheminVideo)));//File(cheminModifie)
+	            
 	            String limiteTemps = (String) jsonObject.get("limiteTemps");
 	            int hours = Integer.parseInt(limiteTemps.charAt(0) + "");
-	            int minutes = Integer.parseInt(limiteTemps.charAt(2) + limiteTemps.charAt(3) + "");
+	            //int minutes = Integer.parseInt(limiteTemps.charAt(2) + limiteTemps.charAt(3) + "");
 	            demarrerExercice();
-	            //byte[] decodedBytes = Base64.getDecoder().decode(Test);
-	            //String decodedString = new String(decodedBytes);
-	            
-	            //System.out.println("Fichier d�cod� : " + decodedString);
+
 	        }catch(IOException e){
 	        	
-	        }
+	        } catch (URISyntaxException e) {
+				System.out.println("uri invalide ou fichier introuvable");
+			}
 		}
 	}
 	
 	public void chargerUneVideo(File f) {
-		System.out.println("Chemin vid�o : " + f.getAbsolutePath());
+		System.out.println("Chemin vidéo : " + f.getAbsolutePath());
 		if (f != null) {
 			Media media = new Media(new File(f.getAbsolutePath()).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setVisible(true);
+			mediaView.setPreserveRatio(false);
 			volume.setValue(mediaPlayer.getVolume()*100);
 			volume.valueProperty().addListener(new InvalidationListener() {
-				
 				@Override
 				public void invalidated(javafx.beans.Observable observable) {
 						mediaPlayer.setVolume(volume.getValue() / 100);			
