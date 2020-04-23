@@ -118,14 +118,13 @@ public class ApplicationController extends Main{
 					mediaPlayer.seek(new Duration(1000*(double)newValue/100*mediaPlayer.getTotalDuration().toSeconds()));
 		        }
 		    });
-			
-			checklimite.cursorProperty().addListener((obs,oldVal,newVal) -> {
-				checklimitestatus=!checklimitestatus;
-				timefieldh.setDisable(checklimitestatus);
-				timefieldm.setDisable(checklimitestatus);
-			});
-			
 		}
+	}
+	
+	public void timeHandle() {
+		checklimitestatus=!checklimitestatus;
+		timefieldh.setDisable(!checklimitestatus);
+		timefieldm.setDisable(!checklimitestatus);
 	}
 	
 	public void interactionVideo() {

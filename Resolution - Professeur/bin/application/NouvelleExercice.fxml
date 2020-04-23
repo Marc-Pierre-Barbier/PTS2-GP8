@@ -168,7 +168,7 @@
                   </VBox>
                   <BorderPane prefHeight="174.0" prefWidth="168.0">
                      <top>
-                        <CheckBox fx:id="checklimite" mnemonicParsing="false" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" BorderPane.alignment="CENTER" />
+                        <CheckBox fx:id="checklimite" mnemonicParsing="false" onAction="#timeHandle" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" BorderPane.alignment="CENTER" />
                      </top>
                   </BorderPane>
                   <VBox prefHeight="191.0" prefWidth="472.0">
