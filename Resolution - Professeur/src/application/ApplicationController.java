@@ -29,7 +29,7 @@ import javafx.util.Duration;
 public class ApplicationController extends Main{
 	
 	private final String DEFAULT_EXTENSION = ".res";
-	private final String DEFAULT_NAME_EXTENSION = "R�solution";	
+	private final String DEFAULT_NAME_EXTENSION = "Résolution";	
 	
 	@FXML
 	private TextField titre;
@@ -83,7 +83,7 @@ public class ApplicationController extends Main{
 	public void chargerUneVideo() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"), new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("All", "*"));
-		fileChooser.setTitle("Ouvrir une vid�o/audio");
+		fileChooser.setTitle("Ouvrir une vidéo/audio");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		if (selectedFile != null) {
@@ -145,21 +145,34 @@ public class ApplicationController extends Main{
 		mediaView.getMediaPlayer().stop();
 	}
 	
+
 	public void sauvegarderExercice() {
 		final FileChooser dialog = new FileChooser(); 
 		dialog.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION)); 
 	    final File file = dialog.showSaveDialog(super.getStage()); 
 	    if (file != null) { 
 	    	if(videoChargee) {
-	    		JsonController.JSONCreation(file.getAbsoluteFile().toString(), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), mediaView.getMediaPlayer().getMedia().getSource().toString(), 0, 0);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString()), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), mediaView.getMediaPlayer().getMedia().getSource().toString(), 0, 0);
 	    	}else {
-	    		JsonController.JSONCreation(file.getAbsoluteFile().toString(), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, 0, 0);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString()), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, 0, 0);
 	    	}
 	    }
 	}
 
 
-	
+	/**
+	 * ajoute .res a la fin si il n'est pas deja present
+	 * j'ai euh le probleme sur linux ou sa enregistrais sans extention
+	 */
+	private String fixMyPath(String string) {
+		int i = string.length();
+		String str = "";
+		for(int j = i-4 ; j < i ; j++)
+			str += string.charAt(j);
+		if(str.equals(".res")) return string;
+		else return string + ".res";
+	}
+
 	public void chargerExercice() {
 		System.out.println("Chargement d'un exercice");
 	}

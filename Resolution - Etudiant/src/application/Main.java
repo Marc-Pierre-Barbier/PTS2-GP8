@@ -73,7 +73,7 @@ public class Main extends Application {
 	
 	public void JSONReader() throws ParseException {
 		JSONParser parser = new JSONParser();
-		System.out.println("Lancement du d�codeur");
+		System.out.println("Lancement du décodeur");
         try (Reader reader = new FileReader("c:\\project\\test.json")) {
 
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -84,7 +84,7 @@ public class Main extends Application {
             byte[] decodedBytes = Base64.getDecoder().decode(Test);
             String decodedString = new String(decodedBytes);
             
-            System.out.println("Fichier d�cod� : " + decodedString);
+            System.out.println("Fichier décodé : " + decodedString);
         }catch(IOException e){
         	
         }
