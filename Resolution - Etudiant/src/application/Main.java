@@ -27,10 +27,11 @@ public class Main extends Application {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
 			Scene scene = new Scene(root);
-			primaryStage.setTitle("Résolution V1.0 G8 - Etudiant");
+			primaryStage.setTitle("RÃ©solution V1.0 G8 - Etudiant");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			stage = primaryStage;
+			stage.setResizable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,7 +73,7 @@ public class Main extends Application {
 	
 	public void JSONReader() throws ParseException {
 		JSONParser parser = new JSONParser();
-		System.out.println("Lancement du décodeur");
+		System.out.println("Lancement du dï¿½codeur");
         try (Reader reader = new FileReader("c:\\project\\test.json")) {
 
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -83,7 +84,7 @@ public class Main extends Application {
             byte[] decodedBytes = Base64.getDecoder().decode(Test);
             String decodedString = new String(decodedBytes);
             
-            System.out.println("Fichier décodé : " + decodedString);
+            System.out.println("Fichier dï¿½codï¿½ : " + decodedString);
         }catch(IOException e){
         	
         }

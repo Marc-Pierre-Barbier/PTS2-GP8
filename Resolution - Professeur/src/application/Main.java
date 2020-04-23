@@ -19,10 +19,11 @@ public class Main extends Application {
 		try {
 			pagePrincipale = FXMLLoader.load(getClass().getResource("MenuPrincipal.fxml"));
 			Scene scene = new Scene(pagePrincipale, 450, 450);
-			primaryStage.setTitle("Résolution V1.0 G8 - Professeur");
+			primaryStage.setTitle("Rï¿½solution V1.0 G8 - Professeur");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			stage = primaryStage;
+			stage.setResizable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

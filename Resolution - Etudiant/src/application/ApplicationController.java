@@ -11,6 +11,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javafx.beans.InvalidationListener;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
@@ -21,12 +23,13 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 
 public class ApplicationController extends Main{
 	
 	/*10/02/2019 G8 Programmation de l'application VERSION ETUDIANTE*/
 	
-	private final String DEFAULT_EXTENSION_NAME  = "Résolution";
+	private final String DEFAULT_EXTENSION_NAME  = "Rï¿½solution";
 	private final String DEFAULT_EXTENSION_FILE = ".res";
 	private final String CARACTERE_OCULTATION = "*";
 	
@@ -48,6 +51,8 @@ public class ApplicationController extends Main{
 	private Button interactionVideoBtn;
 	@FXML
 	private Text tempsText;
+	@FXML
+	private Slider progression;
 	
 	private boolean videoChargee = false;
 	private String texteATrouver = "";
@@ -89,7 +94,7 @@ public class ApplicationController extends Main{
 	            //byte[] decodedBytes = Base64.getDecoder().decode(Test);
 	            //String decodedString = new String(decodedBytes);
 	            
-	            //System.out.println("Fichier décodé : " + decodedString);
+	            //System.out.println("Fichier dï¿½codï¿½ : " + decodedString);
 	        }catch(IOException e){
 	        	
 	        }
@@ -97,7 +102,7 @@ public class ApplicationController extends Main{
 	}
 	
 	public void chargerUneVideo(File f) {
-		System.out.println("Chemin vidéo : " + f.getAbsolutePath());
+		System.out.println("Chemin vidï¿½o : " + f.getAbsolutePath());
 		if (f != null) {
 			Media media = new Media(new File(f.getAbsolutePath()).toURI().toString());
 			MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -112,6 +117,21 @@ public class ApplicationController extends Main{
 				}
 			});
 			videoChargee = true;
+			
+			mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+		        if (!progression.isValueChanging() && !progression.isPressed()) {
+		        	progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds()*100);
+		        }
+		    });
+			
+			
+			progression.setOnMouseReleased(new EventHandler<Event>() {
+		        @Override
+		        public void handle(Event event) {
+		        	double newValue = progression.getValue();
+					mediaPlayer.seek(new Duration(1000*(double)newValue/100*mediaPlayer.getTotalDuration().toSeconds()));
+		        }
+		    });
 		}
 	}
 	

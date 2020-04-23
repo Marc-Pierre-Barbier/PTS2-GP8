@@ -21,7 +21,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1142.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1142.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="635.0" minWidth="10.0" prefWidth="611.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" prefWidth="340.0" />
@@ -52,7 +52,11 @@
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Texte à retrouver" />
                               <TextArea fx:id="texte" prefHeight="267.0" prefWidth="635.0" />
-                              <TextField alignment="CENTER" prefHeight="26.0" prefWidth="263.0" text="Temps restant pour cette section : 00h00min" />
+                              <BorderPane prefHeight="79.0" prefWidth="635.0">
+                                 <center>
+                                    <Text text="Temps restant pour cette section : 00h00min" BorderPane.alignment="CENTER" />
+                                 </center>
+                              </BorderPane>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
                               <TextArea fx:id="proposition" prefHeight="267.0" prefWidth="635.0" />
                               <BorderPane prefHeight="140.0" prefWidth="431.0">
@@ -99,7 +103,7 @@
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin></Button>
-                  <Slider minWidth="250.0" prefHeight="16.0" prefWidth="250.0">
+                  <Slider id="progression" fx:id="progression" minWidth="250.0" prefHeight="16.0" prefWidth="250.0">
                      <HBox.margin>
                         <Insets left="5.0" right="-195.0" />
                      </HBox.margin></Slider>

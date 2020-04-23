@@ -4,7 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -16,11 +23,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 
 public class ApplicationController extends Main{
 	
 	private final String DEFAULT_EXTENSION = ".res";
-	private final String DEFAULT_NAME_EXTENSION = "Résolution";
+	private final String DEFAULT_NAME_EXTENSION = "Rï¿½solution";	
 	
 	@FXML
 	private TextField titre;
@@ -43,16 +51,22 @@ public class ApplicationController extends Main{
 	@FXML
 	private Slider volume;
 	@FXML
+	private Slider progression;
+	@FXML
 	private MediaView mediaView;
 	@FXML
 	private Button interactionVideoBtn;
 	@FXML
 	private Label aucuneVideoChargee;
+	@FXML
+	private MediaPlayer mediaPlayer;
+	@FXML
+	private Button chosevid;
 	
 	private boolean videoChargee = false;
 	
 	public void nouvelleExercice() throws IOException {
-		System.out.println("Création d'un exercice");
+		System.out.println("Crï¿½ation d'un exercice");
 		super.setHauteur(720);
 		super.setLargeur(910);
 		super.chargerUnePage("NouvelleExercice.fxml");
@@ -61,14 +75,16 @@ public class ApplicationController extends Main{
 	public void chargerUneVideo() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"), new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("All", "*"));
-		fileChooser.setTitle("Ouvrir une vidéo/audio");
+		fileChooser.setTitle("Ouvrir une vidï¿½o/audio");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		if (selectedFile != null) {
 			Media media = new Media(new File(selectedFile.getAbsolutePath()).toURI().toString());
-			MediaPlayer mediaPlayer = new MediaPlayer(media);
+			mediaPlayer = new MediaPlayer(media);
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setVisible(true);
+			mediaView.setPreserveRatio(false);
+			
 			volume.setValue(mediaPlayer.getVolume()*100);
 			volume.valueProperty().addListener(new InvalidationListener() {
 				
@@ -76,21 +92,36 @@ public class ApplicationController extends Main{
 				public void invalidated(javafx.beans.Observable observable) {
 						mediaPlayer.setVolume(volume.getValue() / 100);			
 				}
-			});
+			});			
 			aucuneVideoChargee.setVisible(false);
-			mediaView.setFitHeight(300);
+			mediaView.setFitHeight(250);
 			videoChargee = true;
+			mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+		        if (!progression.isValueChanging() && !progression.isPressed()) {
+		        	progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds()*100);
+		        }
+		    });
+			
+			
+			progression.setOnMouseReleased(new EventHandler<Event>() {
+		        @Override
+		        public void handle(Event event) {
+		        	double newValue = progression.getValue();
+					mediaPlayer.seek(new Duration(1000*(double)newValue/100*mediaPlayer.getTotalDuration().toSeconds()));
+		        }
+		    });
+			
 		}
 	}
 	
 	public void interactionVideo() {
 		if(videoChargee) {
-			if(interactionVideoBtn.getText().equalsIgnoreCase("Jouer")) {
+			if(interactionVideoBtn.getText().equalsIgnoreCase("Pause")) {
 				mediaView.getMediaPlayer().pause();
-				interactionVideoBtn.setText("Pause");
+				interactionVideoBtn.setText("Lire");
 			}else {
 				mediaView.getMediaPlayer().play();
-				interactionVideoBtn.setText("Jouer");
+				interactionVideoBtn.setText("Pause");
 			}
 		}
 	}
