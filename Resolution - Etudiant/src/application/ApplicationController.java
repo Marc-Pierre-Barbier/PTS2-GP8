@@ -95,7 +95,7 @@ public class ApplicationController extends Main{
 	            demarrerExercice();
 
 	        }catch(IOException e){
-	        	
+	        	System.out.println("fichier introuvable");
 	        } catch (URISyntaxException e) {
 				System.out.println("uri invalide ou fichier introuvable");
 			}
@@ -163,16 +163,15 @@ public class ApplicationController extends Main{
 	
 	public void chercherMot() {
 		System.out.println("Lancement d'une recherche");
-		System.out.println(texteATrouver);
 		System.out.println(texteCache.length());
 		texteCache += " ";
 		for (int i = 0; i < texteCache.length(); i++) {
 			if(i + proposition.getText().length() > texteCache.length()) {
-			break;
+				break;
 			}
 			for (int j = 0; j < proposition.getText().length(); j++) {
-
-				char letter = texteATrouver.charAt(i + j);
+				if( i+j >= texteATrouver.length()) break;
+				char letter = texteATrouver.charAt(i+j);
 				char letterTextTry = proposition.getText().charAt(j);
 				if(letter == letterTextTry) {
 					
