@@ -87,7 +87,7 @@
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin></Button>
-                        <Slider fx:id="progression" onDragDone="#progressionf" prefHeight="16.0" prefWidth="298.0">
+                        <Slider fx:id="progression" prefHeight="16.0" prefWidth="298.0">
                            <padding>
                               <Insets left="10.0" />
                            </padding></Slider>
@@ -168,7 +168,7 @@
                   </VBox>
                   <BorderPane prefHeight="174.0" prefWidth="168.0">
                      <top>
-                        <CheckBox mnemonicParsing="false" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" BorderPane.alignment="CENTER" />
+                        <CheckBox fx:id="checklimite" mnemonicParsing="false" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" BorderPane.alignment="CENTER" />
                      </top>
                   </BorderPane>
                   <VBox prefHeight="191.0" prefWidth="472.0">
@@ -189,7 +189,7 @@
                                     <Insets top="20.0" />
                                  </HBox.margin>
                               </Text>
-                              <TextField maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="28.0" text="00">
+                              <TextField fx:id="timefieldh" maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="28.0" text="00">
                                  <HBox.margin>
                                     <Insets left="5.0" top="15.0" />
                                  </HBox.margin>
@@ -199,7 +199,7 @@
                                     <Insets left="2.0" top="20.0" />
                                  </HBox.margin>
                               </Text>
-                              <TextField maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="30.0" text="30">
+                              <TextField fx:id="timefieldm" maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="30.0" text="30">
                                  <HBox.margin>
                                     <Insets left="2.0" top="15.0" />
                                  </HBox.margin>

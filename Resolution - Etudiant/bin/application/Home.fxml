@@ -103,7 +103,7 @@
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin></Button>
-                  <Slider minWidth="250.0" prefHeight="16.0" prefWidth="250.0">
+                  <Slider id="progression" fx:id="progression" minWidth="250.0" prefHeight="16.0" prefWidth="250.0">
                      <HBox.margin>
                         <Insets left="5.0" right="-195.0" />
                      </HBox.margin></Slider>

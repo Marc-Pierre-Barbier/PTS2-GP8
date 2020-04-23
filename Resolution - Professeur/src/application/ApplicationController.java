@@ -8,6 +8,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,6 +34,10 @@ public class ApplicationController extends Main{
 	@FXML
 	private TextField titre;
 	@FXML
+	private TextField timefieldh;
+	@FXML
+	private TextField timefieldm;
+	@FXML
 	private TextArea texte;
 	@FXML
 	private TextArea aide;
@@ -44,6 +49,9 @@ public class ApplicationController extends Main{
 	private CheckBox motIncomplet;
 	@FXML
 	private CheckBox affichageSolution;
+	@FXML
+	private CheckBox checklimite;
+	private boolean checklimitestatus=true;
 	@FXML
 	private RadioButton modeEvaluation;
 	@FXML
@@ -110,6 +118,12 @@ public class ApplicationController extends Main{
 					mediaPlayer.seek(new Duration(1000*(double)newValue/100*mediaPlayer.getTotalDuration().toSeconds()));
 		        }
 		    });
+			
+			checklimite.cursorProperty().addListener((obs,oldVal,newVal) -> {
+				checklimitestatus=!checklimitestatus;
+				timefieldh.setDisable(checklimitestatus);
+				timefieldm.setDisable(checklimitestatus);
+			});
 			
 		}
 	}
