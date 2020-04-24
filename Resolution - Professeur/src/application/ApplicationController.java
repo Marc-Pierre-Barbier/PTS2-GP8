@@ -2,6 +2,10 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -153,10 +157,25 @@ public class ApplicationController extends Main{
 	    final File file = dialog.showSaveDialog(super.getStage()); 
 	    if (file != null) { 
 	    	if(videoChargee) {
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString()), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), mediaView.getMediaPlayer().getMedia().getSource().toString(), 0, 0);
+	    		String videoformat = "";
+	    		final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
+	    		for (int i=medialength-4 ; i<medialength ;i++)videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); //on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), videoformat, 0, 0);
+	    	
+				try {
+					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
+					File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), videoformat));
+					Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.REPLACE_EXISTING);
+
+				} catch (URISyntaxException e1) {
+					System.err.println("erreur syntax uri");
+				} catch (IOException e) {
+					System.err.println("ERREUR MAJEUR DANS LA COPIE ABANDON");
+				}
 	    	}else {
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString()), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, 0, 0);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, 0, 0);
 	    	}
+
 	    }
 	}
 
@@ -164,14 +183,22 @@ public class ApplicationController extends Main{
 	/**
 	 * ajoute .res a la fin si il n'est pas deja present
 	 * j'ai euh le probleme sur linux ou sa enregistrais sans extention
+	 * sa ne deverais pas poser probleme sur windows
+	 * j'y ai ajouter aussi la fonction pour renomer les fichier en mp4
 	 */
-	private String fixMyPath(String string) {
-		int i = string.length();
+	private String fixMyPath(String chemin, String format) {
+		int i = chemin.length();
 		String str = "";
 		for(int j = i-4 ; j < i ; j++)
-			str += string.charAt(j);
-		if(str.equals(".res")) return string;
-		else return string + ".res";
+			str += chemin.charAt(j);
+		
+		if(str.equals(".res")) {
+			chemin=chemin.replace(".res", format);
+			return chemin;
+		}else {
+			return chemin + format;
+		}
+		
 	}
 
 	public void chargerExercice() {

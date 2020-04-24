@@ -34,7 +34,7 @@ public class ApplicationController extends Main{
 	private final String DEFAULT_EXTENSION_NAME  = "R�solution";
 	private final String DEFAULT_EXTENSION_FILE = ".res";
 	private final String CARACTERE_OCULTATION = "*";
-	
+	private final String CARACTERE_NON_OCULTER= ";.,!? ";
 	@FXML
 	private Text titre;
 	@FXML
@@ -69,25 +69,27 @@ public class ApplicationController extends Main{
 		if(selectedFile != null) {
 			System.out.println("Chargement de l'exercice");
 			JSONParser parser = new JSONParser();
-	        try (Reader reader = new FileReader(selectedFile.getAbsolutePath().toString())) {
+	        try (Reader reader = new FileReader(selectedFile.getAbsolutePath())) {
 
 	            JSONObject jsonObject = (JSONObject) parser.parse(reader);
 	            titre.setText((String) jsonObject.get("titre"));
 	            texteATrouver = (String) jsonObject.get("texte");
 	            for (int i = 0; i < texteATrouver.length(); i++) {
-	            	if(texteATrouver.charAt(i) != ' ') {
+	            	if(!CARACTERE_NON_OCULTER.contains(texteATrouver.charAt(i)+"")) {
 	            		texteCache += CARACTERE_OCULTATION;
 	            	}else {
-	            		texteCache += " ";
+	            		texteCache += texteATrouver.charAt(i);
 	            	}
 				}
 	            texte.setText(texteCache);
 	            consigne.setText((String) jsonObject.get("consigne"));
-	            String cheminVideo = (String) jsonObject.get("cheminVideo");
+	            String formatvideo = (String) jsonObject.get("cheminVideo");
+	            
+	            String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
 	            
 	            System.out.println(cheminVideo);
 	            
-	            chargerUneVideo(new File(new URI(cheminVideo)));//File(cheminModifie)
+	            chargerUneVideo(new File(cheminVideo));//File(cheminModifie)
 	            
 	            String limiteTemps = (String) jsonObject.get("limiteTemps");
 	            int hours = Integer.parseInt(limiteTemps.charAt(0) + "");
@@ -96,9 +98,7 @@ public class ApplicationController extends Main{
 
 	        }catch(IOException e){
 	        	System.out.println("fichier introuvable");
-	        } catch (URISyntaxException e) {
-				System.out.println("uri invalide ou fichier introuvable");
-			}
+	        } 
 		}
 	}
 	
@@ -164,6 +164,28 @@ public class ApplicationController extends Main{
 	public void chercherMot() {
 		System.out.println("Lancement d'une recherche");
 		System.out.println(texteCache.length());
+		System.out.println(texteATrouver);
+		System.out.println(proposition.getText());
+		proposition.setText(proposition.getText().trim());//supprime les retour a la ligne dans la recherche car sa casse tout
+		//séparation de la fonction pour recherche mot par mots indépendament
+		String mot = "";
+		String objectif = proposition.getText() + " "; // cette variable permet de memoriser le contenu de la proposition car elle est modifié aprés
+		
+		for(int i=0 ; i < objectif.length();i++) {
+			if(objectif.charAt(i) != ' ') {
+				mot += objectif.charAt(i);
+			}else {
+				if(mot != "") {
+					proposition.setText(mot);
+					chercherMotSplt();
+					mot="";
+				}
+			}
+		}
+		proposition.setText("");//on suprime le champs aprés validation
+	}
+	
+	public void chercherMotSplt() {
 		texteCache += " ";
 		for (int i = 0; i < texteCache.length(); i++) {
 			if(i + proposition.getText().length() > texteCache.length()) {
@@ -175,7 +197,7 @@ public class ApplicationController extends Main{
 				char letterTextTry = proposition.getText().charAt(j);
 				if(letter == letterTextTry) {
 					
-				 if(j == proposition.getText().length() - 1 && texteCache.charAt(i+j+1) == ' '){
+				 if(j == proposition.getText().length() - 1 && CARACTERE_NON_OCULTER.contains(""+texteCache.charAt(i+j+1))){
 					StringBuilder TextAtFoundHideB = new StringBuilder(texteCache);
 					for (int k = 0; k < proposition.getText().length(); k++) {
 						TextAtFoundHideB.setCharAt(i + k, proposition.getText().charAt(k));

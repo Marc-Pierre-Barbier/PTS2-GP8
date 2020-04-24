@@ -51,7 +51,7 @@
                         <VBox prefHeight="399.0" prefWidth="431.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Texte à retrouver" />
-                              <TextArea fx:id="texte" prefHeight="267.0" prefWidth="635.0" />
+                              <TextArea fx:id="texte" editable="false" prefHeight="267.0" prefWidth="635.0" />
                               <BorderPane prefHeight="79.0" prefWidth="635.0">
                                  <center>
                                     <Text text="Temps restant pour cette section : 00h00min" BorderPane.alignment="CENTER" />
@@ -84,7 +84,7 @@
       <VBox prefHeight="561.0" prefWidth="335.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
-            <TextField fx:id="consigne" prefHeight="38.0" prefWidth="403.0" promptText="La consigne de l'exercice..." />
+            <TextField fx:id="consigne" editable="false" prefHeight="38.0" prefWidth="403.0" promptText="La consigne de l'exercice..." />
             <BorderPane prefHeight="268.0" prefWidth="468.0">
                <center>
                   <MediaView fx:id="mediaView" fitHeight="300.0" fitWidth="200.0" scaleX="2.2" BorderPane.alignment="CENTER" />
