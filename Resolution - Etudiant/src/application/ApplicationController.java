@@ -1,7 +1,5 @@
 package application;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,12 +16,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -32,7 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
-public class ApplicationController extends Main implements KeyListener{
+public class ApplicationController extends Main{
 	
 	/*10/02/2019 G8 Programmation de l'application VERSION ETUDIANTE*/
 	
@@ -64,7 +62,9 @@ public class ApplicationController extends Main implements KeyListener{
 	private boolean videoChargee = false;
 	private String texteATrouver = "";
 	private String texteCache = "";
-	private LocalTime tempsTotal = LocalTime.parse("00:01:52");
+	private LocalTime tempsTotal = LocalTime.parse("00:00:00");
+	private boolean chronometrer = false;
+	
 	public void ouvrirUnExercice() throws ParseException, InterruptedException {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichier " + DEFAULT_EXTENSION_NAME, "*" + DEFAULT_EXTENSION_FILE));
@@ -86,23 +86,40 @@ public class ApplicationController extends Main implements KeyListener{
 	            		texteCache += texteATrouver.charAt(i);
 	            	}
 				}
+	            System.out.println(texteCache);
 	            texte.setText(texteCache);
 	            consigne.setText((String) jsonObject.get("consigne"));
 	            String formatvideo = (String) jsonObject.get("cheminVideo");
-	            tempsTotal = LocalTime.parse((String)jsonObject.get("limiteTemps"));
+	            
+	            String limiteTemps = (String)jsonObject.get("limiteTemps");
+	            if(!(limiteTemps.equals("00:00:00"))) {
+	            	tempsTotal = LocalTime.parse(limiteTemps);
+	            	int hours = Integer.parseInt(limiteTemps.charAt(0) + limiteTemps.charAt(1) +"");
+		            int minutes = Integer.parseInt(limiteTemps.charAt(3) + limiteTemps.charAt(4) + ""); //le char 0 est les disaines d'eur le char 1 les heure le char 2 le : etc..
+	            	chronometrer=true;
+	            }else {
+	            	tempsTotal = LocalTime.parse("00:00:00");
+	            	chronometrer=false;
+	            }
+	            
+	            proposition.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	                public void handle(KeyEvent ke) {
+	                    if (ke.getCode() == KeyCode.ENTER) {
+	                    	chercherMot();
+	                    }
+	                }
+	            });
+
 	            String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
 	            
 	            System.out.println(cheminVideo);
 	            
 	            chargerUneVideo(new File(cheminVideo));//File(cheminModifie)
-	            
-	            String limiteTemps = (String) jsonObject.get("limiteTemps");
-	            int hours = Integer.parseInt(limiteTemps.charAt(0) + "");
-	            //int minutes = Integer.parseInt(limiteTemps.charAt(2) + limiteTemps.charAt(3) + "");
+
 	            demarrerExercice();
 
 	        }catch(IOException e){
-	        	System.out.println("fichier introuvable");
+	        	System.err.println("fichier introuvable");
 	        } 
 		}
 	}
@@ -224,7 +241,6 @@ public class ApplicationController extends Main implements KeyListener{
 			for(Node n : vbox.getChildren()) {
 				if(!(n instanceof MenuBar)) {
 					n.setDisable(true);
-					System.out.println(n);
 				}
 			}
 		}
@@ -232,23 +248,10 @@ public class ApplicationController extends Main implements KeyListener{
 	
 	public void demarrerExercice() {
 		System.out.println(tempsText.getText());
-		Timer(tempsTotal);
+		if(chronometrer)Timer(tempsTotal);
 	}
 	
 	public void quitter() {
 		System.exit(0);
 	}
-
-	// le code pour la touche enter
-	@Override
-	public void keyPressed(KeyEvent key) {
-		if(key.equals(KeyEvent.VK_ENTER))chercherMot();
-	}
-	//osef maison dois le garder pour le implements
-	@Override
-	public void keyReleased(KeyEvent arg0) {}
-	@Override
-	public void keyTyped(KeyEvent arg0) {}
-	
-
 }
