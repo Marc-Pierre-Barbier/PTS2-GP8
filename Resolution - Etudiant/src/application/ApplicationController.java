@@ -1,11 +1,11 @@
 package application;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalTime;
 import java.util.Timer;
 import org.json.simple.JSONObject;
@@ -16,10 +16,15 @@ import javafx.beans.InvalidationListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -27,11 +32,11 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
-public class ApplicationController extends Main{
+public class ApplicationController extends Main implements KeyListener{
 	
 	/*10/02/2019 G8 Programmation de l'application VERSION ETUDIANTE*/
 	
-	private final String DEFAULT_EXTENSION_NAME  = "R�solution";
+	private final String DEFAULT_EXTENSION_NAME  = "Résolution";
 	private final String DEFAULT_EXTENSION_FILE = ".res";
 	private final String CARACTERE_OCULTATION = "*";
 	private final String CARACTERE_NON_OCULTER= ";.,!? ";
@@ -84,7 +89,7 @@ public class ApplicationController extends Main{
 	            texte.setText(texteCache);
 	            consigne.setText((String) jsonObject.get("consigne"));
 	            String formatvideo = (String) jsonObject.get("cheminVideo");
-	            
+	            tempsTotal = LocalTime.parse((String)jsonObject.get("limiteTemps"));
 	            String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
 	            
 	            System.out.println(cheminVideo);
@@ -213,6 +218,18 @@ public class ApplicationController extends Main{
 	}
 		
 	
+	public static void lockAll() {
+		for(Node parent : root.getChildren()) {
+			VBox vbox = (VBox)parent; //tout les enfant de la gridpane root sont des vbox si on change le fxml sa va tout casser 
+			for(Node n : vbox.getChildren()) {
+				if(!(n instanceof MenuBar)) {
+					n.setDisable(true);
+					System.out.println(n);
+				}
+			}
+		}
+	}
+	
 	public void demarrerExercice() {
 		System.out.println(tempsText.getText());
 		Timer(tempsTotal);
@@ -221,6 +238,17 @@ public class ApplicationController extends Main{
 	public void quitter() {
 		System.exit(0);
 	}
+
+	// le code pour la touche enter
+	@Override
+	public void keyPressed(KeyEvent key) {
+		if(key.equals(KeyEvent.VK_ENTER))chercherMot();
+	}
+	//osef maison dois le garder pour le implements
+	@Override
+	public void keyReleased(KeyEvent arg0) {}
+	@Override
+	public void keyTyped(KeyEvent arg0) {}
 	
 
 }

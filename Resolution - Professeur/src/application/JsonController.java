@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 public class JsonController {
 		
 	@SuppressWarnings("unchecked")
-	public static void JSONCreation(String cheminEnregistrement, Object title, Object texte, Object aide, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet, boolean solution, boolean modeEvaluation, String consigne, String cheminVideo, int limiteTempsHeure, int limiteTempsMinutes) {
+	public static void JSONCreation(String cheminEnregistrement, Object title, Object texte, Object aide, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet, boolean solution, boolean modeEvaluation, String consigne, String cheminVideo, String limiteTemps) {
 		
 		/*
 		 *  JSON 
@@ -29,7 +29,7 @@ public class JsonController {
         obj.put("modeEvaluation", modeEvaluation);
         obj.put("consigne", consigne);
         obj.put("cheminVideo", cheminVideo);
-        obj.put("limiteTemps", limiteTempsHeure+":"+limiteTempsMinutes);
+        obj.put("limiteTemps", limiteTemps);
 
         /*JSONArray list = new JSONArray();
         list.add("msg 1");

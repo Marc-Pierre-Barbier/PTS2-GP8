@@ -34,7 +34,7 @@ public class ApplicationController extends Main{
 	
 	private final String DEFAULT_EXTENSION = ".res";
 	private final String DEFAULT_NAME_EXTENSION = "Résolution";	
-	
+	private String time = "00:00:00";
 	@FXML
 	private TextField titre;
 	@FXML
@@ -152,6 +152,24 @@ public class ApplicationController extends Main{
 	
 
 	public void sauvegarderExercice() {
+		if(!checklimitestatus)time = "00:00:00";
+		else {
+			if(timefieldh.getText().length() == 1)timefieldh.setText("0"+timefieldh.getText());
+			if(timefieldm.getText().length() == 1)timefieldm.setText("0"+timefieldm.getText());
+			if(timefieldh.getText().length() == 0)timefieldh.setText("00");
+			if(timefieldm.getText().length() == 0)timefieldm.setText("00");
+			if(timefieldm.getText().length() > 2) {
+				timefieldm.setStyle("-fx-text-inner-color: red;"); 
+				return;
+			}
+			if(timefieldh.getText().length() > 2) {
+				timefieldh.setStyle("-fx-text-inner-color: red;");  
+				return;
+			}
+			time = timefieldh.getText()+":"+timefieldm.getText()+":00";
+		}
+		
+		
 		final FileChooser dialog = new FileChooser(); 
 		dialog.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION)); 
 	    final File file = dialog.showSaveDialog(super.getStage()); 
@@ -160,7 +178,7 @@ public class ApplicationController extends Main{
 	    		String videoformat = "";
 	    		final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
 	    		for (int i=medialength-4 ; i<medialength ;i++)videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); //on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), videoformat, 0, 0);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), videoformat, time);
 	    	
 				try {
 					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
@@ -173,7 +191,7 @@ public class ApplicationController extends Main{
 					System.err.println("ERREUR MAJEUR DANS LA COPIE ABANDON");
 				}
 	    	}else {
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, 0, 0);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
 	    	}
 
 	    }

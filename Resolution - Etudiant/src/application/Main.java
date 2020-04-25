@@ -16,16 +16,18 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
 	public static Stage stage;
+	public static GridPane root;
 
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
+			root = FXMLLoader.load(getClass().getResource("Home.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("Résolution V1.0 G8 - Etudiant");
 			primaryStage.setScene(scene);
