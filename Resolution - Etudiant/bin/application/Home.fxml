@@ -6,7 +6,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -14,11 +13,12 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.media.MediaView?> 
 <?import javafx.scene.text.Text?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1142.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
@@ -44,41 +44,29 @@
                   </Text>
                </children>
             </HBox>
-            <TabPane prefHeight="800.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Section 1">
-                     <content>
-                        <VBox prefHeight="399.0" prefWidth="431.0">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Texte à retrouver" />
-                              <TextArea fx:id="texte" editable="false" prefHeight="267.0" prefWidth="635.0" />
-                              <BorderPane prefHeight="79.0" prefWidth="635.0">
-                                 <center>
-                                    <Text text="Temps restant pour cette section : 00h00min" BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
-                              <TextArea fx:id="proposition" prefHeight="267.0" prefWidth="635.0" />
-                              <BorderPane prefHeight="140.0" prefWidth="431.0">
-                                 <right>
-                                    <Button mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
-                                       <BorderPane.margin>
-                                          <Insets right="10.0" />
-                                       </BorderPane.margin></Button>
-                                 </right>
-                                 <center>
-                                    <Button mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
-                                       <BorderPane.margin>
-                                          <Insets left="125.0" />
-                                       </BorderPane.margin></Button>
-                                 </center>
-                              </BorderPane>
-                           </children>
-                        </VBox>
-                     </content>
-                </Tab>
-              </tabs>
-            </TabPane>
+            <TabPane fx:id="TabPaneExo" prefHeight="800.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
+            <FlowPane>
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
+                  <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="635.0" />
+                  <BorderPane prefHeight="140.0" prefWidth="431.0">
+                     <right>
+                        <Button mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets right="10.0" />
+                           </BorderPane.margin>
+                        </Button>
+                     </right>
+                     <center>
+                        <Button mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets left="125.0" />
+                           </BorderPane.margin>
+                        </Button>
+                     </center>
+                  </BorderPane>
+               </children>
+            </FlowPane>
          </children>
       </VBox>
       <VBox prefHeight="561.0" prefWidth="335.0" GridPane.columnIndex="1" GridPane.rowIndex="1">

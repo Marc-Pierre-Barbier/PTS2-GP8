@@ -6,23 +6,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -35,16 +32,14 @@ public class ApplicationController extends Main{
 	private final String DEFAULT_EXTENSION = ".res";
 	private final String DEFAULT_NAME_EXTENSION = "Résolution";	
 	private String time = "00:00:00";
+	private List<Section> sections;
+	
 	@FXML
 	private TextField titre;
 	@FXML
 	private TextField timefieldh;
 	@FXML
 	private TextField timefieldm;
-	@FXML
-	private TextArea texte;
-	@FXML
-	private TextArea aide;
 	@FXML
 	private CheckBox sensibiliteCase;
 	@FXML
@@ -60,6 +55,10 @@ public class ApplicationController extends Main{
 	private RadioButton modeEvaluation;
 	@FXML
 	private TextField consigne;
+	@FXML
+	private TabPane sectionsTabPane;
+	@FXML
+	private TabPane sectionsTimeCodePane;
 	@FXML
 	private Slider volume;
 	@FXML
@@ -77,6 +76,9 @@ public class ApplicationController extends Main{
 	
 	private boolean videoChargee = false;
 	
+	private Tab sectionsTabNEW = new Tab("+");
+	private Button btnNewSection = new Button("nouvelle section");
+	
 	public void nouvelleExercice() throws IOException {
 		System.out.println("Création d'un exercice");
 		super.setHauteur(720);
@@ -85,6 +87,7 @@ public class ApplicationController extends Main{
 	}
 	
 	public void chargerUneVideo() {
+		sections = new ArrayList<>();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"), new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("All", "*"));
 		fileChooser.setTitle("Ouvrir une vidéo/audio");
@@ -114,7 +117,10 @@ public class ApplicationController extends Main{
 		        	progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds()*100);
 		        }
 		    });
-			
+			sectionsTabNEW.setContent(btnNewSection);
+			btnNewSection.setOnAction(e -> sections.add(new Section(sectionsTabPane,sectionsTimeCodePane)));
+			sectionsTabPane.getTabs().add(sectionsTabNEW);
+			sections.add(new Section(sectionsTabPane,sectionsTimeCodePane));	
 			
 			progression.setOnMouseReleased(new EventHandler<Event>() {
 		        @Override
@@ -125,7 +131,7 @@ public class ApplicationController extends Main{
 		    });
 		}
 	}
-	
+
 	public void timeHandle() {
 		checklimitestatus=!checklimitestatus;
 		timefieldh.setDisable(!checklimitestatus);
@@ -178,7 +184,7 @@ public class ApplicationController extends Main{
 	    		String videoformat = "";
 	    		final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
 	    		for (int i=medialength-4 ; i<medialength ;i++)videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); //on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), videoformat, time);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), videoformat, time);
 	    	
 				try {
 					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
@@ -191,7 +197,7 @@ public class ApplicationController extends Main{
 					System.err.println("ERREUR MAJEUR DANS LA COPIE ABANDON");
 				}
 	    	}else {
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), texte.getText(), aide.getText(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
 	    	}
 
 	    }

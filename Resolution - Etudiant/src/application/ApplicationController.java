@@ -5,7 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -36,12 +40,11 @@ public class ApplicationController extends Main{
 	
 	private final String DEFAULT_EXTENSION_NAME  = "Résolution";
 	private final String DEFAULT_EXTENSION_FILE = ".res";
-	private final String CARACTERE_OCULTATION = "*";
-	private final String CARACTERE_NON_OCULTER= ";.,!? ";
+	protected static final String CARACTERE_OCULTATION = "*";
+	protected static final String CARACTERE_NON_OCULTER= ";.,!? ";
+	private List<Section> sections;
 	@FXML
 	private Text titre;
-	@FXML
-	private TextArea texte;
 	@FXML
 	private TextArea proposition;
 	@FXML
@@ -58,12 +61,15 @@ public class ApplicationController extends Main{
 	private Text tempsText;
 	@FXML
 	private Slider progression;
+	@FXML
+	private TabPane TabPaneExo;
 	
 	private boolean videoChargee = false;
-	private String texteATrouver = "";
-	private String texteCache = "";
+
 	private LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	private boolean chronometrer = false;
+	
+	
 	
 	public void ouvrirUnExercice() throws ParseException, InterruptedException {
 		FileChooser fileChooser = new FileChooser();
@@ -78,24 +84,14 @@ public class ApplicationController extends Main{
 
 	            JSONObject jsonObject = (JSONObject) parser.parse(reader);
 	            titre.setText((String) jsonObject.get("titre"));
-	            texteATrouver = (String) jsonObject.get("texte");
-	            for (int i = 0; i < texteATrouver.length(); i++) {
-	            	if(!CARACTERE_NON_OCULTER.contains(texteATrouver.charAt(i)+"")) {
-	            		texteCache += CARACTERE_OCULTATION;
-	            	}else {
-	            		texteCache += texteATrouver.charAt(i);
-	            	}
-				}
-	            System.out.println(texteCache);
-	            texte.setText(texteCache);
 	            consigne.setText((String) jsonObject.get("consigne"));
 	            String formatvideo = (String) jsonObject.get("cheminVideo");
 	            
 	            String limiteTemps = (String)jsonObject.get("limiteTemps");
 	            if(!(limiteTemps.equals("00:00:00"))) {
 	            	tempsTotal = LocalTime.parse(limiteTemps);
-	            	int hours = Integer.parseInt(limiteTemps.charAt(0) + limiteTemps.charAt(1) +"");
-		            int minutes = Integer.parseInt(limiteTemps.charAt(3) + limiteTemps.charAt(4) + ""); //le char 0 est les disaines d'eur le char 1 les heure le char 2 le : etc..
+	            	//int hours = Integer.parseInt(limiteTemps.charAt(0) + limiteTemps.charAt(1) +"");
+		            //int minutes = Integer.parseInt(limiteTemps.charAt(3) + limiteTemps.charAt(4) + ""); //le char 0 est les disaines d'eur le char 1 les heure le char 2 le : etc..
 	            	chronometrer=true;
 	            }else {
 	            	tempsTotal = LocalTime.parse("00:00:00");
@@ -109,6 +105,11 @@ public class ApplicationController extends Main{
 	                    }
 	                }
 	            });
+	            
+	            sections = new ArrayList<>();
+	            for (int i = 1 ; i<= (long) jsonObject.get("sections");i++) {
+	        	   sections.add(new Section(TabPaneExo,(String)jsonObject.get("SectionAide"+i),(String)jsonObject.get("SectionText"+i),(String)jsonObject.get("SectionTimeCode"+i)));
+	           }
 
 	            String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
 	            
@@ -184,9 +185,12 @@ public class ApplicationController extends Main{
 	}
 	
 	public void chercherMot() {
+		Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
+		
+		
 		System.out.println("Lancement d'une recherche");
-		System.out.println(texteCache.length());
-		System.out.println(texteATrouver);
+		System.out.println(s.getTextATrouver().length());
+		System.out.println(s.getTextATrouver());
 		System.out.println(proposition.getText());
 		proposition.setText(proposition.getText().trim());//supprime les retour a la ligne dans la recherche car sa casse tout
 		//séparation de la fonction pour recherche mot par mots indépendament
@@ -199,7 +203,7 @@ public class ApplicationController extends Main{
 			}else {
 				if(mot != "") {
 					proposition.setText(mot);
-					chercherMotSplt();
+					chercherMotSplt(s);
 					mot="";
 				}
 			}
@@ -207,8 +211,9 @@ public class ApplicationController extends Main{
 		proposition.setText("");//on suprime le champs aprés validation
 	}
 	
-	public void chercherMotSplt() {
-		texteCache += " ";
+	public void chercherMotSplt(Section s) {
+		String texteATrouver = s.getTextATrouver();
+		String texteCache = s.getTextvideo().getText()+" ";
 		for (int i = 0; i < texteCache.length(); i++) {
 			if(i + proposition.getText().length() > texteCache.length()) {
 				break;
@@ -220,12 +225,12 @@ public class ApplicationController extends Main{
 				if(letter == letterTextTry) {
 					
 				 if(j == proposition.getText().length() - 1 && CARACTERE_NON_OCULTER.contains(""+texteCache.charAt(i+j+1))){
-					StringBuilder TextAtFoundHideB = new StringBuilder(texteCache);
+					StringBuilder textAtFoundHideB = new StringBuilder(texteCache);
 					for (int k = 0; k < proposition.getText().length(); k++) {
-						TextAtFoundHideB.setCharAt(i + k, proposition.getText().charAt(k));
+						textAtFoundHideB.setCharAt(i + k, proposition.getText().charAt(k));
 					}
-					texteCache = TextAtFoundHideB.toString();
-					texte.setText(texteCache);
+					texteCache = textAtFoundHideB.toString();
+					s.getTextvideo().setText(texteCache);
 				 }
 				}else {
 					break;

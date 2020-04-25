@@ -9,9 +9,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -38,27 +36,7 @@
             <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="191.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
-               <tabs>
-                  <Tab text="Section 1">
-                     <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Texte" />
-                              <TextArea fx:id="texte" prefHeight="200.0" prefWidth="200.0" promptText="Entrez le texte de la vidéo..." />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aide" />
-                              <TextArea fx:id="aide" minWidth="400.0" prefHeight="200.0" prefWidth="200.0" promptText="Entrer l'aide pour cette exercice..." />
-                           </children>
-                        </VBox>
-                     </content>
-                  </Tab>
-                  <Tab text="+">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                     </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+            <TabPane fx:id="sectionsTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1" />
             <VBox prefHeight="341.0" prefWidth="446.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
@@ -173,15 +151,7 @@
                   </BorderPane>
                   <VBox prefHeight="191.0" prefWidth="472.0">
                      <children>
-                        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                           <tabs>
-                              <Tab text="Section 1">
-                                 <content>
-                                    <TextField prefHeight="100.0" prefWidth="459.0" />
-                                 </content>
-                              </Tab>
-                           </tabs>
-                        </TabPane>
+                        <TabPane fx:id="sectionsTimeCodePane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Limite de temps :" textAlignment="CENTER">
