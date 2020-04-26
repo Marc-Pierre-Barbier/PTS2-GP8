@@ -13,15 +13,15 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	public static Stage stage;
-	//public static AnchorPane pagePrincipale;
+	public static AnchorPane pagePrincipale;
 	public static AnchorPane pane;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			//pagePrincipale = FXMLLoader.load(getClass().getResource("MenuPrincipal.fxml"));
-			//Scene scene = new Scene(pagePrincipale, 450, 450);
-			pane = FXMLLoader.load(getClass().getResource("NouvelleExercice.fxml"));
-			Scene scene = new Scene(pane, 910,720);
+			pagePrincipale = FXMLLoader.load(getClass().getResource("MenuPrincipal.fxml"));
+			Scene scene = new Scene(pagePrincipale, 450, 450);
+			//pane = FXMLLoader.load(getClass().getResource("NouvelleExercice.fxml"));
+			//Scene scene = new Scene(pane, 910,720);
 			primaryStage.setTitle("Résolution V1.0 G8 - Professeur");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -43,7 +43,7 @@ public class Main extends Application {
 	
 	public void chargerUnePage(String nomPage) throws IOException {
 		pane = FXMLLoader.load(getClass().getResource(nomPage));
-		//pagePrincipale.getChildren().setAll(pane);
+		pagePrincipale.getChildren().setAll(pane);
 	}
 
 	public void setHauteur(int i) {
