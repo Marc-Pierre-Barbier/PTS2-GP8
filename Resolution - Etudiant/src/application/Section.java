@@ -26,7 +26,6 @@ public class Section {
 		Section = new Tab("Section "+nbtab);
 		vbox = new VBox();
 		texte = new Text("texte");
-		
 		aide = new Text("aide");
 		aideVideo = new TextArea(SectionAide);
 		aideVideo.setMaxHeight(100);
@@ -52,6 +51,7 @@ public class Section {
         	}
         };
         vbox.getChildren().addAll(texte,texteVideo,aide,aideVideo);
+        texteVideo.setEditable(false);
 	}
 
 	public int getidTab(){

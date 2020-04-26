@@ -96,7 +96,7 @@ public class ApplicationController extends Main{
 	            String formatvideo = (String) jsonObject.get("cheminVideo");
 	            sensibiliteCase = (boolean) jsonObject.get("sensibiliteCase");
 	            String limiteTemps = (String)jsonObject.get("limiteTemps");
-	            motincomplet = (boolean )jsonObject.get("motIncomplet");
+	            motincomplet = (boolean)jsonObject.get("motIncomplet");
 	            if(!(boolean)jsonObject.get("affichageSolution")) {
 	            	solutionBoutton.setDisable(true);
 	            }
@@ -248,29 +248,46 @@ public class ApplicationController extends Main{
 	public void chercherMotSplt(Section s) {
 		String texteATrouver = s.getTextATrouver();
 		String texteCache = s.getTextvideo().getText()+" ";
-		for (int i = 0; i < texteCache.length(); i++) {
-			if(i + proposition.getText().length() > texteCache.length()) {
-				break;
-			}
-			for (int j = 0; j < proposition.getText().length(); j++) {
-				if( i+j >= texteATrouver.length()) break;
-				char letter = texteATrouver.charAt(i+j);
-				char letterTextTry = proposition.getText().charAt(j);
-				if(sensibiliteCase && letter == letterTextTry || !sensibiliteCase && (letter+"").toLowerCase() == (letterTextTry+"").toLowerCase()) {
-					
-				 if(j == proposition.getText().length() - 1 && CARACTERE_NON_OCULTER.contains(""+texteCache.charAt(i+j+1))){
-					StringBuilder textAtFoundHideB = new StringBuilder(texteCache);
-					for (int k = 0; k < proposition.getText().length(); k++) {
-						textAtFoundHideB.setCharAt(i + k, proposition.getText().charAt(k));
+		int index=0;
+		for(char c : texteATrouver.toCharArray()) {			
+			if (proposition.getText().charAt(0) == c && proposition.getText().length() <= (texteATrouver.length() - index)) {
+				int indexProp=index;
+				if(sensibiliteCase) {
+					for(char prop : proposition.getText().toCharArray()) {
+						if(!(prop == texteATrouver.charAt(indexProp))) break;
+						indexProp++;
 					}
-					texteCache = textAtFoundHideB.toString();
-					s.getTextvideo().setText(texteCache);
-				 }
 				}else {
-					break;
+					for(char prop : proposition.getText().toLowerCase().toCharArray()) {
+						if(!(prop == texteATrouver.toLowerCase().charAt(indexProp))) break;
+						indexProp++;
+					}
+				}
+				
+				if(indexProp==index + proposition.getText().length()) System.out.println("trouvé!");
+				else {
+					System.out.println("prop : " + indexProp + "\ncalc index : "+(index + proposition.getText().length()));
+				}
+				
+				System.out.println("autorisé les mots incomplets ? : "+motincomplet);
+				
+				if((indexProp==index + proposition.getText().length() && motincomplet) || 
+				//verification pour mots complet(donc caractére non oculter a la fin)
+				(!motincomplet && texteCache.length() >= indexProp+1 && 
+				CARACTERE_NON_OCULTER.contains(texteCache.charAt(indexProp)+"") && 
+				indexProp==index + proposition.getText().length())) {
+					System.out.println("im in");
+					for(int i = index ; i < indexProp ; i++) {
+						char[] chars = texteCache.toCharArray();
+						chars[i] = texteATrouver.charAt(i);
+						texteCache = String.valueOf(chars);
+					}
 				}
 			}
+			index++;
 		}
+		
+		s.getTextvideo().setText(texteCache);
 	}
 		
 	
