@@ -23,6 +23,16 @@ public class Section {
 	private TextArea limiteTempsM;
 	private HBox boxtime;
 	private final int TAILLE_CHAMP_TEXTE_TIMER = 30;
+
+	public Section(TabPane parent, TabPane sectionsTimeCodePane,String aideVideoSTR,String texteVideoSTR,String SectionTimeCode) {
+		this(parent,sectionsTimeCodePane);
+		texteVideo.setText(texteVideoSTR);
+		aideVideo.setText(aideVideoSTR);
+		System.out.println(SectionTimeCode);
+		limiteTempsH.setText(SectionTimeCode.charAt(0) +""+ SectionTimeCode.charAt(1) + "");
+		limiteTempsM.setText(SectionTimeCode.charAt(3) +""+ SectionTimeCode.charAt(4) + "");
+	}
+	
 	
 	public Section(TabPane parent, TabPane sectionsTimeCodePane) {
 		nbtab++;
@@ -83,4 +93,7 @@ public class Section {
 	/*public Section(TabPane tabPane,TabPane sectionsTimeCodePane) {
 		this(tabPane,sectionsTimeCodePane);
 	}*/
+	public static void reset() {
+		nbtab=0;
+	}
 }
