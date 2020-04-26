@@ -151,10 +151,12 @@ public class ApplicationController extends Main{
 	}
 	
 	public void handleRadialA() {
-		modeEvaluation.setSelected(!modeApprentissage.isSelected());
+		modeApprentissage.setSelected(true);
+		modeEvaluation.setSelected(false);
 	}
 	public void handleRadialE() {
-		modeApprentissage.setSelected(!modeEvaluation.isSelected());
+		modeApprentissage.setSelected(false);
+		modeEvaluation.setSelected(true);
 	}
 	
 	public void stopVideo() {
