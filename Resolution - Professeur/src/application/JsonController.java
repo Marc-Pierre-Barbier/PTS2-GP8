@@ -28,7 +28,6 @@ public class JsonController {
         obj.put("cheminVideo", cheminVideo);
         obj.put("limiteTemps", limiteTemps);
 
-        
         for(Section  s : sections) {
         	if(!s.getTimeCode().equals("ABORT")) {
         		obj.put("SectionAide"+s.getidTab(),s.getAide());

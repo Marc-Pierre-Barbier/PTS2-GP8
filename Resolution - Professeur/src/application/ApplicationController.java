@@ -13,6 +13,8 @@ import javafx.beans.InvalidationListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -175,7 +177,14 @@ public class ApplicationController extends Main{
 			time = timefieldh.getText()+":"+timefieldm.getText()+":00";
 		}
 		
-		
+		if(!videoChargee) {
+    		Alert alert = new Alert(AlertType.ERROR);
+    		alert.setTitle("Erreur");
+    		alert.setHeaderText("aucune video trouver");
+    		alert.setContentText("vous devez mettre une video avant de sauvegarder");
+    		alert.showAndWait();
+    		return;
+		}
 		final FileChooser dialog = new FileChooser(); 
 		dialog.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION)); 
 	    final File file = dialog.showSaveDialog(super.getStage()); 
@@ -196,9 +205,11 @@ public class ApplicationController extends Main{
 				} catch (IOException e) {
 					System.err.println("ERREUR MAJEUR DANS LA COPIE ABANDON");
 				}
-	    	}else {
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
-	    	}
+	    	}/*else {
+
+	    		//je le remplace par un msg d'erreur sa ne fait pas de sens d'enregistrer le doc sans video
+	    		//JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), null, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
+	    	}*///le msg se trouve avant le file chooser
 
 	    }
 	}
