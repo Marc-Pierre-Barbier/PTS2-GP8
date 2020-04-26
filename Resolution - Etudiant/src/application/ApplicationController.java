@@ -77,7 +77,7 @@ public class ApplicationController extends Main{
 	private LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	private boolean chronometrer = false;
 	private boolean motincomplet = false;
-	
+	CustomTimer custom;
 	
 	public void ouvrirUnExercice() throws ParseException, InterruptedException {
 		FileChooser fileChooser = new FileChooser();
@@ -213,7 +213,7 @@ public class ApplicationController extends Main{
 	
 	public LocalTime Timer(LocalTime temps) {
 		Timer time = new Timer();
-		CustomTimer custom = new CustomTimer(temps, tempsText);
+		custom = new CustomTimer(temps, tempsText);
 		time.schedule(custom, 1000, 1000);
 		return custom.getTimeObject();
 	}
