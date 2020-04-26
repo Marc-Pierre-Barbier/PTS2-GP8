@@ -1,21 +1,31 @@
 package application;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -29,13 +39,13 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
-public class ApplicationController extends Main{
-	
+public class ApplicationController extends Main {
+
 	private final String DEFAULT_EXTENSION = ".res";
-	private final String DEFAULT_NAME_EXTENSION = "Résolution";	
+	private final String DEFAULT_NAME_EXTENSION = "Résolution";
 	private String time = "00:00:00";
 	private List<Section> sections;
-	
+
 	@FXML
 	private TextField titre;
 	@FXML
@@ -74,26 +84,105 @@ public class ApplicationController extends Main{
 	private MediaPlayer mediaPlayer;
 	@FXML
 	private Button chosevid;
-	
+
 	private boolean videoChargee = false;
-	
+
 	private Tab sectionsTabNEW = new Tab("+");
 	private Button btnNewSection = new Button("nouvelle section");
-	
+
 	public void nouvelleExercice() throws IOException {
 		System.out.println("Création d'un exercice");
 		super.setHauteur(720);
 		super.setLargeur(910);
 		super.chargerUnePage("NouvelleExercice.fxml");
 	}
+
+	public void nouvelleExerciceMenu() throws IOException {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation");
+		alert.setHeaderText(
+				"/!\\ la création/ouverture d'un nouvelle exo va entrainer le suppretion de toutes donné non sauvegarder");
+		alert.setContentText("cliquer sur ok pour continuer quand meme");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			chargerUnePage("NouvelleExercice.fxml");
+			sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
+			if(mediaPlayer != null) {
+				mediaPlayer.stop();
+				mediaView.setMediaPlayer(null);;
+			}
+			Section.reset();
+			sectionsTabPane.getTabs().clear();
+			sectionsTimeCodePane.getTabs().clear();
+			setupbtn();
+			videoChargee=false;
+			aucuneVideoChargee.setVisible(true);
+		}
+
+	}
 	
-	public void chargerUneVideo() {
+	public void ouvrir() throws IOException, InterruptedException {
+		sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
+		if (mediaPlayer != null)
+			mediaPlayer.pause();
+		Section.reset();
+		setupbtn();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters()
+				.addAll(new FileChooser.ExtensionFilter("Fichier " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
+		fileChooser.setTitle("Ouvrir un fichier de Resolution");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		File selectedFile = fileChooser.showOpenDialog(Main.stage);
+		if (selectedFile != null) {
+			System.out.println("Chargement de l'exercice");
+			JSONParser parser = new JSONParser();
+			try (Reader reader = new FileReader(selectedFile.getAbsolutePath())) {
+
+				JSONObject jsonObject = (JSONObject) parser.parse(reader);
+				titre.setText((String) jsonObject.get("titre"));
+				consigne.setText((String) jsonObject.get("consigne"));
+				String formatvideo = (String) jsonObject.get("cheminVideo");
+
+				sensibiliteCase.setSelected((boolean) jsonObject.get("sensibiliteCase"));
+				String limiteTemps = (String) jsonObject.get("limiteTemps");
+				time = limiteTemps;
+				timefieldh.setText(limiteTemps.charAt(0) +""+ limiteTemps.charAt(1));
+				timefieldm.setText(limiteTemps.charAt(3) +""+ limiteTemps.charAt(4));
+
+				sections = new ArrayList<>();
+				for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
+					sections.add(new Section(sectionsTabPane, sectionsTimeCodePane,
+							(String) jsonObject.get("SectionAide" + i), (String) jsonObject.get("SectionText" + i),
+							(String) jsonObject.get("SectionTimeCode" + i)));
+				}
+
+				String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
+
+				chargerUneVideo(new File(cheminVideo));
+				mediaView.setVisible(videoChargee);
+				motIncomplet.setSelected((boolean) jsonObject.get("motIncomplet"));
+			} catch (Exception e) {
+				erreur("fichier introuvable ou endomager", "votre fichier d'exercice est introuve ou a éte endomager");
+			}
+		}
+
+	}
+
+	public void chargerUneVideoBTN() {
 		sections = new ArrayList<>();
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"), new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("All", "*"));
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"),
+				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("All", "*"));
 		fileChooser.setTitle("Ouvrir une vidéo/audio");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
+		chargerUneVideo(selectedFile);
+		setupbtn();
+		sections.add(new Section(sectionsTabPane, sectionsTimeCodePane));
+	}
+
+	public void chargerUneVideo(File selectedFile) {
 		if (selectedFile != null) {
 			Media media = new Media(new File(selectedFile.getAbsolutePath()).toURI().toString());
 			System.out.println(selectedFile.getAbsolutePath());
@@ -101,158 +190,183 @@ public class ApplicationController extends Main{
 			mediaView.setMediaPlayer(mediaPlayer);
 			mediaView.setVisible(true);
 			mediaView.setPreserveRatio(false);
-			
-			volume.setValue(mediaPlayer.getVolume()*100);
+
+			volume.setValue(mediaPlayer.getVolume() * 100);
 			volume.valueProperty().addListener(new InvalidationListener() {
-				
+
 				@Override
 				public void invalidated(javafx.beans.Observable observable) {
-						mediaPlayer.setVolume(volume.getValue() / 100);			
+					mediaPlayer.setVolume(volume.getValue() / 100);
 				}
-			});			
+			});
 			aucuneVideoChargee.setVisible(false);
 			mediaView.setFitHeight(250);
 			videoChargee = true;
 			mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
-		        if (!progression.isValueChanging() && !progression.isPressed()) {
-		        	progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds()*100);
-		        }
-		    });
-			sectionsTabNEW.setContent(btnNewSection);
-			btnNewSection.setOnAction(e -> sections.add(new Section(sectionsTabPane,sectionsTimeCodePane)));
-			sectionsTabPane.getTabs().add(sectionsTabNEW);
-			sections.add(new Section(sectionsTabPane,sectionsTimeCodePane));	
-			
+				if (!progression.isValueChanging() && !progression.isPressed()) {
+					progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100);
+				}
+			});
+
 			progression.setOnMouseReleased(new EventHandler<Event>() {
-		        @Override
-		        public void handle(Event event) {
-		        	double newValue = progression.getValue();
-					mediaPlayer.seek(new Duration(1000*(double)newValue/100*mediaPlayer.getTotalDuration().toSeconds()));
-		        }
-		    });
+				@Override
+				public void handle(Event event) {
+					double newValue = progression.getValue();
+					mediaPlayer.seek(
+							new Duration(1000 * (double) newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
+				}
+			});
 		}
+	}
+	
+	public void setupbtn() {
+		sectionsTabPane.getTabs().clear();
+		sectionsTimeCodePane.getTabs().clear();
+		sectionsTabPane.getTabs().add(sectionsTabNEW);
+		sectionsTabNEW.setContent(btnNewSection);
+		btnNewSection.setOnAction(e -> sections.add(new Section(sectionsTabPane, sectionsTimeCodePane)));
 	}
 
 	public void timeHandle() {
 		timefieldh.setDisable(!checklimite.isSelected());
 		timefieldm.setDisable(!checklimite.isSelected());
 	}
-	
+
 	public void interactionVideo() {
-		if(videoChargee) {
-			if(interactionVideoBtn.getText().equalsIgnoreCase("Pause")) {
+		if (videoChargee) {
+			if (interactionVideoBtn.getText().equalsIgnoreCase("Pause")) {
 				mediaView.getMediaPlayer().pause();
 				interactionVideoBtn.setText("Lire");
-			}else {
+			} else {
 				mediaView.getMediaPlayer().play();
 				interactionVideoBtn.setText("Pause");
 			}
 		}
 	}
-	
+
 	public void handleRadialA() {
 		modeApprentissage.setSelected(true);
 		modeEvaluation.setSelected(false);
 	}
+
 	public void handleRadialE() {
 		modeApprentissage.setSelected(false);
 		modeEvaluation.setSelected(true);
 	}
-	
+
 	public void stopVideo() {
 		interactionVideoBtn.setText("Jouer");
 		mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStopTime());
 		mediaView.getMediaPlayer().stop();
 	}
-	
 
 	public void sauvegarderExercice() {
-		if(!checklimite.isSelected())time = "00:00:00";
+		if (!checklimite.isSelected())
+			time = "00:00:00";
 		else {
-			if(timefieldh.getText().length() == 1)timefieldh.setText("0"+timefieldh.getText());
-			if(timefieldm.getText().length() == 1)timefieldm.setText("0"+timefieldm.getText());
-			if(timefieldh.getText().length() == 0)timefieldh.setText("00");
-			if(timefieldm.getText().length() == 0)timefieldm.setText("00");
-			if(timefieldm.getText().length() > 2) {
-				timefieldm.setStyle("-fx-text-inner-color: red;"); 
+			if (timefieldh.getText().length() == 1)
+				timefieldh.setText("0" + timefieldh.getText());
+			if (timefieldm.getText().length() == 1)
+				timefieldm.setText("0" + timefieldm.getText());
+			if (timefieldh.getText().length() == 0)
+				timefieldh.setText("00");
+			if (timefieldm.getText().length() == 0)
+				timefieldm.setText("00");
+			if (timefieldm.getText().length() > 2) {
+				timefieldm.setStyle("-fx-text-inner-color: red;");
 				return;
 			}
-			if(timefieldh.getText().length() > 2) {
-				timefieldh.setStyle("-fx-text-inner-color: red;");  
+			if (timefieldh.getText().length() > 2) {
+				timefieldh.setStyle("-fx-text-inner-color: red;");
 				return;
 			}
-			time = timefieldh.getText()+":"+timefieldm.getText()+":00";
+			time = timefieldh.getText() + ":" + timefieldm.getText() + ":00";
 		}
-		
-		if(!videoChargee) {
+
+		if (!videoChargee) {
 			erreur("aucune video trouver", "vous devez mettre une video avant de sauvegarder");
-    		return;
+			return;
 		}
-		final FileChooser dialog = new FileChooser(); 
-		dialog.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION)); 
-	    final File file = dialog.showSaveDialog(super.getStage()); 
-	    if (file != null) { 
-	    	if(videoChargee) {
-	    		String videoformat = "";
-	    		final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
-	    		for (int i=medialength-4 ; i<medialength ;i++)videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); //on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(),consigne.getText(), videoformat, time);
-	    	
+		final FileChooser dialog = new FileChooser();
+		dialog.getExtensionFilters()
+				.setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
+		final File file = dialog.showSaveDialog(super.getStage());
+		if (file != null) {
+			if (videoChargee) {
+				String videoformat = "";
+				final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
+				for (int i = medialength - 4; i < medialength; i++)
+					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); // on sauvegarde que le
+																								// format car on copie
+																								// la video avec le
+																								// fichier pour rendre
+																								// le tout transportable
+				JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
+						sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(),
+						motIncomplet.isSelected(), affichageSolution.isSelected(), consigne.getText(), videoformat,
+						time);
+
 				try {
 					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
 					File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), videoformat));
-					Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.REPLACE_EXISTING);
+					Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				} catch (URISyntaxException e1) {
 					erreur("erreur URI", "le chemin d'acces de la vidéo est éroné veuiller le redéfinir");
 				} catch (IOException e) {
-					erreur("erreur copie","une erreur dans la copie est survenue veuiller verifier si vous avez les droit dans le dossier de destination et verifier sur vous avez sufisament d'espace libre (le poids de votre video defini la place nessecaire)");
+					erreur("erreur copie",
+							"une erreur dans la copie est survenue veuiller verifier si vous avez les droit dans le dossier de destination et verifier sur vous avez sufisament d'espace libre (le poids de votre video defini la place nessecaire)");
 				}
-	    	}/*else {
+			} /*
+				 * else {
+				 * 
+				 * //je le remplace par un msg d'erreur sa ne fait pas de sens d'enregistrer le
+				 * doc sans video et par consequent aucune section
+				 * //JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),
+				 * ".res"), titre.getText(), null, sensibiliteCase.isSelected(),
+				 * modeApprentissage.isSelected(), motIncomplet.isSelected(),
+				 * affichageSolution.isSelected(), modeEvaluation.isSelected(),
+				 * consigne.getText(), null, time); }
+				 */
+			// le msg se trouve avant le file chooser
 
-	    		//je le remplace par un msg d'erreur sa ne fait pas de sens d'enregistrer le doc sans video et par consequent aucune section
-	    		//JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), null, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
-	    	}*///le msg se trouve avant le file chooser
-
-	    }
+		}
 	}
 
-
 	/**
-	 * ajoute .res a la fin si il n'est pas deja present
-	 * j'ai euh le probleme sur linux ou sa enregistrais sans extention
-	 * sa ne deverais pas poser probleme sur windows
-	 * j'y ai ajouter aussi la fonction pour renomer les fichier en mp4
+	 * ajoute .res a la fin si il n'est pas deja present j'ai euh le probleme sur
+	 * linux ou sa enregistrais sans extention sa ne deverais pas poser probleme sur
+	 * windows j'y ai ajouter aussi la fonction pour renomer les fichier en mp4
 	 */
 	private String fixMyPath(String chemin, String format) {
 		int i = chemin.length();
 		String str = "";
-		for(int j = i-4 ; j < i ; j++)
+		for (int j = i - 4; j < i; j++)
 			str += chemin.charAt(j);
-		
-		if(str.equals(".res")) {
-			chemin=chemin.replace(".res", format);
+
+		if (str.equals(".res")) {
+			chemin = chemin.replace(".res", format);
 			return chemin;
-		}else {
+		} else {
 			return chemin + format;
 		}
-		
+
 	}
 
 	public void chargerExercice() {
 		System.out.println("Chargement d'un exercice");
 	}
-	
-	public int onSelectNumberSection() {
+
+	public int onSelectNumber() {
 		return 0;
 	}
-	
-	public static void erreur(String entete,String contenu) {
+
+	public static void erreur(String entete, String contenu) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Erreur");
 		alert.setHeaderText(entete);
 		alert.setContentText(contenu);
 		alert.showAndWait();
 	}
-	
+
 }

@@ -49,7 +49,7 @@
                         <Label fx:id="aucuneVideoChargee" text="Aucune vidéo chargée" BorderPane.alignment="CENTER" />
                      </top>
                      <bottom>
-                        <Button id="chosevid" mnemonicParsing="false" onAction="#chargerUneVideo" text="Charger une vidéo" BorderPane.alignment="CENTER" />
+                        <Button id="chosevid" mnemonicParsing="false" onAction="#chargerUneVideoBTN" text="Charger une vidéo" BorderPane.alignment="CENTER" />
                      </bottom>
                      <right>
                         <Slider fx:id="volume" orientation="VERTICAL" prefHeight="100.0" prefWidth="15.0" value="10.0" BorderPane.alignment="CENTER">
@@ -92,8 +92,9 @@
                      <menus>
                         <Menu mnemonicParsing="false" text="Fichier">
                            <items>
-                              <MenuItem mnemonicParsing="false" text="Nouveau" />
-                              <MenuItem mnemonicParsing="false" text="Ouvrir" />
+                              <MenuItem mnemonicParsing="false" onAction="#nouvelleExerciceMenu" text="Nouveau" />
+                              <MenuItem mnemonicParsing="false" onAction="#sauvegarderExercice" text="Sauvegarder" />
+                              <MenuItem mnemonicParsing="false" onAction="#ouvrir" text="Ouvrir" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Crédits">
