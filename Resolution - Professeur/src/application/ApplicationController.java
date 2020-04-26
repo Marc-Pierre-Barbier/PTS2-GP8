@@ -185,11 +185,7 @@ public class ApplicationController extends Main{
 		}
 		
 		if(!videoChargee) {
-    		Alert alert = new Alert(AlertType.ERROR);
-    		alert.setTitle("Erreur");
-    		alert.setHeaderText("aucune video trouver");
-    		alert.setContentText("vous devez mettre une video avant de sauvegarder");
-    		alert.showAndWait();
+			erreur("aucune video trouver", "vous devez mettre une video avant de sauvegarder");
     		return;
 		}
 		final FileChooser dialog = new FileChooser(); 
@@ -208,9 +204,9 @@ public class ApplicationController extends Main{
 					Files.copy(source.toPath(), dest.toPath(),StandardCopyOption.REPLACE_EXISTING);
 
 				} catch (URISyntaxException e1) {
-					System.err.println("erreur syntax uri");
+					erreur("erreur URI", "le chemin d'acces de la vidéo est éroné veuiller le redéfinir");
 				} catch (IOException e) {
-					System.err.println("ERREUR MAJEUR DANS LA COPIE ABANDON");
+					erreur("erreur copie","une erreur dans la copie est survenue veuiller verifier si vous avez les droit dans le dossier de destination et verifier sur vous avez sufisament d'espace libre (le poids de votre video defini la place nessecaire)");
 				}
 	    	}/*else {
 
@@ -249,6 +245,14 @@ public class ApplicationController extends Main{
 	
 	public int onSelectNumberSection() {
 		return 0;
+	}
+	
+	public static void erreur(String entete,String contenu) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Erreur");
+		alert.setHeaderText(entete);
+		alert.setContentText(contenu);
+		alert.showAndWait();
 	}
 	
 }

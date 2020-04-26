@@ -29,14 +29,13 @@ public class JsonController {
         obj.put("limiteTemps", limiteTemps);
 
         for(Section  s : sections) {
-        	if(!s.getTimeCode().equals("ABORT")) {
-        		obj.put("SectionAide"+s.getidTab(),s.getAide());
-        		obj.put("SectionText"+s.getidTab(),s.getText());
-        		obj.put("SectionTimeCode"+s.getidTab(),s.getTimeCode());
-        	}else {
-        		return; //on ne sauvegarde pas sa a pas marché
-        		//TODO avertir pour l'erreur
+        	if(s.getTimeCode().equals("ABORT")) {
+        		
+        		return;
         	}
+        	obj.put("SectionAide"+s.getidTab(),s.getAide());
+        	obj.put("SectionText"+s.getidTab(),s.getText());
+        	obj.put("SectionTimeCode"+s.getidTab(),s.getTimeCode());
         }
         
         /*JSONArray list = new JSONArray();
@@ -53,7 +52,7 @@ public class JsonController {
         try (FileWriter file = new FileWriter(cheminEnregistrement)) {
             file.write(obj.toJSONString());
         } catch (IOException e) {
-            e.printStackTrace();
+        	ApplicationController.erreur("erreur dans l'ecriture du fichier .res", "veuiller verifier si vous avez les droit d'écriture dans le dossier de destination");
         }
 
         System.out.print(obj);

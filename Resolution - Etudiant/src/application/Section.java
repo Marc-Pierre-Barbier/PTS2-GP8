@@ -77,7 +77,4 @@ public class Section {
 	public String getTimeCode() {
 		return SectionTimeCode;
 	}
-	/*public Section(TabPane tabPane,TabPane sectionsTimeCodePane) {
-		this(tabPane,sectionsTimeCodePane);
-	}*/
 }
