@@ -52,7 +52,6 @@ public class ApplicationController extends Main{
 	private CheckBox affichageSolution;
 	@FXML
 	private CheckBox checklimite;
-	private boolean checklimitestatus=true;
 	@FXML
 	private RadioButton modeEvaluation;
 	@FXML
@@ -135,9 +134,8 @@ public class ApplicationController extends Main{
 	}
 
 	public void timeHandle() {
-		checklimitestatus=!checklimitestatus;
-		timefieldh.setDisable(!checklimitestatus);
-		timefieldm.setDisable(!checklimitestatus);
+		timefieldh.setDisable(!checklimite.isSelected());
+		timefieldm.setDisable(!checklimite.isSelected());
 	}
 	
 	public void interactionVideo() {
@@ -152,6 +150,13 @@ public class ApplicationController extends Main{
 		}
 	}
 	
+	public void handleRadialA() {
+		modeEvaluation.setSelected(!modeApprentissage.isSelected());
+	}
+	public void handleRadialE() {
+		modeApprentissage.setSelected(!modeEvaluation.isSelected());
+	}
+	
 	public void stopVideo() {
 		interactionVideoBtn.setText("Jouer");
 		mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStopTime());
@@ -160,7 +165,7 @@ public class ApplicationController extends Main{
 	
 
 	public void sauvegarderExercice() {
-		if(!checklimitestatus)time = "00:00:00";
+		if(!checklimite.isSelected())time = "00:00:00";
 		else {
 			if(timefieldh.getText().length() == 1)timefieldh.setText("0"+timefieldh.getText());
 			if(timefieldm.getText().length() == 1)timefieldm.setText("0"+timefieldm.getText());
@@ -193,7 +198,7 @@ public class ApplicationController extends Main{
 	    		String videoformat = "";
 	    		final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
 	    		for (int i=medialength-4 ; i<medialength ;i++)videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); //on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
-	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), videoformat, time);
+	    		JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(),consigne.getText(), videoformat, time);
 	    	
 				try {
 					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
@@ -207,7 +212,7 @@ public class ApplicationController extends Main{
 				}
 	    	}/*else {
 
-	    		//je le remplace par un msg d'erreur sa ne fait pas de sens d'enregistrer le doc sans video
+	    		//je le remplace par un msg d'erreur sa ne fait pas de sens d'enregistrer le doc sans video et par consequent aucune section
 	    		//JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),".res"), titre.getText(), null, sensibiliteCase.isSelected(), modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(), modeEvaluation.isSelected(), consigne.getText(), null, time);
 	    	}*///le msg se trouve avant le file chooser
 

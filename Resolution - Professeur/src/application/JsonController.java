@@ -8,7 +8,7 @@ import org.json.simple.JSONObject;
 public class JsonController {
 		
 	@SuppressWarnings("unchecked")
-	public static void JSONCreation(String cheminEnregistrement, Object title, List<Section> sections, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet, boolean solution, boolean modeEvaluation, String consigne, String cheminVideo, String limiteTemps) {
+	public static void JSONCreation(String cheminEnregistrement, Object title, List<Section> sections, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet, boolean solution, String consigne, String cheminVideo, String limiteTemps) {
 		
 		/*
 		 *  JSON 
@@ -23,7 +23,7 @@ public class JsonController {
         obj.put("modeApprentissage", modeApprentissage);
         obj.put("motIncomplet", motIncomplet);
         obj.put("affichageSolution", solution);
-        obj.put("modeEvaluation", modeEvaluation);
+        //obj.put("modeEvaluation", modeEvaluation); inutile de le mettre on a que 2 mode
         obj.put("consigne", consigne);
         obj.put("cheminVideo", cheminVideo);
         obj.put("limiteTemps", limiteTemps);

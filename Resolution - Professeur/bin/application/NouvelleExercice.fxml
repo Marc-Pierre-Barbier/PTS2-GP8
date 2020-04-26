@@ -124,7 +124,7 @@
                            <VBox.margin>
                               <Insets top="15.0" />
                            </VBox.margin></CheckBox>
-                        <RadioButton fx:id="modeApprentissage" mnemonicParsing="false" text="Mode apprentissage">
+                        <RadioButton fx:id="modeApprentissage" mnemonicParsing="false" onAction="#handleRadialA" selected="true" text="Mode apprentissage">
                            <padding>
                               <Insets top="5.0" />
                            </padding></RadioButton>
@@ -136,12 +136,12 @@
                                        <padding>
                                           <Insets top="5.0" />
                                        </padding></CheckBox>
-                                    <CheckBox fx:id="affichageSolution" mnemonicParsing="false" prefHeight="26.0" prefWidth="236.0" text="Autoriser l'affichage de la solution" />
+                                    <CheckBox fx:id="affichageSolution" mnemonicParsing="false" prefHeight="26.0" prefWidth="271.0" text="Autoriser l'affichage de la solution" />
                                  </children>
                               </VBox>
                            </right>
                         </BorderPane>
-                        <RadioButton fx:id="modeEvaluation" mnemonicParsing="false" text="Mode evaluation" />
+                        <RadioButton fx:id="modeEvaluation" mnemonicParsing="false" onAction="#handleRadialE" text="Mode evaluation" />
                      </children>
                   </VBox>
                   <BorderPane prefHeight="174.0" prefWidth="168.0">

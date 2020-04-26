@@ -42,6 +42,7 @@ public class ApplicationController extends Main{
 	private final String DEFAULT_EXTENSION_FILE = ".res";
 	protected static final String CARACTERE_OCULTATION = "*";
 	protected static final String CARACTERE_NON_OCULTER= ";.,!? ";
+	private boolean sensibiliteCase = false;
 	private List<Section> sections;
 	@FXML
 	private Text titre;
@@ -86,7 +87,7 @@ public class ApplicationController extends Main{
 	            titre.setText((String) jsonObject.get("titre"));
 	            consigne.setText((String) jsonObject.get("consigne"));
 	            String formatvideo = (String) jsonObject.get("cheminVideo");
-	            
+	            sensibiliteCase = (boolean) jsonObject.get("sensibiliteCase");
 	            String limiteTemps = (String)jsonObject.get("limiteTemps");
 	            if(!(limiteTemps.equals("00:00:00"))) {
 	            	tempsTotal = LocalTime.parse(limiteTemps);
@@ -222,7 +223,7 @@ public class ApplicationController extends Main{
 				if( i+j >= texteATrouver.length()) break;
 				char letter = texteATrouver.charAt(i+j);
 				char letterTextTry = proposition.getText().charAt(j);
-				if(letter == letterTextTry) {
+				if(sensibiliteCase && letter == letterTextTry || !sensibiliteCase && (letter+"").toLowerCase() == (letterTextTry+"").toLowerCase()) {
 					
 				 if(j == proposition.getText().length() - 1 && CARACTERE_NON_OCULTER.contains(""+texteCache.charAt(i+j+1))){
 					StringBuilder textAtFoundHideB = new StringBuilder(texteCache);
