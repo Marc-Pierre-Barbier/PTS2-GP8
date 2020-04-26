@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javafx.beans.InvalidationListener;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -64,12 +65,18 @@ public class ApplicationController extends Main{
 	private Slider progression;
 	@FXML
 	private TabPane TabPaneExo;
-	
+	@FXML
+	private Button validerbtn;
+	@FXML 
+	private Button solutionBoutton;
+	private boolean solutionVisible = false;
+	private String solutionStringMem = "";
+	private String CachéStringMem = "";
 	private boolean videoChargee = false;
-
+	private int indexSoluce = 0;
 	private LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	private boolean chronometrer = false;
-	
+	private boolean motincomplet = false;
 	
 	
 	public void ouvrirUnExercice() throws ParseException, InterruptedException {
@@ -89,6 +96,32 @@ public class ApplicationController extends Main{
 	            String formatvideo = (String) jsonObject.get("cheminVideo");
 	            sensibiliteCase = (boolean) jsonObject.get("sensibiliteCase");
 	            String limiteTemps = (String)jsonObject.get("limiteTemps");
+	            motincomplet = (boolean )jsonObject.get("motIncomplet");
+	            if(!(boolean)jsonObject.get("affichageSolution")) {
+	            	solutionBoutton.setDisable(true);
+	            }
+	            solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						solutionVisible=!solutionVisible;
+						validerbtn.setDisable(solutionVisible);
+						proposition.setDisable(solutionVisible);
+						//TabPaneExo.setDisable(solutionVisible);
+						Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
+						if(solutionVisible) {
+							indexSoluce=TabPaneExo.getSelectionModel().getSelectedIndex();
+							solutionStringMem = s.getTextATrouver();
+							CachéStringMem = s.getTextvideo().getText();
+							s.getTextvideo().setText(solutionStringMem);
+							solutionStringMem="";
+						}else {
+							TabPaneExo.getSelectionModel().clearAndSelect(indexSoluce);
+							s.getTextvideo().setText(CachéStringMem);
+							CachéStringMem="";
+						}
+					}
+				});
 	            if(!(limiteTemps.equals("00:00:00"))) {
 	            	tempsTotal = LocalTime.parse(limiteTemps);
 	            	//int hours = Integer.parseInt(limiteTemps.charAt(0) + limiteTemps.charAt(1) +"");

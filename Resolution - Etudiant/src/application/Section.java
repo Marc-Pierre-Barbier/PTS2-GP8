@@ -45,14 +45,23 @@ public class Section {
         	}
 		}
         System.out.println(texteCache);
-        texteVideo = new TextArea(texteCache);
+        texteVideo = new TextArea(texteCache) {
+        	@Override
+        	public void copy() {
+        		System.out.println("tu va pas triché quand meme !");
+        	}
+        };
         vbox.getChildren().addAll(texte,texteVideo,aide,aideVideo);
 	}
 
 	public int getidTab(){
 		return idTab;
 	}
-	
+	/**
+	 * retourne le texte crypté
+	 * 
+	 * @return
+	 */
 	public TextArea getTextvideo() {
 		return texteVideo;
 	}

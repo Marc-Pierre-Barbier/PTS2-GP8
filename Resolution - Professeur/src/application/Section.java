@@ -54,7 +54,7 @@ public class Section {
 	public int getidTab(){
 		return idTab;
 	}
-	
+
 	public String getText() {
 		return texteVideo.getText();
 	}

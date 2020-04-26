@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.media.MediaView?> 
+<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1142.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ApplicationController">
@@ -51,14 +51,14 @@
                   <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="635.0" />
                   <BorderPane prefHeight="140.0" prefWidth="431.0">
                      <right>
-                        <Button mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
+                        <Button fx:id="solutionBoutton" mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets right="10.0" />
                            </BorderPane.margin>
                         </Button>
                      </right>
                      <center>
-                        <Button mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
+                        <Button fx:id="validerbtn" mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets left="125.0" />
                            </BorderPane.margin>
