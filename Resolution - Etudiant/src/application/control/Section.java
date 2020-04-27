@@ -1,4 +1,4 @@
-package application;
+package application.control;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -21,6 +21,7 @@ public class Section {
 	
 	
 	public Section(TabPane parent,String SectionAide,String SectionText,String SectionTimeCode) {
+		//TODO l'aide doit se superposer au texe et la solution doit bloquer la section
 		nbtab++;
 		idTab=nbtab;
 		Section = new Tab("Section "+nbtab);
@@ -29,6 +30,7 @@ public class Section {
 		aide = new Text("aide");
 		aideVideo = new TextArea(SectionAide);
 		aideVideo.setMaxHeight(100);
+		aideVideo.setEditable(false);
 		Section.setContent(vbox);
 		
 		parent.getTabs().add(Section);
