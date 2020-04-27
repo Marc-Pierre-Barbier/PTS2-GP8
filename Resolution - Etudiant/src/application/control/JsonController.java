@@ -97,7 +97,8 @@ public class JsonController {
 					ApplicationController.tempsTotal = LocalTime.parse("00:00:00");
 					ApplicationController.chronometrer = false;
 				}
-
+				TabPaneExo.getTabs().clear();
+				Section.reset();
 				for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
 					sections.add(new Section(TabPaneExo, (String) jsonObject.get("SectionAide" + i),
 							(String) jsonObject.get("SectionText" + i),

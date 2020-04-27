@@ -1,40 +1,21 @@
 package application.control;
 
-import javafx.scene.control.Tab;
+import application.model.SectionModel;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 public class Section {
 	public static int nbtab = 0;
 	private int idTab;
-	private Tab Section;
-	private VBox vbox;
-	private Text texte;
-	private TextArea texteVideo;
-	private Text aide;
-	private TextArea aideVideo;
 	private String SectionTimeCode;
 	private String SectionText = "";
 	private String texteCache = "";
+	private SectionModel secMod;
 	
-	
-	public Section(TabPane parent,String SectionAide,String SectionText,String SectionTimeCode) {
+	public Section(TabPane parent,String sectionAide,String SectionText,String SectionTimeCode) {
 		//TODO l'aide doit se superposer au texe et la solution doit bloquer la section
 		nbtab++;
 		idTab=nbtab;
-		Section = new Tab("Section "+nbtab);
-		vbox = new VBox();
-		texte = new Text("texte");
-		aide = new Text("aide");
-		aideVideo = new TextArea(SectionAide);
-		aideVideo.setMaxHeight(100);
-		aideVideo.setEditable(false);
-		Section.setContent(vbox);
-		
-		parent.getTabs().add(Section);
-		
 		this.SectionTimeCode = SectionTimeCode;
 		this.SectionText=SectionText;
 		
@@ -45,17 +26,16 @@ public class Section {
         		texteCache += SectionText.charAt(i);
         	}
 		}
+        
+        secMod = new SectionModel(parent,texteCache, nbtab, sectionAide);
         System.out.println(texteCache);
-        texteVideo = new TextArea(texteCache) {
-        	@Override
-        	public void copy() {
-        		System.out.println("tu va pas triché quand meme !");
-        	}
-        };
-        vbox.getChildren().addAll(texte,texteVideo,aide,aideVideo);
-        texteVideo.setEditable(false);
+        
 	}
 
+	public static void reset() {
+		nbtab=0;
+	}
+	
 	public int getidTab(){
 		return idTab;
 	}
@@ -65,7 +45,7 @@ public class Section {
 	 * @return
 	 */
 	public TextArea getTextvideo() {
-		return texteVideo;
+		return secMod.getTextvideo();
 	}
 	
 	public String getTextATrouver() {
@@ -73,7 +53,7 @@ public class Section {
 	}
 	
 	public String getAide() {
-		return aideVideo.getText();
+		return secMod.getAide();
 	}
 	
 	public String getTimeCode() {
