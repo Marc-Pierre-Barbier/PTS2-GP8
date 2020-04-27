@@ -1,4 +1,4 @@
-package application;
+package application.control;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,22 +15,20 @@ import java.util.Optional;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
+import application.model.ErreurModel;
+import application.model.SectionTab;
+import application.view.Main;
 import javafx.beans.InvalidationListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.media.Media;
@@ -87,42 +85,36 @@ public class ApplicationController extends Main {
 
 	private boolean videoChargee = false;
 
-	private Tab sectionsTabNEW = new Tab("+");
-	private Button btnNewSection = new Button("nouvelle section");
-
 	public void nouvelleExercice() throws IOException {
 		System.out.println("Création d'un exercice");
 		super.setHauteur(720);
 		super.setLargeur(910);
-		super.chargerUnePage("NouvelleExercice.fxml");
+		super.chargerUnePage("../model/NouvelleExercice.fxml");
 	}
 
 	public void nouvelleExerciceMenu() throws IOException {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation");
-		alert.setHeaderText(
-				"/!\\ la création/ouverture d'un nouvelle exo va entrainer le suppretion de toutes donné non sauvegarder");
-		alert.setContentText("cliquer sur ok pour continuer quand meme");
-
+		Alert alert = ErreurModel.warn("Confirmation", "/!\\ la création/ouverture d'un nouvelle exo va entrainer le suppretion de toutes donné non sauvegarder"
+				, "cliquer sur ok pour continuer quand meme");
+		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.isPresent() && result.get() == ButtonType.OK) {
-			chargerUnePage("NouvelleExercice.fxml");
+			chargerUnePage("../model/NouvelleExercice.fxml");
 			sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
-			if(mediaPlayer != null) {
+			if (mediaPlayer != null) {
 				mediaPlayer.stop();
-				mediaView.setMediaPlayer(null);;
+				mediaView.setMediaPlayer(null);
 			}
 			Section.reset();
 			sectionsTabPane.getTabs().clear();
 			sectionsTimeCodePane.getTabs().clear();
 			setupbtn();
-			videoChargee=false;
+			videoChargee = false;
 			aucuneVideoChargee.setVisible(true);
 		}
 
 	}
-	
-	public void ouvrir() throws IOException, InterruptedException {
+
+	public void ouvrir() throws IOException {
 		sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
 		if (mediaPlayer != null)
 			mediaPlayer.pause();
@@ -147,8 +139,8 @@ public class ApplicationController extends Main {
 				sensibiliteCase.setSelected((boolean) jsonObject.get("sensibiliteCase"));
 				String limiteTemps = (String) jsonObject.get("limiteTemps");
 				time = limiteTemps;
-				timefieldh.setText(limiteTemps.charAt(0) +""+ limiteTemps.charAt(1));
-				timefieldm.setText(limiteTemps.charAt(3) +""+ limiteTemps.charAt(4));
+				timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
+				timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
 
 				sections = new ArrayList<>();
 				for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
@@ -163,7 +155,7 @@ public class ApplicationController extends Main {
 				mediaView.setVisible(videoChargee);
 				motIncomplet.setSelected((boolean) jsonObject.get("motIncomplet"));
 			} catch (Exception e) {
-				erreur("fichier introuvable ou endomager", "votre fichier d'exercice est introuve ou a éte endomager");
+				ErreurModel.erreur("fichier introuvable ou endomager", "votre fichier d'exercice est introuve ou a éte endomager");
 			}
 		}
 
@@ -173,7 +165,7 @@ public class ApplicationController extends Main {
 		sections = new ArrayList<>();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"),
-				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("All", "*"));
+				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("*.avi", "*.avi"),new FileChooser.ExtensionFilter("All", "*"));
 		fileChooser.setTitle("Ouvrir une vidéo/audio");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
@@ -213,18 +205,15 @@ public class ApplicationController extends Main {
 				public void handle(Event event) {
 					double newValue = progression.getValue();
 					mediaPlayer.seek(
-							new Duration(1000 * (double) newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
+							new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
 				}
 			});
 		}
 	}
-	
+
 	public void setupbtn() {
 		sectionsTabPane.getTabs().clear();
-		sectionsTimeCodePane.getTabs().clear();
-		sectionsTabPane.getTabs().add(sectionsTabNEW);
-		sectionsTabNEW.setContent(btnNewSection);
-		btnNewSection.setOnAction(e -> sections.add(new Section(sectionsTabPane, sectionsTimeCodePane)));
+		SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
 	}
 
 	public void timeHandle() {
@@ -284,7 +273,7 @@ public class ApplicationController extends Main {
 		}
 
 		if (!videoChargee) {
-			erreur("aucune video trouver", "vous devez mettre une video avant de sauvegarder");
+			ErreurModel.erreur("aucune video trouver", "vous devez mettre une video avant de sauvegarder");
 			return;
 		}
 		final FileChooser dialog = new FileChooser();
@@ -296,11 +285,8 @@ public class ApplicationController extends Main {
 				String videoformat = "";
 				final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
 				for (int i = medialength - 4; i < medialength; i++)
-					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); // on sauvegarde que le
-																								// format car on copie
-																								// la video avec le
-																								// fichier pour rendre
-																								// le tout transportable
+					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); 
+				// on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
 				JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
 						sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(),
 						motIncomplet.isSelected(), affichageSolution.isSelected(), consigne.getText(), videoformat,
@@ -312,9 +298,9 @@ public class ApplicationController extends Main {
 					Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				} catch (URISyntaxException e1) {
-					erreur("erreur URI", "le chemin d'acces de la vidéo est éroné veuiller le redéfinir");
+					ErreurModel.erreur("erreur URI", "le chemin d'acces de la vidéo est éroné veuiller le redéfinir");
 				} catch (IOException e) {
-					erreur("erreur copie",
+					ErreurModel.erreur("erreur copie",
 							"une erreur dans la copie est survenue veuiller verifier si vous avez les droit dans le dossier de destination et verifier sur vous avez sufisament d'espace libre (le poids de votre video defini la place nessecaire)");
 				}
 			} /*
@@ -350,23 +336,18 @@ public class ApplicationController extends Main {
 		} else {
 			return chemin + format;
 		}
-
 	}
 
-	public void chargerExercice() {
-		System.out.println("Chargement d'un exercice");
+	
+	//TODO chager exo
+	public void chargerExercice() throws Exception {
+		//nouvelleExercice();
+		// ouvrir(); bien sur ce n'est pas possible de les enchainer
+
 	}
 
 	public int onSelectNumber() {
 		return 0;
-	}
-
-	public static void erreur(String entete, String contenu) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Erreur");
-		alert.setHeaderText(entete);
-		alert.setContentText(contenu);
-		alert.showAndWait();
 	}
 
 }

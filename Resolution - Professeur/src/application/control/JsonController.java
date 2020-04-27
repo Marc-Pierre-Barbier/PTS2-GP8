@@ -1,9 +1,11 @@
-package application;
+package application.control;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import org.json.simple.JSONObject;
+
+import application.model.ErreurModel;
 
 public class JsonController {
 		
@@ -23,7 +25,7 @@ public class JsonController {
         obj.put("modeApprentissage", modeApprentissage);
         obj.put("motIncomplet", motIncomplet);
         obj.put("affichageSolution", solution);
-        //obj.put("modeEvaluation", modeEvaluation); inutile de le mettre on a que 2 mode
+        //obj.put("modeEvaluation", modeEvaluation); inutile de le mettre on a que 2 mode car modeEvaluation=!modeEtudiant
         obj.put("consigne", consigne);
         obj.put("cheminVideo", cheminVideo);
         obj.put("limiteTemps", limiteTemps);
@@ -52,7 +54,7 @@ public class JsonController {
         try (FileWriter file = new FileWriter(cheminEnregistrement)) {
             file.write(obj.toJSONString());
         } catch (IOException e) {
-        	ApplicationController.erreur("erreur dans l'ecriture du fichier .res", "veuiller verifier si vous avez les droit d'écriture dans le dossier de destination");
+        	ErreurModel.erreur("erreur dans l'ecriture du fichier .res", "veuiller verifier si vous avez les droit d'écriture dans le dossier de destination");
         }
 
         System.out.print(obj);

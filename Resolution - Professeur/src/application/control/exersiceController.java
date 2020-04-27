@@ -1,4 +1,4 @@
-package application;
+package application.control;
 
 import java.util.Optional;
 
