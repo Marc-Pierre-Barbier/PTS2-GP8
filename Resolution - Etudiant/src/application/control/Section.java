@@ -2,32 +2,34 @@ package application.control;
 
 import application.model.SectionModel;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 
 public class Section {
 	public static int nbtab = 0;
 	private int idTab;
-	private String SectionTimeCode;
-	private String SectionText = "";
-	private String texteCache = "";
+	private String sectionTimeCode;
+	private String sectionText; //le texte non caché
+	private String texteCache;  //le texte avec la reponse de l'éleve + char masqué
+	private String sectionAide;
 	private SectionModel secMod;
+	private boolean locked = false;
+	private boolean help = false;
 	
-	public Section(TabPane parent,String sectionAide,String SectionText,String SectionTimeCode) {
-		//TODO l'aide doit se superposer au texe et la solution doit bloquer la section
+	public Section(TabPane parent,String sectionAide,String sectionText,String sectionTimeCode) {
 		nbtab++;
 		idTab=nbtab;
-		this.SectionTimeCode = SectionTimeCode;
-		this.SectionText=SectionText;
-		
-        for (int i = 0; i < SectionText.length(); i++) {
-        	if(!ApplicationController.CARACTERE_NON_OCULTER.contains(SectionText.charAt(i)+"")) {
+		this.sectionTimeCode = sectionTimeCode;
+		this.sectionText=sectionText;
+		this.sectionAide=sectionAide;
+		texteCache="";
+        for (int i = 0; i < sectionText.length(); i++) {
+        	if(!ApplicationController.CARACTERE_NON_OCULTER.contains(sectionText.charAt(i)+"")) {
         		texteCache += ApplicationController.CARACTERE_OCULTATION;
         	}else {
-        		texteCache += SectionText.charAt(i);
+        		texteCache += sectionText.charAt(i);
         	}
 		}
         
-        secMod = new SectionModel(parent,texteCache, nbtab, sectionAide);
+        secMod = new SectionModel(parent,texteCache, nbtab);
         System.out.println(texteCache);
         
 	}
@@ -44,12 +46,9 @@ public class Section {
 	 * 
 	 * @return
 	 */
-	public TextArea getTextvideo() {
-		return secMod.getTextvideo();
-	}
 	
 	public String getTextATrouver() {
-		return SectionText;
+		return sectionText;
 	}
 	
 	public String getAide() {
@@ -57,6 +56,44 @@ public class Section {
 	}
 	
 	public String getTimeCode() {
-		return SectionTimeCode;
+		return sectionTimeCode;
+	}
+
+	public String getTexteCache() {
+		return texteCache;
+	}
+	
+	public void setTexteCache(String texteCache) {
+		this.texteCache = texteCache;
+		if(!help && !locked)secMod.getTextvideo().setText(texteCache);
+	}
+	
+	public void switchHelpStatus() {
+		if(!locked) {
+			System.out.println("help ed");
+			help=!help;
+			if(help) {
+				secMod.getTextvideo().setText(sectionAide);
+			}else {
+				secMod.getTextvideo().setText(texteCache);
+			}
+		}
+	}
+	
+	public boolean isHelp() {
+		return help;
+	}
+	
+	
+	/**
+	 * empeche toute modification des champs pour l'affichage de la solution
+	 */
+	public void lock() {
+		locked = true;
+		secMod.getTextvideo().setText(sectionText);
+	}
+	
+	public boolean islocked() {
+		return locked;
 	}
 }

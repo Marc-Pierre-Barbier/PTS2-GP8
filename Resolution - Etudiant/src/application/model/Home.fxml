@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.GridPane?> 
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
@@ -23,8 +23,8 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1142.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="635.0" minWidth="10.0" prefWidth="611.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" prefWidth="340.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="639.0" minWidth="10.0" prefWidth="639.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" prefWidth="503.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="451.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
@@ -50,20 +50,23 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
                   <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="635.0" />
                   <BorderPane prefHeight="140.0" prefWidth="431.0">
-                     <right>
-                        <Button fx:id="solutionBoutton" mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets right="10.0" />
-                           </BorderPane.margin>
-                        </Button>
-                     </right>
-                     <center>
+                     <left>
                         <Button fx:id="validerbtn" mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
                            <BorderPane.margin>
                               <Insets left="125.0" />
                            </BorderPane.margin>
                         </Button>
+                     </left>
+                     <center>
+                        <Button fx:id="solutionBoutton" mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets right="10.0" />
+                           </BorderPane.margin>
+                        </Button>
                      </center>
+                     <right>
+                        <Button fx:id="AideBtn" mnemonicParsing="false" text="Aide" BorderPane.alignment="CENTER" />
+                     </right>
                   </BorderPane>
                </children>
             </FlowPane>
@@ -95,21 +98,20 @@
                      <HBox.margin>
                         <Insets left="5.0" right="-195.0" />
                      </HBox.margin></Slider>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="150.0" fitWidth="182.0" pickOnBounds="true" preserveRatio="true" />
                   <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" text="Stop">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </Button>
-                  <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" text="Plein écran" />
-                  <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../Desktop/Cours/PTS2/Image/volume.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="15.0" />
-                     </HBox.margin>
-                  </ImageView>
+                  <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" text="Plein écran">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@IconePleinEcran.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                </children>
             </HBox>
          </children>

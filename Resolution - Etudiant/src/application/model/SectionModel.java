@@ -15,14 +15,10 @@ public class SectionModel {
 	private TextArea aideVideo;
 	
 	
-	public SectionModel(TabPane parent,String texteCache,int nbtab,String sectionAide) {
+	public SectionModel(TabPane parent,String texteCache,int nbtab) {
 		Section = new Tab("Section "+nbtab);
 		vbox = new VBox();
 		texte = new Text("texte");
-		aide = new Text("aide");
-		aideVideo = new TextArea(sectionAide);
-		aideVideo.setMaxHeight(100);
-		aideVideo.setEditable(false);
 		Section.setContent(vbox);
 		texteVideo = new TextArea(texteCache) {
         	@Override
@@ -33,7 +29,7 @@ public class SectionModel {
         
         texteVideo.setEditable(false);
 		parent.getTabs().add(Section);
-		vbox.getChildren().addAll(texte,texteVideo,aide,aideVideo);
+		vbox.getChildren().addAll(texte,texteVideo);
 	}
 	
 	public TextArea getTextvideo() {

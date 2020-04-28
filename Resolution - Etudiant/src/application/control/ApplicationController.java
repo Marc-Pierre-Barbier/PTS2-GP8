@@ -1,16 +1,11 @@
 package application.control;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import application.vue.Main;
@@ -33,7 +28,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 public class ApplicationController extends Main {
@@ -68,11 +62,11 @@ public class ApplicationController extends Main {
 	private Button validerbtn;
 	@FXML
 	private Button solutionBoutton;
-	private boolean solutionVisible = false;
-	private String solutionStringMem = "";
-	private String CachéStringMem = "";
+	@FXML
+	private Button AideBtn;
+
 	private boolean videoChargee = false;
-	private int indexSoluce = 0;
+	// private int indexSoluce = 0;
 	protected static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	protected static boolean chronometrer = false;
 	protected static boolean motincomplet = false;
@@ -84,22 +78,24 @@ public class ApplicationController extends Main {
 		solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				solutionVisible = !solutionVisible;
-				validerbtn.setDisable(solutionVisible);
-				proposition.setDisable(solutionVisible);
-				// TabPaneExo.setDisable(solutionVisible);
 				Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
-				if (solutionVisible) {
-					indexSoluce = TabPaneExo.getSelectionModel().getSelectedIndex();
-					solutionStringMem = s.getTextATrouver();
-					CachéStringMem = s.getTextvideo().getText();
-					s.getTextvideo().setText(solutionStringMem);
-					solutionStringMem = "";
-				} else {
-					TabPaneExo.getSelectionModel().clearAndSelect(indexSoluce);
-					s.getTextvideo().setText(CachéStringMem);
-					CachéStringMem = "";
-				}
+				s.lock();
+			}
+			
+		});
+		proposition.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.ENTER) {
+                	chercherMot();
+                }
+            }
+        });
+		AideBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
+				s.switchHelpStatus();
 			}
 		});
 
@@ -172,6 +168,8 @@ public class ApplicationController extends Main {
 	public void chercherMot() {
 		Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
 
+		if (s.islocked() || s.isHelp())return; // on le cherche pas si c'est lock ou dans l'aide
+
 		System.out.println("Lancement d'une recherche");
 		System.out.println(s.getTextATrouver().length());
 		System.out.println(s.getTextATrouver());
@@ -199,7 +197,7 @@ public class ApplicationController extends Main {
 
 	public void chercherMotSplt(Section s) {
 		String texteATrouver = s.getTextATrouver();
-		String texteCache = s.getTextvideo().getText() + " ";
+		String texteCache = s.getTexteCache() +" ";
 		int index = 0;
 		for (char c : texteATrouver.toCharArray()) {
 			if (proposition.getText().charAt(0) == c
@@ -244,7 +242,7 @@ public class ApplicationController extends Main {
 			index++;
 		}
 
-		s.getTextvideo().setText(texteCache);
+		s.setTexteCache(texteCache);
 	}
 
 	public static void lockAll() {

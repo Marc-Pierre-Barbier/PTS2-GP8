@@ -2,14 +2,11 @@ package application.control;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.time.LocalTime;
-import java.util.Base64;
 import java.util.List;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -27,7 +24,8 @@ public class JsonController {
 	private static final String DEFAULT_EXTENSION_FILE = ".res";
 	
 	public void jSONCreation() {
-		System.out.println("Lancement");
+		//TODO acoder
+		/*System.out.println("Lancement");
 		JSONObject obj = new JSONObject();
         obj.put("name", "mkyong.com");
         obj.put("age", 100);
@@ -49,7 +47,7 @@ public class JsonController {
             e.printStackTrace();
         }
 
-        System.out.print(obj);
+        System.out.print(obj);*/
 	}
 	/**
 	 * c'est un reader simpler mais /!\ il retourne le chemin video

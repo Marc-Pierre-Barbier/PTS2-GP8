@@ -10,13 +10,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static Stage stage;
-	public static AnchorPane pagePrincipale;
-	public static AnchorPane pane;
+	protected static Stage stage;
+	protected static AnchorPane pagePrincipale; //le static es essenciel sinon sa print une erreur sur chargerUnePage
+	protected AnchorPane pane;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			pagePrincipale = FXMLLoader.load(getClass().getResource("../model/MenuPrincipal.fxml"));
+			System.out.println(getClass().getResource("/application/model/MenuPrincipal.fxml"));
+			pagePrincipale = FXMLLoader.load(getClass().getResource("/application/model/MenuPrincipal.fxml"));
+			
+			//pagePrincipale = FXMLLoader.load(getClass().getResource("../model/MenuPrincipal.fxml"));
 			Scene scene = new Scene(pagePrincipale, 450, 450);
 			primaryStage.setTitle("Résolution V1.0 G8 - Professeur");
 			primaryStage.setScene(scene);
@@ -26,6 +29,7 @@ public class Main extends Application {
 			
 		} catch (Exception e) {
 			System.out.println("Au revoir.");
+			e.printStackTrace();
 		}
 	}
 

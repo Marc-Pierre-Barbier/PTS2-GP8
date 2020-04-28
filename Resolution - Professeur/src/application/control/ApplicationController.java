@@ -89,7 +89,7 @@ public class ApplicationController extends Main {
 		System.out.println("Création d'un exercice");
 		super.setHauteur(720);
 		super.setLargeur(910);
-		super.chargerUnePage("../model/NouvelleExercice.fxml");
+		super.chargerUnePage("/application/model/NouvelleExercice.fxml");
 	}
 
 	public void nouvelleExerciceMenu() throws IOException {
@@ -98,7 +98,7 @@ public class ApplicationController extends Main {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.isPresent() && result.get() == ButtonType.OK) {
-			chargerUnePage("../model/NouvelleExercice.fxml");
+			chargerUnePage("/application/model/NouvelleExercice.fxml");
 			sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
 			if (mediaPlayer != null) {
 				mediaPlayer.stop();

@@ -15,8 +15,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			root = FXMLLoader.load(getClass().getResource("../model/Home.fxml"));
-			Scene scene = new Scene(root);
+			root = FXMLLoader.load(getClass().getResource("/application/model/Home.fxml"));
+			Scene scene = new Scene(root, 1142, 656);
 			primaryStage.setTitle("Résolution V1.0 G8 - Etudiant");
 			primaryStage.setScene(scene);
 			primaryStage.show();
