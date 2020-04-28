@@ -30,7 +30,7 @@ public class Section {
 	}
 	
 	public String getAide() {
-		return SecModl.getText();
+		return SecModl.getAide();
 	}
 	
 	public String getTimeCode() {

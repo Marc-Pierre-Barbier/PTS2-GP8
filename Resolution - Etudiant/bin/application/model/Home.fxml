@@ -6,7 +6,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TabPane?> 
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?> 
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
@@ -90,7 +90,7 @@
             </BorderPane>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="506.0">
                <children>
-                  <Button fx:id="interactionVideoBtn" minWidth="65.0" mnemonicParsing="false" onAction="#interactionVideo" text="Jouer">
+                  <Button fx:id="interactionVideoBtn" minWidth="65.0" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="33.0" prefWidth="65.0" text="▸ Jouer">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin></Button>
@@ -99,7 +99,7 @@
                         <Insets left="5.0" right="-195.0" />
                      </HBox.margin></Slider>
                   <ImageView fitHeight="150.0" fitWidth="182.0" pickOnBounds="true" preserveRatio="true" />
-                  <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" text="Stop">
+                  <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" prefHeight="32.0" prefWidth="69.0" text="■  Stop">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -108,7 +108,7 @@
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@IconePleinEcran.png" />
+                              <Image url="@/application/model/IconePleinEcran.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>

@@ -18,8 +18,6 @@ public class Main extends Application {
 		try {
 			System.out.println(getClass().getResource("/application/model/MenuPrincipal.fxml"));
 			pagePrincipale = FXMLLoader.load(getClass().getResource("/application/model/MenuPrincipal.fxml"));
-			
-			//pagePrincipale = FXMLLoader.load(getClass().getResource("../model/MenuPrincipal.fxml"));
 			Scene scene = new Scene(pagePrincipale, 450, 450);
 			primaryStage.setTitle("Résolution V1.0 G8 - Professeur");
 			primaryStage.setScene(scene);

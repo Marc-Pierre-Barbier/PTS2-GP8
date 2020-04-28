@@ -11,7 +11,6 @@ public class SectionModel {
 	private VBox vbox;
 	private Text texte;
 	private TextArea texteVideo;
-	private Text aide;
 	private TextArea aideVideo;
 	
 	

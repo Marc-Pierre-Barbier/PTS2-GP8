@@ -20,6 +20,7 @@ public class Section {
 		this.sectionTimeCode = sectionTimeCode;
 		this.sectionText=sectionText;
 		this.sectionAide=sectionAide;
+		System.out.println(sectionAide);
 		texteCache="";
         for (int i = 0; i < sectionText.length(); i++) {
         	if(!ApplicationController.CARACTERE_NON_OCULTER.contains(sectionText.charAt(i)+"")) {

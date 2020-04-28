@@ -66,7 +66,6 @@ public class ApplicationController extends Main {
 	private Button AideBtn;
 
 	private boolean videoChargee = false;
-	// private int indexSoluce = 0;
 	protected static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	protected static boolean chronometrer = false;
 	protected static boolean motincomplet = false;

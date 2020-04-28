@@ -87,8 +87,8 @@ public class ApplicationController extends Main {
 
 	public void nouvelleExercice() throws IOException {
 		System.out.println("Création d'un exercice");
-		super.setHauteur(720);
-		super.setLargeur(910);
+		super.setHauteur(666);
+		super.setLargeur(964);
 		super.chargerUnePage("/application/model/NouvelleExercice.fxml");
 	}
 
