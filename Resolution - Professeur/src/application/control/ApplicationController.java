@@ -236,11 +236,16 @@ public class ApplicationController extends Main {
 	public void handleRadialA() {
 		modeApprentissage.setSelected(true);
 		modeEvaluation.setSelected(false);
+		motIncomplet.setDisable(false);
+		affichageSolution.setDisable(false);
 	}
 
 	public void handleRadialE() {
 		modeApprentissage.setSelected(false);
 		modeEvaluation.setSelected(true);
+		motIncomplet.setDisable(true);
+		affichageSolution.setDisable(true);
+		
 	}
 
 	public void stopVideo() {
