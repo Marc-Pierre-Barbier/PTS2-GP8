@@ -36,7 +36,7 @@ public class JsonController {
         		
         		return;
         	}
-        	obj.put("SectionAide"+s.getidTab(),s.getAide());
+        	if(aidestatus)obj.put("SectionAide"+s.getidTab(),s.getAide());
         	obj.put("SectionText"+s.getidTab(),s.getText());
         	obj.put("SectionTimeCode"+s.getidTab(),s.getTimeCode());
         }
