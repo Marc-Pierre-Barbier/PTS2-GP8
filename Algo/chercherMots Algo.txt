@@ -1,0 +1,95 @@
+methode chercherMot()
+Variables
+
+Entier numeroTab,i
+Chaine mot,objectif
+Section s
+
+Debuts
+	numeroTab <- TabPanex.getSelected;
+	s <- sections.get(numeroTab);
+	
+	Si (s.estVerrouille() || s.estLAideOuverte())
+	alors
+		fin
+	finSi
+	
+	ecrire("lancement d'une recherche")
+	
+	s.setText(trim(s.getText))
+	mot = "";
+	objectif = proposition.getText() + " "
+	
+	pour i de 0 a len(objectif) -1 pas 1
+	faire
+		si(mid(objectif,i,i) != " ")
+		alors
+			mot += mid(objectif,i,i)
+		sinon
+			si(mot != null)
+			alors
+				proposition.setText(mot)
+				chercherMotSplt(s)
+				mot=""		
+			finsi
+		finsi
+	finPour
+	proposition.setText("");
+fin
+fin methode
+
+fonction chercherMotSplt(Section s)
+variables
+Chaine texteATrouver , texteCache
+Entier index,indexProp
+Caractére c,prop
+Booléen sensibiliteCase,motincomplet //variables defini dans le coprs de la classe est donc deja rempli
+debuts
+	texteATrouver = s.getTextATrouver();
+	texteCache = s.getTexteCache() +" ";
+	index = 0
+	
+	pour chaque c dans texteAtrouver
+	faire
+		si(mid(proposition.getText(),0,0) == c && len(proposition.getText()) <= len(texteATrouver) - index)
+		alors
+			indexProp = index
+			si(snesibiliteCase)
+			alors
+				pour chaque caractére prop dans proposition.getText()
+				faire
+					si(non prop == mid(TexteATrouver,indexProp,indexProp))
+					alors
+						break
+					sinon
+						indexProp++
+					finsi				
+				finpour
+			sinon
+				pour chaque caractére prop dans proposition.getText()
+				faire
+					si(non minuscule(prop) == minuscule(mid(TexteATrouver,indexProp,indexProp)))
+					alors
+						break
+					sinon
+						indexProp++
+					finsi				
+				finpour
+			finsi
+			ecrire("autorisé les mots incomplets ? : " + motincomplet)
+			si ((indexProp == index + len(proposition.getText) && motincomplet) || 
+								//la condition est trés long donc je l'ai couper en 2 en dessou il y a si les mots incomplet sont autorisé
+								(!motincomplet && texteCache.length() >= indexProp + 1 //onverifier que le texte est >= long comparer a l'index pour eviter de chercher un caractére inexistant
+								&& CARACTERE_NON_OCULTER.contains(mid(texteCache,indexProp,indexProp)) //on verifie que le caractére a la fin de la chaine n'est pas une lettre
+								&& indexProp == len(index + proposition.getText())) 
+			alors
+				mid(texteCache,i,indexProp) = mid(texteATrouver,i,indexProp)
+			finsi
+		sinon
+		
+		finsi
+		index++
+	finPour
+	s.setTexteCache(texteCache)
+fin
+

@@ -6,10 +6,10 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TabPane?> 
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.Image?> 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -65,7 +65,7 @@
                         </Button>
                      </center>
                      <right>
-                        <Button fx:id="AideBtn" mnemonicParsing="false" text="Aide" BorderPane.alignment="CENTER" />
+                        <Button fx:id="aideBtn" mnemonicParsing="false" text="Aide" BorderPane.alignment="CENTER" />
                      </right>
                   </BorderPane>
                </children>

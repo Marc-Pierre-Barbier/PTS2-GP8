@@ -95,13 +95,28 @@ public class JsonController {
 					ApplicationController.tempsTotal = LocalTime.parse("00:00:00");
 					ApplicationController.chronometrer = false;
 				}
+				
+				//ce try catch permet le chargement de sauvegarde de version precedente pre 0.0.10
+				try{
+					ApplicationController.aideAutorisation=(boolean) jsonObject.get("aidestatus");
+				}catch (Exception e) {
+					ApplicationController.aideAutorisation=true;
+				} //on a pas besoin d'actoin la valeur par defaut est suffisante
 				TabPaneExo.getTabs().clear();
 				Section.reset();
-				for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
-					sections.add(new Section(TabPaneExo, (String) jsonObject.get("SectionAide" + i),
-							(String) jsonObject.get("SectionText" + i),
-							(String) jsonObject.get("SectionTimeCode" + i)));
+				if(ApplicationController.aideAutorisation) {
+					for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
+						sections.add(new Section(TabPaneExo, (String) jsonObject.get("SectionAide" + i),
+								(String) jsonObject.get("SectionText" + i),
+								(String) jsonObject.get("SectionTimeCode" + i)));
+					}
+				}else {
+					for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
+						sections.add(new Section(TabPaneExo,(String) jsonObject.get("SectionText" + i),
+								(String) jsonObject.get("SectionTimeCode" + i)));
+					}
 				}
+				
 				return selectedFile.getAbsolutePath().replace(".res", formatvideo);
 			} catch (IOException e) {
 				return "ABORT";

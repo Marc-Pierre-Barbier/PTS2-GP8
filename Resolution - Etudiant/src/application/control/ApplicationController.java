@@ -63,8 +63,8 @@ public class ApplicationController extends Main {
 	@FXML
 	private Button solutionBoutton;
 	@FXML
-	private Button AideBtn;
-
+	private Button aideBtn;
+	protected static boolean aideAutorisation=true;
 	private boolean videoChargee = false;
 	protected static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	protected static boolean chronometrer = false;
@@ -74,6 +74,7 @@ public class ApplicationController extends Main {
 	public void ouvrirUnExercice() throws ParseException, InterruptedException {
 		sections = new ArrayList<>();
 		String cheminVideo = JsonController.JSONReader(titre, consigne, solutionBoutton, sections, TabPaneExo);
+		aideBtn.setDisable(!aideAutorisation);
 		solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -89,7 +90,7 @@ public class ApplicationController extends Main {
                 }
             }
         });
-		AideBtn.setOnAction(new EventHandler<ActionEvent>() {
+		aideBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -261,7 +262,7 @@ public class ApplicationController extends Main {
 		if (chronometrer)
 			Timer(tempsTotal);
 	}
-
+	
 	public void quitter() {
 		System.exit(0);
 	}

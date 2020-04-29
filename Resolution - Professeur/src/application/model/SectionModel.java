@@ -91,4 +91,14 @@ public class SectionModel {
 		limiteTempsM.setText(string);
 		
 	}
+
+	public void disableAide() {
+		aide.setDisable(true);
+		aideVideo.setDisable(true);
+	}
+
+	public void enableAide() {
+		aide.setDisable(false);
+		aideVideo.setDisable(false);
+	}
 }

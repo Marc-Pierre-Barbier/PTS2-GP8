@@ -62,4 +62,15 @@ public class Section {
 	public static void reset() {
 		nbtab=0;
 	}
+
+
+	public void disableAide() {
+		SecModl.disableAide();
+	}
+
+
+	public void enableAide() {
+		SecModl.enableAide();
+		
+	}
 }

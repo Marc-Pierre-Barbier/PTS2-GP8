@@ -19,6 +19,7 @@ import application.model.ErreurModel;
 import application.model.SectionTab;
 import application.view.Main;
 import javafx.beans.InvalidationListener;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -52,6 +53,8 @@ public class ApplicationController extends Main {
 	private TextField timefieldm;
 	@FXML
 	private CheckBox sensibiliteCase;
+	@FXML
+	private CheckBox aideCheckbox;
 	@FXML
 	private RadioButton modeApprentissage;
 	@FXML
@@ -114,6 +117,8 @@ public class ApplicationController extends Main {
 
 	}
 
+	
+	//TODO deplacer le gros de l'ouverture dans JSONController
 	public void ouvrir() throws IOException {
 		sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
 		if (mediaPlayer != null)
@@ -137,6 +142,26 @@ public class ApplicationController extends Main {
 				String formatvideo = (String) jsonObject.get("cheminVideo");
 
 				sensibiliteCase.setSelected((boolean) jsonObject.get("sensibiliteCase"));
+				
+				
+				//ce try catch permet la conversion de sauvegarde de version precedente pre 0.0.10
+				try {
+					aideCheckbox.setSelected((boolean) jsonObject.get("aidestatus"));
+				} catch (Exception e) {
+					aideCheckbox.setSelected(true);
+				}
+				aideCheckbox.setOnAction(new EventHandler<ActionEvent>() {
+					
+					@Override
+					public void handle(ActionEvent arg0) {
+						for(Section s : sections) {
+							if(!aideCheckbox.isSelected())s.disableAide();
+							else s.enableAide();
+						}
+						
+					}
+				});
+				
 				String limiteTemps = (String) jsonObject.get("limiteTemps");
 				time = limiteTemps;
 				timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
@@ -238,6 +263,7 @@ public class ApplicationController extends Main {
 		modeEvaluation.setSelected(false);
 		motIncomplet.setDisable(false);
 		affichageSolution.setDisable(false);
+		aideCheckbox.setDisable(false);
 	}
 
 	public void handleRadialE() {
@@ -245,7 +271,7 @@ public class ApplicationController extends Main {
 		modeEvaluation.setSelected(true);
 		motIncomplet.setDisable(true);
 		affichageSolution.setDisable(true);
-		
+		aideCheckbox.setDisable(true);
 	}
 
 	public void stopVideo() {
@@ -293,7 +319,7 @@ public class ApplicationController extends Main {
 					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); 
 				// on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
 				JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
-						sections, sensibiliteCase.isSelected(), modeApprentissage.isSelected(),
+						sections,aideCheckbox.isSelected() ,sensibiliteCase.isSelected(), modeApprentissage.isSelected(),
 						motIncomplet.isSelected(), affichageSolution.isSelected(), consigne.getText(), videoformat,
 						time);
 
@@ -347,7 +373,7 @@ public class ApplicationController extends Main {
 	//TODO chager exo
 	public void chargerExercice() throws Exception {
 		//nouvelleExercice();
-		// ouvrir(); bien sur ce n'est pas possible de les enchainer
+		// ouvrir(); bien sur ce n'est pas possible de les enchainer et je sais pas comment faire
 
 	}
 
