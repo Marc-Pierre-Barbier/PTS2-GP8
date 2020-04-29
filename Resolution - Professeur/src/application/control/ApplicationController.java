@@ -150,17 +150,6 @@ public class ApplicationController extends Main {
 				} catch (Exception e) {
 					aideCheckbox.setSelected(true);
 				}
-				aideCheckbox.setOnAction(new EventHandler<ActionEvent>() {
-					
-					@Override
-					public void handle(ActionEvent arg0) {
-						for(Section s : sections) {
-							if(!aideCheckbox.isSelected())s.disableAide();
-							else s.enableAide();
-						}
-						
-					}
-				});
 				
 				String limiteTemps = (String) jsonObject.get("limiteTemps");
 				time = limiteTemps;
@@ -224,7 +213,19 @@ public class ApplicationController extends Main {
 					progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100);
 				}
 			});
-
+			
+			aideCheckbox.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent arg0) {
+					for(Section s : sections) {
+						if(!aideCheckbox.isSelected())s.disableAide();
+						else s.enableAide();
+					}
+					
+				}
+			});
+			
 			progression.setOnMouseReleased(new EventHandler<Event>() {
 				@Override
 				public void handle(Event event) {
@@ -248,12 +249,12 @@ public class ApplicationController extends Main {
 
 	public void interactionVideo() {
 		if (videoChargee) {
-			if (interactionVideoBtn.getText().equalsIgnoreCase("Pause")) {
+			if (interactionVideoBtn.getText().equalsIgnoreCase("‖ Pause")) {
 				mediaView.getMediaPlayer().pause();
-				interactionVideoBtn.setText("Lire");
+				interactionVideoBtn.setText("▸ Jouer");
 			} else {
 				mediaView.getMediaPlayer().play();
-				interactionVideoBtn.setText("Pause");
+				interactionVideoBtn.setText("‖ Pause");
 			}
 		}
 	}
