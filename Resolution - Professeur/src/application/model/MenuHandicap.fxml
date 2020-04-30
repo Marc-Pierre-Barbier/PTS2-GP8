@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="374.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="374.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox prefHeight="390.0" prefWidth="407.0" BorderPane.alignment="CENTER">
          <children>
@@ -17,19 +16,19 @@
                <children>
                   <VBox prefHeight="100.0" prefWidth="268.0">
                      <children>
-                        <CheckBox mnemonicParsing="false" text="Agrandissement de la Police">
+                        <CheckBox id="policeChbx" mnemonicParsing="false" text="Agrandissement de la Police">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </CheckBox>
-                        <ComboBox disable="true" prefWidth="150.0" />
+                        <ComboBox id="policeSize" disable="true" prefWidth="150.0" />
                      </children>
                   </VBox>
                </children>
             </HBox>
             <VBox prefHeight="100.0" prefWidth="268.0">
                <children>
-                  <CheckBox mnemonicParsing="false" text="Mode Daltonisme (WIP)">
+                  <CheckBox id="DaltonChbx" mnemonicParsing="false" text="Mode Daltonisme (WIP)">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -42,8 +41,8 @@
    <right>
       <HBox alignment="BOTTOM_CENTER" BorderPane.alignment="BOTTOM_CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Annuler" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Valider" />
+            <Button id="anulerOption" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Annuler" />
+            <Button id="validerOption" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Valider" />
          </children>
       </HBox>
    </right>

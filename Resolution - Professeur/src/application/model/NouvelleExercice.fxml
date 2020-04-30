@@ -7,13 +7,12 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?> 
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextField?> 
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -23,182 +22,188 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="680.0" maxWidth="964.0" prefHeight="670.0" prefWidth="1007.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="437.0" minWidth="10.0" percentWidth="50.0" prefWidth="400.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" percentWidth="50.0" prefWidth="468.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="451.0" minHeight="10.0" percentHeight="15.0" prefHeight="95.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="406.0" minHeight="0.0" percentHeight="60.0" prefHeight="370.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="284.0" minHeight="10.0" percentHeight="25.0" prefHeight="191.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="666.0" prefWidth="964.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="437.0" minWidth="10.0" prefWidth="400.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" prefWidth="468.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="451.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="406.0" minHeight="0.0" prefHeight="370.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="191.0" vgrow="SOMETIMES" />
-         </rowConstraints>
+      <TabPane fx:id="sectionsTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1" />
+      <VBox prefHeight="341.0" prefWidth="446.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <TabPane fx:id="sectionsTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1" />
-            <VBox prefHeight="341.0" prefWidth="446.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
+            <TextField fx:id="consigne" prefHeight="45.0" prefWidth="468.0" promptText="Entrez la consigne de l'exercice..." />
+            <BorderPane prefHeight="268.0" prefWidth="468.0">
+               <center>
+                  <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" scaleX="2.2" BorderPane.alignment="CENTER" />
+               </center>
+               <top>
+                  <Label fx:id="aucuneVideoChargee" text="Aucune vidéo chargée" BorderPane.alignment="CENTER" />
+               </top>
+               <bottom>
+                  <Button id="chosevid" mnemonicParsing="false" onAction="#chargerUneVideoBTN" text="Charger une vidéo" BorderPane.alignment="CENTER" />
+               </bottom>
+               <right>
+                  <Slider fx:id="volume" orientation="VERTICAL" prefHeight="100.0" prefWidth="15.0" value="10.0" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets bottom="-30.0" right="10.0" />
+                     </BorderPane.margin>
+                  </Slider>
+               </right>
+            </BorderPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="394.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
-                  <TextField fx:id="consigne" prefHeight="45.0" prefWidth="468.0" promptText="Entrez la consigne de l'exercice..." />
-                  <BorderPane prefHeight="268.0" prefWidth="468.0">
-                     <center>
-                        <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" scaleX="2.2" BorderPane.alignment="CENTER" />
-                     </center>
-                     <top>
-                        <Label fx:id="aucuneVideoChargee" text="Aucune vidéo chargée" BorderPane.alignment="CENTER" />
-                     </top>
-                     <bottom>
-                        <Button id="chosevid" mnemonicParsing="false" onAction="#chargerUneVideoBTN" text="Charger une vidéo" BorderPane.alignment="CENTER" />
-                     </bottom>
+                  <Button fx:id="interactionVideoBtn" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="32.0" prefWidth="77.0" text=" ▸ Jouer ">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Slider fx:id="progression" prefHeight="16.0" prefWidth="208.0">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Slider>
+                  <Button mnemonicParsing="false" onAction="#stopVideo" prefHeight="30.0" prefWidth="69.0" text="■ Stop">
+                     <HBox.margin>
+                        <Insets left="10.0" right="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="21.0" prefWidth="108.0" text="PleinEcran">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@application/model/IconePleinEcran.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+         <children>
+            <MenuBar prefHeight="26.0" prefWidth="894.0">
+               <menus>
+                  <Menu mnemonicParsing="false" text="Fichier">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#nouvelleExerciceMenu" text="Nouveau" />
+                        <MenuItem mnemonicParsing="false" onAction="#sauvegarderExercice" text="Sauvegarder" />
+                        <MenuItem mnemonicParsing="false" onAction="#ouvrir" text="Ouvrir" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Option">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#optionMenu" text="Option" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Crédits">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="A propos" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Aide">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Manuel d'utilisation" />
+                        <MenuItem mnemonicParsing="false" text="Notre site" />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <BorderPane prefHeight="70.0" prefWidth="881.0">
+               <center>
+                  <TextField fx:id="titre" alignment="CENTER" promptText="Titre de l'exercice..." BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+         </children>
+      </VBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <children>
+            <VBox prefHeight="191.0" prefWidth="292.0">
+               <children>
+                  <CheckBox fx:id="sensibiliteCase" mnemonicParsing="false" text="Sensibilite a la casse">
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </CheckBox>
+                  <RadioButton fx:id="modeApprentissage" mnemonicParsing="false" onAction="#handleRadialA" selected="true" text="Mode apprentissage">
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </RadioButton>
+                  <BorderPane prefHeight="80.0" prefWidth="254.0">
                      <right>
-                        <Slider fx:id="volume" orientation="VERTICAL" prefHeight="100.0" prefWidth="15.0" value="10.0" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets bottom="-30.0" right="10.0" />
-                           </BorderPane.margin>
-                        </Slider>
+                        <VBox prefHeight="80.0" prefWidth="253.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <CheckBox fx:id="motIncomplet" mnemonicParsing="false" text="Mot incomplet(autoriser)">
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </CheckBox>
+                              <CheckBox fx:id="affichageSolution" mnemonicParsing="false" prefHeight="26.0" prefWidth="271.0" text="Autoriser l'affichage de la solution" />
+                              <CheckBox fx:id="aideCheckbox" mnemonicParsing="false" prefHeight="33.0" prefWidth="132.0" text="Ajouter une aide" />
+                           </children>
+                        </VBox>
                      </right>
                   </BorderPane>
-                  <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="394.0">
+                  <RadioButton fx:id="modeEvaluation" mnemonicParsing="false" onAction="#handleRadialE" text="Mode evaluation" />
+               </children>
+            </VBox>
+            <BorderPane prefHeight="174.0" prefWidth="168.0">
+               <top>
+                  <CheckBox fx:id="checklimite" mnemonicParsing="false" onAction="#timeHandle" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" BorderPane.alignment="CENTER" />
+               </top>
+            </BorderPane>
+            <VBox prefHeight="191.0" prefWidth="472.0">
+               <children>
+                  <TabPane fx:id="sectionsTimeCodePane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="interactionVideoBtn" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="32.0" prefWidth="77.0" text=" ▸ Jouer ">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Limite de temps :" textAlignment="CENTER">
                            <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin></Button>
-                        <Slider fx:id="progression" prefHeight="16.0" prefWidth="230.0">
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding></Slider>
-                        <Button mnemonicParsing="false" onAction="#stopVideo" prefHeight="30.0" prefWidth="69.0" text="■ Stop">
+                              <Insets top="20.0" />
+                           </HBox.margin>
+                        </Text>
+                        <TextField fx:id="timefieldh" maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="28.0" text="00">
                            <HBox.margin>
-                              <Insets left="10.0" right="5.0" />
+                              <Insets left="5.0" top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="h">
+                           <HBox.margin>
+                              <Insets left="2.0" top="20.0" />
+                           </HBox.margin>
+                        </Text>
+                        <TextField fx:id="timefieldm" maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="30.0" text="30">
+                           <HBox.margin>
+                              <Insets left="2.0" top="15.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="min">
+                           <HBox.margin>
+                              <Insets left="2.0" top="20.0" />
+                           </HBox.margin>
+                        </Text>
+                        <Button mnemonicParsing="false" onAction="#sauvegarderExercice" text="Sauvegarder">
+                           <HBox.margin>
+                              <Insets left="10.0" top="15.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="21.0" prefWidth="108.0" text="PleinEcran">
-                           <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@application/model/IconePleinEcran.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
+                        <Button mnemonicParsing="false" text="Annuler">
+                           <HBox.margin>
+                              <Insets left="25.0" top="15.0" />
+                           </HBox.margin>
                         </Button>
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
-               <children>
-                  <MenuBar prefHeight="26.0" prefWidth="894.0">
-                     <menus>
-                        <Menu mnemonicParsing="false" text="Fichier">
-                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#nouvelleExerciceMenu" text="Nouveau" />
-                              <MenuItem mnemonicParsing="false" onAction="#sauvegarderExercice" text="Sauvegarder" />
-                              <MenuItem mnemonicParsing="false" onAction="#ouvrir" text="Ouvrir" />
-                           </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Crédits">
-                           <items>
-                              <MenuItem mnemonicParsing="false" text="A propos" />
-                           </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Aide">
-                           <items>
-                              <MenuItem mnemonicParsing="false" text="Manuel d'utilisation" />
-                              <MenuItem mnemonicParsing="false" text="Notre site" />
-                           </items>
-                        </Menu>
-                     </menus>
-                  </MenuBar>
-                  <BorderPane prefHeight="70.0" prefWidth="881.0">
-                     <center>
-                        <TextField fx:id="titre" alignment="CENTER" promptText="Titre de l'exercice..." BorderPane.alignment="CENTER" />
-                     </center>
-                  </BorderPane>
-               </children>
-            </VBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
-               <children>
-                  <VBox prefHeight="191.0" prefWidth="292.0">
-                     <children>
-                        <CheckBox fx:id="sensibiliteCase" mnemonicParsing="false" text="Sensibilite a la casse">
-                           <VBox.margin>
-                              <Insets top="15.0" />
-                           </VBox.margin></CheckBox>
-                        <RadioButton fx:id="modeApprentissage" mnemonicParsing="false" onAction="#handleRadialA" selected="true" text="Mode apprentissage">
-                           <padding>
-                              <Insets top="5.0" />
-                           </padding></RadioButton>
-                        <BorderPane prefHeight="80.0" prefWidth="254.0">
-                           <right>
-                              <VBox prefHeight="80.0" prefWidth="253.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <CheckBox fx:id="motIncomplet" mnemonicParsing="false" text="Mot incomplet(autoriser)">
-                                       <padding>
-                                          <Insets top="5.0" />
-                                       </padding></CheckBox>
-                                    <CheckBox fx:id="affichageSolution" mnemonicParsing="false" prefHeight="26.0" prefWidth="271.0" text="Autoriser l'affichage de la solution" />
-                                    <CheckBox fx:id="aideCheckbox" mnemonicParsing="false" prefHeight="33.0" prefWidth="132.0" text="Ajouter une aide" />
-                                 </children>
-                              </VBox>
-                           </right>
-                        </BorderPane>
-                        <RadioButton fx:id="modeEvaluation" mnemonicParsing="false" onAction="#handleRadialE" text="Mode evaluation" />
-                     </children>
-                  </VBox>
-                  <BorderPane prefHeight="174.0" prefWidth="168.0">
-                     <top>
-                        <CheckBox fx:id="checklimite" mnemonicParsing="false" onAction="#timeHandle" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" BorderPane.alignment="CENTER" />
-                     </top>
-                  </BorderPane>
-                  <VBox prefHeight="191.0" prefWidth="472.0">
-                     <children>
-                        <TabPane fx:id="sectionsTimeCodePane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Limite de temps :" textAlignment="CENTER">
-                                 <HBox.margin>
-                                    <Insets top="20.0" />
-                                 </HBox.margin>
-                              </Text>
-                              <TextField fx:id="timefieldh" maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="28.0" text="00">
-                                 <HBox.margin>
-                                    <Insets left="5.0" top="15.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="h">
-                                 <HBox.margin>
-                                    <Insets left="2.0" top="20.0" />
-                                 </HBox.margin>
-                              </Text>
-                              <TextField fx:id="timefieldm" maxWidth="40.0" minWidth="40.0" prefHeight="26.0" prefWidth="30.0" text="30">
-                                 <HBox.margin>
-                                    <Insets left="2.0" top="15.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="min">
-                                 <HBox.margin>
-                                    <Insets left="2.0" top="20.0" />
-                                 </HBox.margin>
-                              </Text>
-                              <Button mnemonicParsing="false" onAction="#sauvegarderExercice" text="Sauvegarder">
-                                 <HBox.margin>
-                                    <Insets left="10.0" top="15.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button mnemonicParsing="false" text="Annuler">
-                                 <HBox.margin>
-                                    <Insets left="25.0" top="15.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
          </children>
-      </GridPane>
+      </HBox>
    </children>
-</AnchorPane>
+</GridPane>

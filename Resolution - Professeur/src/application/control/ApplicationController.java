@@ -18,15 +18,18 @@ import org.json.simple.parser.JSONParser;
 import application.model.ErreurModel;
 import application.model.SectionTab;
 import application.view.Main;
+import application.view.Option;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
@@ -44,6 +47,7 @@ public class ApplicationController extends Main {
 	private final String DEFAULT_NAME_EXTENSION = "Résolution";
 	private String time = "00:00:00";
 	private List<Section> sections;
+	private boolean videoChargee = false;
 
 	@FXML
 	private TextField titre;
@@ -86,12 +90,14 @@ public class ApplicationController extends Main {
 	@FXML
 	private Button chosevid;
 
-	private boolean videoChargee = false;
+	private static final int HAUTEUR_FENAITRE=666;
+	private static final int LARGEUR_FENAITRE=964;
+	
 
 	public void nouvelleExercice() throws IOException {
 		System.out.println("Création d'un exercice");
-		super.setHauteur(666);
-		super.setLargeur(964);
+		//setHauteur(666);
+		//setLargeur(964);
 		super.chargerUnePage("/application/model/NouvelleExercice.fxml");
 	}
 
@@ -375,11 +381,33 @@ public class ApplicationController extends Main {
 	public void chargerExercice() throws Exception {
 		//nouvelleExercice();
 		// ouvrir(); bien sur ce n'est pas possible de les enchainer et je sais pas comment faire
+		
+	}
 
+	public void optionMenu() {
+		try {
+			new Option();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("option");
 	}
 
 	public int onSelectNumber() {
 		return 0;
+	}
+	
+	public static void changeResolutionFromPolice(String TaillePolice) {
+		int ratio = 4;
+		Main.setHauteur(HAUTEUR_FENAITRE + Integer.parseInt(TaillePolice)*ratio*2);
+		Main.setLargeur(LARGEUR_FENAITRE + Integer.parseInt(TaillePolice)*ratio);
+	}
+
+	public static void changePoliceSize(String size) {
+		for(Node e : Option.getFinalChildren(Main.getRoot())) {
+			e.setStyle("-fx-font: "+size+" arial;"); 
+		}
 	}
 
 }
