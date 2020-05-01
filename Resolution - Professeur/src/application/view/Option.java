@@ -38,17 +38,14 @@ public class Option {
 						public void handle(ActionEvent arg0) {
 							for (Node pol :  getFinalChildren(OptionRoot)) {
 								if (pol.getId().contentEquals(POLICE_COMBO_BOX_SIZE_ID)) {
-
-									//ApplicationController.changePoliceSize(((ComboBox<String>) pol).getSelectionModel().getSelectedItem());
 									pol.setDisable(!pol.isDisable());
-									//pol.setDisable(false);
 								}
 							}
 						}
 					});
 					break;
 				case POLICE_COMBO_BOX_SIZE_ID:
-					for (int i = 10; i < 30; i++)
+					for (int i = 13; i <= 20; i++)
 						((ComboBox<String>) e).getItems().add(i + "");
 					((ComboBox<String>) e).getSelectionModel().selectFirst();
 					break;

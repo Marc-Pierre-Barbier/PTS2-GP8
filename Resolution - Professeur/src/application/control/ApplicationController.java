@@ -90,8 +90,8 @@ public class ApplicationController extends Main {
 	@FXML
 	private Button chosevid;
 
-	private static final int HAUTEUR_FENAITRE=666;
-	private static final int LARGEUR_FENAITRE=964;
+	private static final int HAUTEUR_FENAITRE=600;
+	private static final int LARGEUR_FENAITRE=1000;
 	
 
 	public void nouvelleExercice() throws IOException {
@@ -399,9 +399,9 @@ public class ApplicationController extends Main {
 	}
 	
 	public static void changeResolutionFromPolice(String TaillePolice) {
-		int ratio = 4;
-		Main.setHauteur(HAUTEUR_FENAITRE + Integer.parseInt(TaillePolice)*ratio*2);
-		Main.setLargeur(LARGEUR_FENAITRE + Integer.parseInt(TaillePolice)*ratio);
+		int ratio = 8;
+		Main.setHauteur(HAUTEUR_FENAITRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+		Main.setLargeur(LARGEUR_FENAITRE + (Integer.parseInt(TaillePolice)*ratio)-13);
 	}
 
 	public static void changePoliceSize(String size) {
