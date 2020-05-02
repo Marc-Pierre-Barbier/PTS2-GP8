@@ -388,8 +388,7 @@ public class ApplicationController extends Main {
 		try {
 			new Option();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErreurModel.erreurStack(e);
 		}
 		System.out.println("option");
 	}

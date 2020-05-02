@@ -7,7 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.RadioButton?> 
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
@@ -166,7 +166,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="191.0" prefWidth="292.0" style="-fx-background-color: RED;" GridPane.hgrow="ALWAYS">
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="191.0" prefWidth="292.0" GridPane.hgrow="ALWAYS">
                <children>
                   <CheckBox fx:id="sensibiliteCase" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Sensibilite a la casse">
                      <VBox.margin>
@@ -178,7 +178,7 @@
                         <Insets top="5.0" />
                      </padding>
                   </RadioButton>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="253.0" style="-fx-background-color: YELLOW;" VBox.vgrow="ALWAYS">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="253.0" VBox.vgrow="ALWAYS">
                      <children>
                         <CheckBox fx:id="motIncomplet" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Mot incomplet(autoriser)" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS">
                            <padding>
