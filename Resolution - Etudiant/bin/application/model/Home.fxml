@@ -13,7 +13,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -44,8 +43,8 @@
                   </Text>
                </children>
             </HBox>
-            <TabPane fx:id="TabPaneExo" prefHeight="800.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-            <FlowPane>
+            <TabPane fx:id="TabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
+            <VBox prefHeight="371.0" prefWidth="514.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
                   <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="480.0" />
@@ -69,7 +68,7 @@
                      </right>
                   </BorderPane>
                </children>
-            </FlowPane>
+            </VBox>
          </children>
       </VBox>
       <VBox prefHeight="674.0" prefWidth="532.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
