@@ -6,7 +6,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -27,6 +27,7 @@ public class Main extends Application {
 			primaryStage.show();
 			stage = primaryStage;
 			//stage.setResizable(false);
+			stage.getIcons().add(new Image("/application/favicon.png"));
 			
 		} catch (Exception e) {
 			System.out.println("Au revoir.");
@@ -47,7 +48,7 @@ public class Main extends Application {
 		pagePrincipale=pane;
 		scene.setRoot(pane);
 		pagePrincipale = pane;
-		setHauteur(pane.getPrefHeight());
+		setHauteur(pane.getPrefHeight()+40);
 		setLargeur(pane.getPrefWidth());
 		stage.setMinHeight(pane.getMinHeight());
 		stage.setMinWidth(pane.getMinWidth());

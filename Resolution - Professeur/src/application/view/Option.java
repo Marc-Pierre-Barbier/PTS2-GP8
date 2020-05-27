@@ -23,6 +23,7 @@ public class Option {
 	public static final String POLICE_CHECK_BOX_ID = "policeChbx";
 	public static final String DALTONIEN_CHECK_BOX_ID = "daltonChbx";
 	
+	@SuppressWarnings("unchecked")
 	public Option() throws IOException {
 		Stage sta = new Stage();
 		BorderPane OptionRoot = FXMLLoader.load(getClass().getResource("/application/model/MenuHandicap.fxml"));
@@ -54,7 +55,6 @@ public class Option {
 					break;
 				case "validerOption":
 					((Button) e).setOnAction(new EventHandler<ActionEvent>() {
-						@SuppressWarnings("unchecked") // pas besoin de proteger les cast on se base sur les id donc il n'y qu'un cas possible
 						@Override
 						public void handle(ActionEvent arg0) {
 							for (Node node : getFinalChildren(OptionRoot)) {
