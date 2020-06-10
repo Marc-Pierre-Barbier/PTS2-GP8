@@ -143,15 +143,22 @@ public class ApplicationController extends Main {
 			}
 		});
 
-		progression.setOnMouseReleased(new EventHandler<Event>() {
+		/*progression.setOnMouseReleased(new EventHandler<Event>() {
 			@Override
 			public void handle(Event event) {
 				double newValue = progression.getValue();
 				mediaPlayer.seek(
 						new Duration(1000 * (double) newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
 			}
+		});*/
+		progression.setOnMouseReleased(new EventHandler<Event>() {
+			@Override
+			public void handle(Event event) {
+				double newValue = progression.getValue();
+				mediaPlayer.seek(
+						new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
+			}
 		});
-
 	}
 
 	public void stopVideo() {

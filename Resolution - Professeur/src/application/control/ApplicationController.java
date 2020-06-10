@@ -249,7 +249,7 @@ public class ApplicationController extends Main {
 	}
 
 	public void setupbtn() {
-		sectionsTabPane.getTabs().clear();
+		if(sectionsTabPane != null)sectionsTabPane.getTabs().clear();
 		SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
 	}
 
@@ -384,9 +384,14 @@ public class ApplicationController extends Main {
 	
 	//TODO chager exo
 	public void chargerExercice() throws Exception {
-		//nouvelleExercice();
+		nouvelleExercice();
 		// ouvrir(); bien sur ce n'est pas possible de les enchainer et je sais pas comment faire
-		
+		Platform.runLater(() -> { try {
+			ouvrir();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}});
 	}
 
 	@FXML
