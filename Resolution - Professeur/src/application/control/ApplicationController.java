@@ -18,7 +18,6 @@ import org.json.simple.parser.JSONParser;
 import application.Main;
 import application.model.JsonController;
 import application.model.Lang;
-import application.model.Option;
 import application.model.Section;
 import application.view.ErreurModel;
 import application.view.SectionTab;
@@ -45,6 +44,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class ApplicationController extends Main {
@@ -96,8 +96,8 @@ public class ApplicationController extends Main {
 	@FXML
 	private Button chosevid;
 
-	private static final int HAUTEUR_FENAITRE=600;
-	private static final int LARGEUR_FENAITRE=1000;
+	private static final int HAUTEUR_FENETRE=600;
+	private static final int LARGEUR_FENETRE=1000;
 	
 
 	public void nouvelleExercice() throws IOException {
@@ -389,13 +389,16 @@ public class ApplicationController extends Main {
 		
 	}
 
-	public void optionMenu() {
-		try {
-			new Option();
-		} catch (IOException e) {
-			ErreurModel.erreurStack(e);
-		}
-		System.out.println("option");
+	@FXML
+	private void option(ActionEvent event) throws IOException {
+		Stage sta = new Stage();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/MenuHandicap.fxml"));
+		Parent OptionRoot = loader.load();
+		Option control = loader.getController();
+		if(OptionRoot == null)System.exit(1);
+		sta.setScene(new Scene(OptionRoot));
+		sta.show();
+		control.run(sta);
 	}
 
 	public int onSelectNumber() {
@@ -404,8 +407,8 @@ public class ApplicationController extends Main {
 	
 	public static void changeResolutionFromPolice(String TaillePolice) {
 		int ratio = 8;
-		Main.setHauteur(HAUTEUR_FENAITRE + (Integer.parseInt(TaillePolice)*ratio)-13);
-		Main.setLargeur(LARGEUR_FENAITRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
 	}
 
 	public static void changePoliceSize(String size) {

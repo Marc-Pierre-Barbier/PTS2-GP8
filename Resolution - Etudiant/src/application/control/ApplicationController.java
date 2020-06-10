@@ -1,6 +1,7 @@
 package application.control;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,10 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Slider;
@@ -27,17 +31,20 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class ApplicationController extends Main {
 
 	/* 10/02/2019 G8 Programmation de l'application VERSION ETUDIANTE */
-
+	private static final int HAUTEUR_FENETRE=600;
+	private static final int LARGEUR_FENETRE=1000;
 	public static final String CARACTERE_OCULTATION = "*";
 	public static final String CARACTERE_NON_OCULTER = ";.,!? ";
 	public static boolean sensibiliteCase = false;
@@ -268,6 +275,31 @@ public class ApplicationController extends Main {
 		if (chronometrer)
 			Timer(tempsTotal);
 	}
+	
+	@FXML
+	private void option(ActionEvent event) throws IOException {
+		Stage sta = new Stage();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/vue/MenuHandicap.fxml"));
+		Parent OptionRoot = loader.load();
+		Option control = loader.getController();
+		if(OptionRoot == null)System.exit(1);
+		sta.setScene(new Scene(OptionRoot));
+		sta.show();
+		control.run(sta);
+	}
+	
+	public static void changeResolutionFromPolice(String TaillePolice) {
+		int ratio = 8;
+		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+	}
+
+	public static void changePoliceSize(String size) {
+		for(Node e : Option.getFinalChildren(Main.getRoot())) {
+			e.setStyle("-fx-font: "+size+" arial;"); 
+		}
+	}
+	
 	
 	public void quitter() {
 		System.exit(0);
