@@ -15,16 +15,23 @@ import java.util.Optional;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import application.model.ErreurModel;
-import application.model.SectionTab;
-import application.view.Main;
-import application.view.Option;
+import application.Main;
+import application.model.JsonController;
+import application.model.Lang;
+import application.model.Option;
+import application.model.Section;
+import application.view.ErreurModel;
+import application.view.SectionTab;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -94,19 +101,18 @@ public class ApplicationController extends Main {
 	
 
 	public void nouvelleExercice() throws IOException {
-		System.out.println("Création d'un exercice");
 		//setHauteur(666);
 		//setLargeur(964);
-		super.chargerUnePage("/application/model/NouvelleExercice.fxml");
+		super.chargerUnePage("/application/view/NouvelleExercice.fxml");
 	}
 
 	public void nouvelleExerciceMenu() throws IOException {
-		Alert alert = ErreurModel.warn("Confirmation", "/!\\ la création/ouverture d'un nouvelle exo va entrainer le suppretion de toutes donné non sauvegarder"
-				, "cliquer sur ok pour continuer quand meme");
+		Alert alert = ErreurModel.warn(Lang.CONFIRMATION, Lang.WARN_NEW_EXO
+				, Lang.OK_TO_CONTINUE);
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.isPresent() && result.get() == ButtonType.OK) {
-			chargerUnePage("/application/model/NouvelleExercice.fxml");
+			chargerUnePage("/application/view/NouvelleExercice.fxml");
 			sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
 			if (mediaPlayer != null) {
 				mediaPlayer.stop();
@@ -132,12 +138,12 @@ public class ApplicationController extends Main {
 		setupbtn();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters()
-				.addAll(new FileChooser.ExtensionFilter("Fichier " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
-		fileChooser.setTitle("Ouvrir un fichier de Resolution");
+				.addAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
+		fileChooser.setTitle(Lang.OUVRIRE_FICHIER);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(Main.stage);
 		if (selectedFile != null) {
-			System.out.println("Chargement de l'exercice");
+			System.out.println(Lang.CHARGE_EXO);
 			JSONParser parser = new JSONParser();
 			try (Reader reader = new FileReader(selectedFile.getAbsolutePath())) {
 
@@ -165,7 +171,7 @@ public class ApplicationController extends Main {
 				for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
 					sections.add(new Section(sectionsTabPane, sectionsTimeCodePane,
 							(String) jsonObject.get("SectionAide" + i), (String) jsonObject.get("SectionText" + i),
-							(String) jsonObject.get("SectionTimeCode" + i)));
+							(String) jsonObject.get("SectionTimeCode" + i),(String) jsonObject.get("SectionDebut" + i),(String) jsonObject.get("SectionFin" + i)));
 				}
 
 				String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
@@ -174,7 +180,7 @@ public class ApplicationController extends Main {
 				mediaView.setVisible(videoChargee);
 				motIncomplet.setSelected((boolean) jsonObject.get("motIncomplet"));
 			} catch (Exception e) {
-				ErreurModel.erreur("fichier introuvable ou endomager", "votre fichier d'exercice est introuve ou a éte endomager");
+				ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
 			}
 		}
 
@@ -185,7 +191,7 @@ public class ApplicationController extends Main {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"),
 				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("*.avi", "*.avi"),new FileChooser.ExtensionFilter("All", "*"));
-		fileChooser.setTitle("Ouvrir une vidéo/audio");
+		fileChooser.setTitle(Lang.OUVRIR_VID);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		chargerUneVideo(selectedFile);
@@ -254,12 +260,12 @@ public class ApplicationController extends Main {
 
 	public void interactionVideo() {
 		if (videoChargee) {
-			if (interactionVideoBtn.getText().equalsIgnoreCase("‖ Pause")) {
+			if (interactionVideoBtn.getText().equalsIgnoreCase(Lang.PAUSE)) {
 				mediaView.getMediaPlayer().pause();
-				interactionVideoBtn.setText("▸ Jouer");
+				interactionVideoBtn.setText(Lang.PLAY);
 			} else {
 				mediaView.getMediaPlayer().play();
-				interactionVideoBtn.setText("‖ Pause");
+				interactionVideoBtn.setText(Lang.PAUSE);
 			}
 		}
 	}
@@ -281,7 +287,7 @@ public class ApplicationController extends Main {
 	}
 
 	public void stopVideo() {
-		interactionVideoBtn.setText("Jouer");
+		interactionVideoBtn.setText(Lang.PLAY);
 		mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStopTime());
 		mediaView.getMediaPlayer().stop();
 	}
@@ -310,12 +316,12 @@ public class ApplicationController extends Main {
 		}
 
 		if (!videoChargee) {
-			ErreurModel.erreur("aucune video trouver", "vous devez mettre une video avant de sauvegarder");
+			ErreurModel.erreur(Lang.NOVID, Lang.SAUV);
 			return;
 		}
 		final FileChooser dialog = new FileChooser();
 		dialog.getExtensionFilters()
-				.setAll(new FileChooser.ExtensionFilter("Fichiers " + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
+				.setAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
 		final File file = dialog.showSaveDialog(super.getStage());
 		if (file != null) {
 			if (videoChargee) {
@@ -335,10 +341,10 @@ public class ApplicationController extends Main {
 					Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				} catch (URISyntaxException e1) {
-					ErreurModel.erreur("erreur URI", "le chemin d'acces de la vidéo est éroné veuiller le redéfinir");
+					ErreurModel.erreur(Lang.URI_ERROR, Lang.FICHIER_LIEN_ERR);
 				} catch (IOException e) {
-					ErreurModel.erreur("erreur copie",
-							"une erreur dans la copie est survenue veuiller verifier si vous avez les droit dans le dossier de destination et verifier sur vous avez sufisament d'espace libre (le poids de votre video defini la place nessecaire)");
+					ErreurModel.erreur(Lang.ERR_COPY,
+							Lang.ERR_COPY_DETAIL);
 				}
 			} /*
 				 * else {
@@ -405,6 +411,25 @@ public class ApplicationController extends Main {
 	public static void changePoliceSize(String size) {
 		for(Node e : Option.getFinalChildren(Main.getRoot())) {
 			e.setStyle("-fx-font: "+size+" arial;"); 
+		}
+	}
+	
+	@FXML
+	private void runSegmentationMenu(ActionEvent event) {
+		System.out.println("chargement Section");
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/Section.fxml"));
+		Parent root;
+		try {
+			root = loader.load();
+			Scene scene = new Scene(root);
+			SectionController sController = loader.getController();
+			Platform.runLater(() -> {
+				if(sections != null)sController.run(scene,sections,(int) mediaPlayer.getTotalDuration().toSeconds());
+				else ErreurModel.erreur(Lang.NO_SECTION, Lang.NEED_VID_LOADED);
+			});
+		} catch (IOException e) {
+			System.err.println("ous sa a crash");
+			e.printStackTrace();
 		}
 	}
 

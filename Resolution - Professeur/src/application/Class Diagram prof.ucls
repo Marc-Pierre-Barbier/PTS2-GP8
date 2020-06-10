@@ -22,8 +22,8 @@
     <position height="518" width="287" x="-255" y="128"/>    
     <display autosize="false" stereotype="false" sort-features="false" accessors="true"/>  
   </package>  
-  <class id="5" language="java" name="application.control.Section" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/control/Section.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="application.model.Section" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/model/Section.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="356" y="428"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -31,8 +31,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="application.control.JsonController" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/control/JsonController.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="application.model.JsonController" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/model/JsonController.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="327" y="554"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -40,8 +40,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="application.control.exersiceController" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/control/exersiceController.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="application.model.exersiceController" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/model/exersiceController.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="345" y="224"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -59,8 +59,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="application.model.ErreurModel" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/model/ErreurModel.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="application.view.ErreurModel" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/view/ErreurModel.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="556" y="232"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -68,8 +68,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="application.model.SectionModel" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/model/SectionModel.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="application.view.SectionModel" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/view/SectionModel.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="611" y="430"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -77,8 +77,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="application.model.SectionTab" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/model/SectionTab.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="11" language="java" name="application.view.SectionTab" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/view/SectionTab.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="674" y="221"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -86,8 +86,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="application.view.Main" project="Resolution - Professeur" 
-    file="/Resolution - Professeur/src/application/view/Main.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="application.Main" project="Resolution - Professeur" 
+    file="/Resolution - Professeur/src/application/Main.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-111" y="428"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -95,26 +95,34 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <generalization id="13">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="12"/>  
-  </generalization>  
-  <association id="14">    
+  <association id="13">    
     <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="15" name="sections"/>      
-      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
+      <attribute id="14" name="sections">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="15" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="17">    
+  <association id="16">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="18" name="SecModl"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
+      <attribute id="17" name="SecModl">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="18" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

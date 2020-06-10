@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="627.0" prefWidth="1027.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="639.0" minWidth="10.0" percentWidth="50.0" prefWidth="639.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" percentWidth="50.0" prefWidth="503.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="451.0" minHeight="10.0" percentHeight="20.0" prefHeight="95.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="644.0" minHeight="0.0" percentHeight="80.0" prefHeight="484.0" vgrow="SOMETIMES" />
+    <RowConstraints fillHeight="false" maxHeight="0.0" minHeight="0.0" percentHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <VBox prefHeight="561.0" prefWidth="526.0" GridPane.rowIndex="1">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire l'exercice : " />
+                  <Text fx:id="tempsText" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Text>
+               </children>
+            </HBox>
+            <TabPane fx:id="TabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
+            <VBox prefHeight="371.0" prefWidth="514.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
+                  <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="480.0" />
+                  <BorderPane prefHeight="140.0" prefWidth="431.0">
+                     <left>
+                        <Button fx:id="validerbtn" mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets left="125.0" />
+                           </BorderPane.margin>
+                        </Button>
+                     </left>
+                     <center>
+                        <Button fx:id="solutionBoutton" mnemonicParsing="false" text="Afficher la Solution" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets right="10.0" />
+                           </BorderPane.margin>
+                        </Button>
+                     </center>
+                     <right>
+                        <Button fx:id="aideBtn" mnemonicParsing="false" text="Aide" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox prefHeight="674.0" prefWidth="532.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Consigne" />
+            <TextField fx:id="consigne" editable="false" prefHeight="38.0" prefWidth="403.0" promptText="La consigne de l'exercice..." />
+            <BorderPane prefHeight="268.0" prefWidth="468.0">
+               <center>
+                  <MediaView fx:id="mediaView" fitHeight="300.0" fitWidth="200.0" scaleX="2.2" BorderPane.alignment="CENTER" />
+               </center>
+               <right>
+                  <Slider fx:id="volume" orientation="VERTICAL" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets right="5.0" />
+                     </BorderPane.margin>
+                  </Slider>
+               </right>
+               <bottom>
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="506.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="interactionVideoBtn" minWidth="65.0" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="33.0" prefWidth="65.0" text="▸ Jouer">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Slider id="progression" fx:id="progression" minWidth="250.0" prefHeight="16.0" prefWidth="250.0">
+                           <HBox.margin>
+                              <Insets left="5.0" right="-195.0" />
+                           </HBox.margin>
+                        </Slider>
+                        <ImageView fitHeight="150.0" fitWidth="182.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" prefHeight="32.0" prefWidth="69.0" text="■  Stop">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                        <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" text="Plein écran">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@/application/IconePleinEcran.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+               </bottom>
+            </BorderPane>
+         </children>
+      </VBox>
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+         <children>
+            <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+              <menus>
+                <Menu mnemonicParsing="false" text="Fichier">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#ouvrirUnExercice" text="Ouvrir" />
+                        <MenuItem mnemonicParsing="false" text="Sauvegarder" />
+                    <MenuItem mnemonicParsing="false" onAction="#quitter" text="Quitter" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Crédits">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Crédits de l'application" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Aide">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Manuel d'utilisation" />
+                    </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <Text fx:id="titre" strokeType="OUTSIDE" strokeWidth="0.0" text="Titre de l'exercice" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+         </children>
+      </VBox>
+   </children>
+</GridPane>

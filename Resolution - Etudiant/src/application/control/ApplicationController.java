@@ -8,7 +8,11 @@ import java.util.Timer;
 
 import org.json.simple.parser.ParseException;
 
-import application.vue.Main;
+import application.model.CustomTimer;
+import application.model.JsonController;
+import application.model.Lang;
+import application.model.Main;
+import application.model.Section;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -34,9 +38,9 @@ public class ApplicationController extends Main {
 
 	/* 10/02/2019 G8 Programmation de l'application VERSION ETUDIANTE */
 
-	protected static final String CARACTERE_OCULTATION = "*";
-	protected static final String CARACTERE_NON_OCULTER = ";.,!? ";
-	protected static boolean sensibiliteCase = false;
+	public static final String CARACTERE_OCULTATION = "*";
+	public static final String CARACTERE_NON_OCULTER = ";.,!? ";
+	public static boolean sensibiliteCase = false;
 	private List<Section> sections;
 	@FXML
 	private Text titre;
@@ -64,11 +68,11 @@ public class ApplicationController extends Main {
 	private Button solutionBoutton;
 	@FXML
 	private Button aideBtn;
-	protected static boolean aideAutorisation=true;
+	public static boolean aideAutorisation=true;
 	private boolean videoChargee = false;
-	protected static LocalTime tempsTotal = LocalTime.parse("00:00:00");
-	protected static boolean chronometrer = false;
-	protected static boolean motincomplet = false;
+	public static LocalTime tempsTotal = LocalTime.parse("00:00:00");
+	public static boolean chronometrer = false;
+	public static boolean motincomplet = false;
 	CustomTimer custom;
 
 	public void ouvrirUnExercice() throws ParseException, InterruptedException {
@@ -151,12 +155,12 @@ public class ApplicationController extends Main {
 
 	public void interactionVideo() {
 		if (videoChargee) {
-			if (interactionVideoBtn.getText().equalsIgnoreCase("Pause")) {
+			if (interactionVideoBtn.getText().equalsIgnoreCase(Lang.PAUSE)) {
 				mediaView.getMediaPlayer().pause();
-				interactionVideoBtn.setText("Jouer");
+				interactionVideoBtn.setText(Lang.PLAY);
 			} else {
 				mediaView.getMediaPlayer().play();
-				interactionVideoBtn.setText("Pause");
+				interactionVideoBtn.setText(Lang.PAUSE);
 			}
 		}
 	}
@@ -173,7 +177,7 @@ public class ApplicationController extends Main {
 
 		if (s.islocked() || s.isHelp())return; // on le cherche pas si c'est lock ou dans l'aide
 
-		System.out.println("Lancement d'une recherche");
+		System.out.println(Lang.LancementRecherche);
 		System.out.println(s.getTextATrouver().length());
 		System.out.println(s.getTextATrouver());
 		System.out.println(proposition.getText());
@@ -234,7 +238,6 @@ public class ApplicationController extends Main {
 						(!motincomplet && texteCache.length() >= indexProp + 1
 								&& CARACTERE_NON_OCULTER.contains(texteCache.charAt(indexProp) + "")
 								&& indexProp == index + proposition.getText().length())) {
-					System.out.println("im in");
 					for (int i = index; i < indexProp; i++) {
 						char[] chars = texteCache.toCharArray();
 						chars[i] = texteATrouver.charAt(i);
