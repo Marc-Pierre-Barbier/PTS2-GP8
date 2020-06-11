@@ -5,13 +5,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.util.IteratorIterable;
 
 import application.control.ApplicationController;
+import application.vue.ErreurModel;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -20,8 +26,8 @@ import javafx.stage.FileChooser;
 
 public class JsonController {
 	
-	private static final String DEFAULT_EXTENSION_NAME = "Résolution";
-	private static final String DEFAULT_EXTENSION_FILE = ".res";
+	private static final String DEFAULT_NAME_EXTENSION = "Résolution";
+	private static final String DEFAULT_EXTENSION = ".res";
 	
 	public void jSONCreation() {
 		//TODO acoder
@@ -60,68 +66,57 @@ public class JsonController {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static String JSONReader(Text titre,TextField consigne,Button solutionBoutton, List<Section> sections,TabPane TabPaneExo) throws ParseException {
+	public static String JSONReader(Text titre,TextField consigne,Button solutionBoutton, List<Section> sections,TabPane TabPaneExo) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().addAll(
-				new FileChooser.ExtensionFilter("Fichier " + DEFAULT_EXTENSION_NAME, "*" + DEFAULT_EXTENSION_FILE));
-		fileChooser.setTitle(Lang.FICHIER_RES);
+		fileChooser.getExtensionFilters()
+				.addAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
+		fileChooser.setTitle(Lang.CHARGER_EXO);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(Main.stage);
-		if (selectedFile != null) {
-			System.out.println(Lang.CHARGER_EXO);
-			JSONParser parser = new JSONParser();
-			try (Reader reader = new FileReader(selectedFile.getAbsolutePath())) {
-
-				JSONObject jsonObject = (JSONObject) parser.parse(reader);
-				titre.setText((String) jsonObject.get("titre"));
-				consigne.setText((String) jsonObject.get("consigne"));
-				String formatvideo = (String) jsonObject.get("cheminVideo");
-				ApplicationController.sensibiliteCase = (boolean) jsonObject.get("sensibiliteCase");
-				String limiteTemps = (String) jsonObject.get("limiteTemps");
-				ApplicationController.motincomplet = (boolean) jsonObject.get("motIncomplet");
-				if (!(boolean) jsonObject.get("affichageSolution")) {
-					solutionBoutton.setDisable(true);
-				}
-
-				if (!(limiteTemps.equals("00:00:00"))) {
-					ApplicationController.tempsTotal = LocalTime.parse(limiteTemps);
-					// int hours = Integer.parseInt(limiteTemps.charAt(0) + limiteTemps.charAt(1)
-					// +"");
-					// int minutes = Integer.parseInt(limiteTemps.charAt(3) + limiteTemps.charAt(4)
-					// + ""); //le char 0 est les disaines d'eur le char 1 les heure le char 2 le :
-					// etc..
-					ApplicationController.chronometrer = true;
-				} else {
-					ApplicationController.tempsTotal = LocalTime.parse("00:00:00");
-					ApplicationController.chronometrer = false;
-				}
+		
+		System.out.println(Lang.CHARGE_EXO);
+		SAXBuilder saxBuilder = new SAXBuilder();
+		try {
+			Document doc = saxBuilder.build(selectedFile);
+			IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
+			
+			
+			titre.setText(doc.getRootElement().getChildText("titre"));
+			consigne.setText(doc.getRootElement().getChildText("consigne"));
+			String formatvideo = doc.getRootElement().getChildText("cheminVideo");
+			
+			ApplicationController.sensibiliteCase = Boolean.parseBoolean(doc.getRootElement().getChildText("sensibiliteCase"));
+			ApplicationController.aideAutorisation=Boolean.parseBoolean(doc.getRootElement().getChildText("aidestatus"));
+			ApplicationController.motincomplet = Boolean.parseBoolean(doc.getRootElement().getChildText("motIncomplet"));
+			
+			String limiteTemps = doc.getRootElement().getChildText("limiteTemps");
 				
-				//ce try catch permet le chargement de sauvegarde de version precedente pre 0.0.10
-				try{
-					ApplicationController.aideAutorisation=(boolean) jsonObject.get("aidestatus");
-				}catch (Exception e) {
-					ApplicationController.aideAutorisation=true;
-				} //on a pas besoin d'actoin la valeur par defaut est suffisante
-				TabPaneExo.getTabs().clear();
-				Section.reset();
-				if(ApplicationController.aideAutorisation) {
-					for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
-						sections.add(new Section(TabPaneExo, (String) jsonObject.get("SectionAide" + i),
-								(String) jsonObject.get("SectionText" + i),
-								(String) jsonObject.get("SectionTimeCode" + i)));
-					}
-				}else {
-					for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
-						sections.add(new Section(TabPaneExo,(String) jsonObject.get("SectionText" + i),
-								(String) jsonObject.get("SectionTimeCode" + i)));
-					}
-				}
-				
-				return selectedFile.getAbsolutePath().replace(".res", formatvideo);
-			} catch (IOException e) {
-				return "ABORT";
+			if (!(limiteTemps.equals("00:00:00"))) {
+				ApplicationController.tempsTotal = LocalTime.parse(limiteTemps);
+				ApplicationController.chronometrer = true;
+			} else {
+				ApplicationController.tempsTotal = LocalTime.parse("00:00:00");
+				ApplicationController.chronometrer = false;
 			}
+			
+			sections = new ArrayList<>();
+			while(processDescendants.hasNext()) {
+				Element elem = (Element) processDescendants.next();
+				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
+				
+				sections.add(new Section(TabPaneExo,
+					elem.getChild("SectionAide").getValue(),
+					new String(raw),
+					elem.getChild("SectionTimeLimitCode").getValue(),
+					elem.getChild("getTimeStart").getValue(),
+					elem.getChild("getTimeStop").getValue()));
+			}
+			
+			return selectedFile.getAbsolutePath().replace(".res", formatvideo);
+		}catch (JDOMException | IOException e) {
+			ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
 		}
-		return "ABORT";
+		//si ce return est utiliser sa veut dire qu'on a euh un crash
+		return null;
 	}
 }

@@ -9,11 +9,16 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.util.IteratorIterable;
 
 import application.Main;
 import application.model.JsonController;
@@ -46,6 +51,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import jdk.nashorn.internal.parser.JSONParser;
 
 public class ApplicationController extends Main {
 
@@ -131,9 +137,7 @@ public class ApplicationController extends Main {
 	
 	//TODO deplacer le gros de l'ouverture dans JSONController
 	public void ouvrir() throws IOException {
-		sections = new ArrayList<>(); // le ramasse miétte s'ocupera du reste
-		if (mediaPlayer != null)
-			mediaPlayer.pause();
+		if (mediaPlayer != null)mediaPlayer.pause();
 		Section.reset();
 		setupbtn();
 		FileChooser fileChooser = new FileChooser();
@@ -142,47 +146,49 @@ public class ApplicationController extends Main {
 		fileChooser.setTitle(Lang.OUVRIRE_FICHIER);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(Main.stage);
-		if (selectedFile != null) {
-			System.out.println(Lang.CHARGE_EXO);
-			JSONParser parser = new JSONParser();
-			try (Reader reader = new FileReader(selectedFile.getAbsolutePath())) {
-
-				JSONObject jsonObject = (JSONObject) parser.parse(reader);
-				titre.setText((String) jsonObject.get("titre"));
-				consigne.setText((String) jsonObject.get("consigne"));
-				String formatvideo = (String) jsonObject.get("cheminVideo");
-
-				sensibiliteCase.setSelected((boolean) jsonObject.get("sensibiliteCase"));
+		
+		System.out.println(Lang.CHARGE_EXO);
+		SAXBuilder saxBuilder = new SAXBuilder();
+		try {
+			Document doc = saxBuilder.build(selectedFile);
+			IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
+			
+			
+			titre.setText(doc.getRootElement().getChildText("titre"));
+			consigne.setText(doc.getRootElement().getChildText("consigne"));
+			String formatvideo = doc.getRootElement().getChildText("cheminVideo");
+			
+			sensibiliteCase.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("sensibiliteCase")));
+			aideCheckbox.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("aidestatus")));
+			motIncomplet.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("motIncomplet")));
+			
+			String limiteTemps = doc.getRootElement().getChildText("limiteTemps");
+			System.out.println(limiteTemps);
+			timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
+			timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
+			
+			sections = new ArrayList<>();
+			while(processDescendants.hasNext()) {
+				Element elem = (Element) processDescendants.next();
+				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
 				
-				
-				//ce try catch permet la conversion de sauvegarde de version precedente pre 0.0.10
-				try {
-					aideCheckbox.setSelected((boolean) jsonObject.get("aidestatus"));
-				} catch (Exception e) {
-					aideCheckbox.setSelected(true);
-				}
-				
-				String limiteTemps = (String) jsonObject.get("limiteTemps");
-				time = limiteTemps;
-				timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
-				timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
-
-				sections = new ArrayList<>();
-				for (int i = 1; i <= (long) jsonObject.get("sections"); i++) {
-					sections.add(new Section(sectionsTabPane, sectionsTimeCodePane,
-							(String) jsonObject.get("SectionAide" + i), (String) jsonObject.get("SectionText" + i),
-							(String) jsonObject.get("SectionTimeCode" + i),(String) jsonObject.get("SectionDebut" + i),(String) jsonObject.get("SectionFin" + i)));
-				}
-
-				String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
-
-				chargerUneVideo(new File(cheminVideo));
-				mediaView.setVisible(videoChargee);
-				motIncomplet.setSelected((boolean) jsonObject.get("motIncomplet"));
-			} catch (Exception e) {
-				ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
+				sections.add(new Section(sectionsTabPane, sectionsTimeCodePane,
+					elem.getChild("SectionAide").getValue(),
+					new String(raw),
+					elem.getChild("SectionTimeLimitCode").getValue(),
+					elem.getChild("getTimeStart").getValue(),
+					elem.getChild("getTimeStop").getValue()));
 			}
+			
+			String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
+			
+			chargerUneVideo(new File(cheminVideo));
+			mediaView.setVisible(videoChargee);
+			
+		} catch (JDOMException | IOException e) {
+			ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
 		}
+		
 
 	}
 
@@ -250,7 +256,7 @@ public class ApplicationController extends Main {
 
 	public void setupbtn() {
 		if(sectionsTabPane != null)sectionsTabPane.getTabs().clear();
-		SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
+		//SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
 	}
 
 	public void timeHandle() {
@@ -432,7 +438,7 @@ public class ApplicationController extends Main {
 			Scene scene = new Scene(root);
 			SectionController sController = loader.getController();
 			Platform.runLater(() -> {
-				if(sections != null)sController.run(scene,sections,(int) mediaPlayer.getTotalDuration().toSeconds());
+				if(sections != null)sController.run(scene,sections,(int) mediaPlayer.getTotalDuration().toSeconds(),sectionsTabPane,sectionsTimeCodePane );
 				else ErreurModel.erreur(Lang.NO_SECTION, Lang.NEED_VID_LOADED);
 			});
 		} catch (IOException e) {

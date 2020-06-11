@@ -27,7 +27,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="627.0" prefWidth="1027.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="627.0" prefWidth="1027.0" xmlns="http://javafx.com/javafx/8.0.251" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="639.0" minWidth="10.0" percentWidth="50.0" prefWidth="639.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="544.0" minWidth="10.0" percentWidth="50.0" prefWidth="503.0" />
@@ -40,16 +40,26 @@
    <children>
       <VBox prefHeight="561.0" prefWidth="526.0" GridPane.rowIndex="1">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <VBox>
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire l'exercice : " />
-                  <Text fx:id="tempsText" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Text>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire la section :   " />
+                        <Text fx:id="tempsTextSection" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire l'exercice : " />
+                        <Text fx:id="tempsText" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
             <TabPane fx:id="TabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
             <VBox prefHeight="371.0" prefWidth="514.0">
                <children>

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-import org.json.simple.parser.ParseException;
-
 import application.model.CustomTimer;
 import application.model.JsonController;
 import application.model.Lang;
@@ -65,6 +63,9 @@ public class ApplicationController extends Main {
 	private Button interactionVideoBtn;
 	@FXML
 	private Text tempsText;
+	//TODO faire le temps des section chaque section contien ses time code mais on ne s'en sert pas 
+	@FXML
+	private Text tempsTextSection;
 	@FXML
 	private Slider progression;
 	@FXML
@@ -82,7 +83,7 @@ public class ApplicationController extends Main {
 	public static boolean motincomplet = false;
 	CustomTimer custom;
 
-	public void ouvrirUnExercice() throws ParseException, InterruptedException {
+	public void ouvrirUnExercice() throws InterruptedException {
 		sections = new ArrayList<>();
 		String cheminVideo = JsonController.JSONReader(titre, consigne, solutionBoutton, sections, TabPaneExo);
 		aideBtn.setDisable(!aideAutorisation);

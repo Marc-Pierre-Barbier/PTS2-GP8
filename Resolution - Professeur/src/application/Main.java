@@ -24,7 +24,7 @@ public class Main extends Application {
 			System.out.println(getClass().getResource("/application/view/MenuPrincipal.fxml"));
 			pagePrincipale = FXMLLoader.load(getClass().getResource("/application/view/MenuPrincipal.fxml"));
 			scene = new Scene(pagePrincipale);//, 450, 450
-			primaryStage.setTitle(Lang.TITRE_FENAITRE);
+			primaryStage.setTitle(Lang.TITRE_FENETRE);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			stage = primaryStage;

@@ -2,63 +2,51 @@ package application.model;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
-import org.json.simple.JSONObject;
 
-import application.view.ErreurModel;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 public class JsonController {
+
+	public static void JSONCreation(String cheminEnregistrement, String title, List<Section> sections,
+			boolean aidestatus, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet,
+			boolean solution, String consigne, String cheminVideo, String limiteTemps) {
+
+		Element root = new Element("exercice");
+		Document doc = new Document(root);
+
+		for(Section s : sections) {
+			Element section = new Element("section");
+			
+			section.addContent(new Element("SectionAide").setText(s.getAide()));
+			section.addContent(new Element("SectionText").setText(Base64.getEncoder().encodeToString(s.getText().getBytes())));
+			section.addContent(new Element("SectionTimeLimitCode").setText(s.getTimeLimitCode()));
+			section.addContent(new Element("getTimeStart").setText(s.getTimeStart()));
+			section.addContent(new Element("getTimeStop").setText(s.getTimeStop()));
+			doc.getRootElement().addContent(section);
+		}
+
+		root.addContent(new Element("titre").setText(title));
+		root.addContent(new Element("sensibiliteCase").setText(sensibiliteCase+""));
+		root.addContent(new Element("modeApprentissage").setText(modeApprentissage+""));
+		root.addContent(new Element("motIncomplet").setText(motIncomplet+""));
+		root.addContent(new Element("solution").setText(solution+""));
+		root.addContent(new Element("aidestatus").setText(aidestatus+""));
+		root.addContent(new Element("consigne").setText(consigne));
+		root.addContent(new Element("cheminVideo").setText(cheminVideo));
+		root.addContent(new Element("limiteTemps").setText(limiteTemps));
 		
-	@SuppressWarnings("unchecked")
-	public static void JSONCreation(String cheminEnregistrement, Object title, List<Section> sections,boolean aidestatus ,boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet, boolean solution, String consigne, String cheminVideo, String limiteTemps) {
-		
-		/*
-		 *  JSON 
-		 *  JSONObject obj = new JSONObject();
-		 *  obj.put("name", "mkyong.com"); mettre un identifiant avec une valeur
-		 * */
-		 
-		JSONObject obj = new JSONObject();
-        obj.put("titre", title);
-        obj.put("sections", sections.size());
-        obj.put("sensibiliteCase", sensibiliteCase);
-        obj.put("modeApprentissage", modeApprentissage);
-        obj.put("motIncomplet", motIncomplet);
-        obj.put("affichageSolution", solution);
-        obj.put("aidestatus", aidestatus);
-        //obj.put("modeEvaluation", modeEvaluation); inutile de le mettre on a que 2 mode car modeEvaluation=!modeEtudiant
-        obj.put("consigne", consigne);
-        obj.put("cheminVideo", cheminVideo);
-        obj.put("limiteTemps", limiteTemps);
-
-        for(Section  s : sections) {
-        	if(s.getTimeCode().equals("ABORT")) {
-        		
-        		return;
-        	}
-        	if(aidestatus)obj.put("SectionAide"+s.getidTab(),s.getAide());
-        	obj.put("SectionText"+s.getidTab(),s.getText());
-        	obj.put("SectionTimeCode"+s.getidTab(),s.getTimeCode());
-        }
-        
-        /*JSONArray list = new JSONArray();
-        list.add("msg 1");
-        list.add("msg 2");
-        list.add("msg 3");
-
-        obj.put("messages", list);
-        
-        String originalInput = "test input";
-        String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes());
-        obj.put("Test", encodedString);*/
-
-        try (FileWriter file = new FileWriter(cheminEnregistrement)) {
-            file.write(obj.toJSONString());
-        } catch (IOException e) {
-        	ErreurModel.erreur(Lang.WRITE_ERR, Lang.WRITE_RIGHT_ERR);
-        }
-
-        System.out.print(obj);
+		XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
+		xmlOutput.setFormat(Format.getPrettyFormat());
+		try {
+			xmlOutput.output(doc, new FileWriter(cheminEnregistrement));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -14,8 +14,18 @@ public class Section {
 	private SectionModel secMod;
 	private boolean locked = false;
 	private boolean help = false;
+	/**
+	 * le temps est exprimer en hh:mm:ss depuis le debut de la video
+	 * @return
+	 */
+	private String timeStart;
+	/**
+	 * le temps est exprimer en hh:mm:ss depuis le debut de la video
+	 * @return
+	 */
+	private String timeStop;
 	
-	public Section(TabPane parent,String sectionAide,String sectionText,String sectionTimeCode) {
+	public Section(TabPane parent,String sectionAide,String sectionText,String sectionTimeCode,String timeStart,String timeStop) {
 		nbtab++;
 		idTab=nbtab;
 		this.sectionTimeCode = sectionTimeCode;
@@ -33,12 +43,15 @@ public class Section {
         
         secMod = new SectionModel(parent,texteCache, nbtab);
         System.out.println(texteCache);
+        this.timeStart=timeStart;
+		this.timeStop=timeStop;
         
 	}
 
-	public Section(TabPane parent,String sectionText,String sectionTimeCode) {
-		this(parent,"",sectionText,sectionTimeCode);
-	}
+	/*public Section(TabPane parent,String sectionText,String sectionTimeCode) {
+		//this(parent,"",sectionText,sectionTimeCode);
+		//TODO a faire correctement
+	}*/
 
 	public static void reset() {
 		nbtab=0;

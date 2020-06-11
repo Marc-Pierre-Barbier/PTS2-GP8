@@ -47,6 +47,7 @@ public class timeCodeTab extends Tab {
 						LocalTime timecode = LocalTime.ofSecondOfDay((long) (timeFin.getValue() * dureVideo / 100));
 						sliderFinStatus.setText(timecode.toString());
 						s.setTimeStop(timecode.toString());
+						errorText.setVisible(false);
 					}else {
 						LocalTime timecode = getLocalTimeOf(s.getTimeStop());
 						timeFin.setValue(timecode.toSecondOfDay() * 100 / dureVideo);

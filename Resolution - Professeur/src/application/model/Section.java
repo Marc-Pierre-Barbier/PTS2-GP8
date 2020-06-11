@@ -46,7 +46,7 @@ public class Section {
 		return SecModl.getAide();
 	}
 	
-	public String getTimeCode() {
+	public String getTimeLimitCode() {
 		String limiteTempsH = SecModl.getlimiteTempsH();
 		String limiteTempsM = SecModl.getlimiteTempsM();
 		if(limiteTempsH.length() == 1)SecModl.setLimiteTempsH("0"+limiteTempsH);
