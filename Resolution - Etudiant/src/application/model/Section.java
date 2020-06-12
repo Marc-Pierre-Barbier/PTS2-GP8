@@ -7,7 +7,7 @@ import javafx.scene.control.TabPane;
 public class Section {
 	public static int nbtab = 0;
 	private int idTab;
-	private String sectionTimeCode;
+	private String sectionTimeLimiteCode;
 	private String sectionText; //le texte non caché
 	private String texteCache;  //le texte avec la reponse de l'éleve + char masqué
 	private String sectionAide;
@@ -28,7 +28,7 @@ public class Section {
 	public Section(TabPane parent,String sectionAide,String sectionText,String sectionTimeCode,String timeStart,String timeStop) {
 		nbtab++;
 		idTab=nbtab;
-		this.sectionTimeCode = sectionTimeCode;
+		this.sectionTimeLimiteCode = sectionTimeCode;
 		this.sectionText=sectionText;
 		this.sectionAide=sectionAide;
 		System.out.println(sectionAide);
@@ -74,8 +74,8 @@ public class Section {
 		return secMod.getAide();
 	}
 	
-	public String getTimeCode() {
-		return sectionTimeCode;
+	public String getTimeLimiteCode() {
+		return sectionTimeLimiteCode;
 	}
 
 	public String getTexteCache() {
@@ -114,5 +114,12 @@ public class Section {
 	
 	public boolean islocked() {
 		return locked;
+	}
+	
+	public String getTimeStart() {
+		return timeStart;
+	}
+	public String getTimeStop() {
+		return timeStop;
 	}
 }

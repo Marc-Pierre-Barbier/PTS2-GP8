@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuBar?> 
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TabPane?>
@@ -149,7 +149,7 @@
                 <Menu mnemonicParsing="false" text="Fichier">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#ouvrirUnExercice" text="Ouvrir" />
-                        <MenuItem mnemonicParsing="false" text="Sauvegarder" />
+                        <MenuItem mnemonicParsing="false" onAction="#sauvegarderUnExercice" text="Sauvegarder" />
                     <MenuItem mnemonicParsing="false" onAction="#quitter" text="Quitter" />
                   </items>
                 </Menu>

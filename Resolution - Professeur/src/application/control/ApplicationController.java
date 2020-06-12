@@ -1,9 +1,7 @@
 package application.control;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -25,7 +23,6 @@ import application.model.JsonController;
 import application.model.Lang;
 import application.model.Section;
 import application.view.ErreurModel;
-import application.view.SectionTab;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
@@ -51,7 +48,6 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import jdk.nashorn.internal.parser.JSONParser;
 
 public class ApplicationController extends Main {
 

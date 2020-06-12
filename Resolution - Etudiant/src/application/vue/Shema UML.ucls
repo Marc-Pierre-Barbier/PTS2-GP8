@@ -58,8 +58,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="application.model.Main" project="Resolution - Etudiant" 
-    file="/Resolution - Etudiant/src/application/model/Main.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="9" language="java" name="application.Main" project="Resolution - Etudiant" 
+    file="/Resolution - Etudiant/src/application/Main.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="367" y="355"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -77,27 +77,27 @@
     </display>  
   </class>  
   <association id="11">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="12" name="custom">        
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="12" name="secMod">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="13" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="14">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="15" name="secMod">        
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="15" name="custom">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="16" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="17">    

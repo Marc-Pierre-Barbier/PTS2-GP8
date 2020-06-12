@@ -1,6 +1,7 @@
-package application.model;
+package application;
 
 
+import application.model.Lang;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

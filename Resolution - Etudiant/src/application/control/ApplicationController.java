@@ -2,15 +2,19 @@ package application.control;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
+import application.Main;
 import application.model.CustomTimer;
 import application.model.JsonController;
 import application.model.Lang;
-import application.model.Main;
 import application.model.Section;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
@@ -29,12 +33,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -81,6 +85,9 @@ public class ApplicationController extends Main {
 	public static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	public static boolean chronometrer = false;
 	public static boolean motincomplet = false;
+	
+	// TODO implementer le modeAprentissage et le mode enseignant
+	public static boolean modeAprentissage;
 	CustomTimer custom;
 
 	public void ouvrirUnExercice() throws InterruptedException {
@@ -119,9 +126,55 @@ public class ApplicationController extends Main {
 
 	}
 	
+	public void sauvegarderUnExercice() {
+		if(!videoChargee)return;
+		final FileChooser dialog = new FileChooser();
+		dialog.getExtensionFilters()
+		.setAll(new FileChooser.ExtensionFilter(Lang.FILE + JsonController.DEFAULT_NAME_EXTENSION, "*" + JsonController.DEFAULT_EXTENSION));
+		File file = dialog.showSaveDialog(super.getStage());
+		
+		String cheminVideo = mediaView.getMediaPlayer().getMedia().getSource();
+		String format="";
 
+		for(int i=4;i>0;i--) {
+			format += cheminVideo.charAt(cheminVideo.length()-i);
+		}
+		
+		JsonController.JSONCreation(fixMyPath(file.toString(),".res"), titre.getText(), sections, aideAutorisation, sensibiliteCase, modeAprentissage, motincomplet, solutionBoutton.isDisabled(), consigne.getText(), format, tempsTotal.toString());
+		
+		File source;
+		try {
+			source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
+			File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), format));
+			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			//TODO AFFICHER CETTE MERDE
+		} catch (URISyntaxException e) {
+			//ERREUR URI CE N'EST PAS REGLABLE PAR L'utilisateur
+		} catch (IOException e) {
+			//ERREUR ECRITURE
+		}
+		
+	}
 	
+	/**
+	 * ajoute .res a la fin si il n'est pas deja present j'ai euh le probleme sur
+	 * linux ou sa enregistrais sans extention sa ne deverais pas poser probleme sur
+	 * windows j'y ai ajouter aussi la fonction pour renomer les fichier en mp4
+	 */
+	private static String fixMyPath(String chemin, String format) {
+		int i = chemin.length();
+		String str = "";
+		for (int j = i - 4; j < i; j++)
+			str += chemin.charAt(j);
 
+		if (str.equals(".res")) {
+			chemin = chemin.replace(".res", format);
+			return chemin;
+		} else {
+			return chemin + format;
+		}
+	}
+	
 	public void chargerUneVideo(File f) {
 
 		Media media = new Media(new File(f.getAbsolutePath()).toURI().toString());
@@ -246,7 +299,7 @@ public class ApplicationController extends Main {
 							"prop : " + indexProp + "\ncalc index : " + (index + proposition.getText().length()));
 				}
 
-				System.out.println("autorisé les mots incomplets ? : " + motincomplet);
+				System.out.println("autorisé les mots incomplets /usr/bin/SceneBuilder? : " + motincomplet);
 
 				if ((indexProp == index + proposition.getText().length() && motincomplet) ||
 				// verification pour mots complet(donc caractére non oculter a la fin)
