@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?> 
-<?import javafx.scene.layout.BorderPane?> 
-<?import javafx.scene.layout.HBox?> 
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="374.0" xmlns="http://javafx.com/javafx/8.0.202-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.Option">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="374.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.Option">
    <top>
       <VBox prefHeight="390.0" prefWidth="407.0" BorderPane.alignment="CENTER">
          <children>
@@ -20,7 +16,7 @@
                <children>
                   <VBox prefHeight="100.0" prefWidth="268.0">
                      <children>
-                        <CheckBox fx:id="policeChbx" mnemonicParsing="false" text="Agrandissement de la Police">
+                        <CheckBox fx:id="policeChbx" mnemonicParsing="false" text="Agrandir la police d'écriture">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -32,7 +28,7 @@
             </HBox>
             <VBox prefHeight="100.0" prefWidth="268.0">
                <children>
-                  <CheckBox id="DaltonChbx" mnemonicParsing="false" text="Mode Daltonisme (WIP)">
+                  <CheckBox id="DaltonChbx" mnemonicParsing="false" text="Mode Daltonien (WIP)">
                      <font>
                         <Font size="16.0" />
                      </font>

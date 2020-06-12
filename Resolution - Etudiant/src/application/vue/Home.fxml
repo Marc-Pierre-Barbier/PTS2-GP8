@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?> 
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TabPane?>
@@ -40,31 +40,47 @@
    <children>
       <VBox prefHeight="561.0" prefWidth="526.0" GridPane.rowIndex="1">
          <children>
-            <VBox>
+            <VBox prefWidth="858.0" style="-fx-border-color: black;">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <VBox prefHeight="15.0" prefWidth="512.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire la section :   " />
-                        <Text fx:id="tempsTextSection" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s" />
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire la section :   " />
+                              <Text fx:id="tempsTextSection" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire l'exercice : " />
+                              <Text fx:id="tempsText" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Text>
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Temps restant pour faire l'exercice : " />
-                        <Text fx:id="tempsText" strokeType="OUTSIDE" strokeWidth="0.0" text="00h00min00s">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Text>
-                     </children>
-                  </HBox>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </VBox>
+                  <TabPane fx:id="TabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </VBox>
-            <TabPane fx:id="TabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
             <VBox prefHeight="371.0" prefWidth="514.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Proposition présente dans le texte" />
-                  <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="480.0" />
+                  <TextArea fx:id="proposition" prefHeight="82.0" prefWidth="480.0" style="-fx-border-color: black;" />
                   <BorderPane prefHeight="140.0" prefWidth="431.0">
                      <left>
                         <Button fx:id="validerbtn" mnemonicParsing="false" onAction="#chercherMot" text="Valider" BorderPane.alignment="CENTER">
@@ -87,6 +103,9 @@
                </children>
             </VBox>
          </children>
+         <GridPane.margin>
+            <Insets left="10.0" right="5.0" />
+         </GridPane.margin>
       </VBox>
       <VBox prefHeight="674.0" prefWidth="532.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
@@ -106,13 +125,19 @@
                <bottom>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="506.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="interactionVideoBtn" minWidth="65.0" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="33.0" prefWidth="65.0" text="▸ Jouer">
+                        <Button fx:id="interactionVideoBtn" minWidth="43.0" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="56.0" prefWidth="72.0" text="▸ " textAlignment="CENTER" textOverrun="CLIP">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
                            <padding>
                               <Insets right="10.0" />
                            </padding>
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
                         </Button>
                         <Slider id="progression" fx:id="progression" minWidth="232.0" prefHeight="16.0" prefWidth="232.0">
                            <HBox.margin>
@@ -141,6 +166,9 @@
                </bottom>
             </BorderPane>
          </children>
+         <GridPane.margin>
+            <Insets left="5.0" right="10.0" />
+         </GridPane.margin>
       </VBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
          <children>

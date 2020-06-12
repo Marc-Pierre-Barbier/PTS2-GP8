@@ -36,7 +36,7 @@ public class SectionModel {
 		return texteVideo;
 	}
 	
-	public String getAide() {
+	/*public String getAide() {
 		return aideVideo.getText();
-	}
+	}*/
 }

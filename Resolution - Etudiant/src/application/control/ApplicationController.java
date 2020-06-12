@@ -139,7 +139,7 @@ public class ApplicationController extends Main {
 		for(int i=4;i>0;i--) {
 			format += cheminVideo.charAt(cheminVideo.length()-i);
 		}
-		
+		System.out.println(sections.get(0) + "    "+sections.size());
 		JsonController.JSONCreation(fixMyPath(file.toString(),".res"), titre.getText(), sections, aideAutorisation, sensibiliteCase, modeAprentissage, motincomplet, solutionBoutton.isDisabled(), consigne.getText(), format, tempsTotal.toString());
 		
 		File source;

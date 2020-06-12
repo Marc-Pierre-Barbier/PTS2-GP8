@@ -71,7 +71,7 @@ public class Section {
 	}
 	
 	public String getAide() {
-		return secMod.getAide();
+		return sectionAide;
 	}
 	
 	public String getTimeLimiteCode() {

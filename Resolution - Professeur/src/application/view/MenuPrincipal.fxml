@@ -7,7 +7,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Text?> 
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="450.0" maxWidth="450.0" minHeight="450.0" minWidth="450.0" prefHeight="450.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.control.ApplicationController">
    <children>
@@ -33,7 +33,7 @@
       </MenuBar>
       <BorderPane layoutX="2.0" layoutY="27.0" prefHeight="426.0" prefWidth="450.0">
          <center>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aucun exercice chargée. Commencez par charger/créer un exercice. Pour plus d'aide rendez-vous dans l'onglet aide." textAlignment="CENTER" wrappingWidth="361.0035705566406" BorderPane.alignment="CENTER">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aucun exercice chargé. Commencez par charger/créer un exercice. Pour plus d'aides, rendez-vous dans l'onglet &quot;Aide&quot;." textAlignment="CENTER" wrappingWidth="361.0035705566406" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets top="100.0" />
                </BorderPane.margin>

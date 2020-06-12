@@ -53,6 +53,7 @@ public class JsonController {
 		Element root = new Element("exercice");
 		Document doc = new Document(root);
 		
+		System.out.println("nb sectoins charger" +sections.size());
 		for(Section s : sections) {
 			Element section = new Element("section");
 			
@@ -80,7 +81,6 @@ public class JsonController {
 		xmlOutput.setFormat(Format.getPrettyFormat());
 		try {
 			xmlOutput.output(doc, new FileWriter(cheminEnregistrement));
-			System.out.println(xmlOutput.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +106,6 @@ public class JsonController {
 		SAXBuilder saxBuilder = new SAXBuilder();
 		try {
 			Document doc = saxBuilder.build(selectedFile);
-			IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
 			
 			ApplicationController.modeAprentissage = Boolean.parseBoolean(doc.getRootElement().getChildText("modeApprentissage"));
 			//empeche de charger une sauvegarde d'un etudiant
@@ -132,11 +131,12 @@ public class JsonController {
 				ApplicationController.chronometrer = false;
 			}
 			
-			sections = new ArrayList<>();
+			IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
+			sections.clear();
 			while(processDescendants.hasNext()) {
 				Element elem = (Element) processDescendants.next();
 				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
-				
+
 				sections.add(new Section(TabPaneExo,
 					elem.getChild("SectionAide").getValue(),
 					new String(raw),

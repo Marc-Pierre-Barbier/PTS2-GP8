@@ -42,6 +42,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -98,20 +99,18 @@ public class ApplicationController extends Main {
 	@FXML
 	private Button chosevid;
 
-	private static final int HAUTEUR_FENETRE=600;
-	private static final int LARGEUR_FENETRE=1000;
-	
+	private static final int HAUTEUR_FENETRE = 600;
+	private static final int LARGEUR_FENETRE = 1000;
 
 	public void nouvelleExercice() throws IOException {
-		//setHauteur(666);
-		//setLargeur(964);
+		// setHauteur(666);
+		// setLargeur(964);
 		super.chargerUnePage("/application/view/NouvelleExercice.fxml");
 	}
 
 	public void nouvelleExerciceMenu() throws IOException {
-		Alert alert = ErreurModel.warn(Lang.CONFIRMATION, Lang.WARN_NEW_EXO
-				, Lang.OK_TO_CONTINUE);
-		
+		Alert alert = ErreurModel.warn(Lang.CONFIRMATION, Lang.WARN_NEW_EXO, Lang.OK_TO_CONTINUE);
+
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.isPresent() && result.get() == ButtonType.OK) {
 			chargerUnePage("/application/view/NouvelleExercice.fxml");
@@ -130,10 +129,10 @@ public class ApplicationController extends Main {
 
 	}
 
-	
-	//TODO deplacer le gros de l'ouverture dans JSONController
+	// TODO deplacer le gros de l'ouverture dans JSONController
 	public void ouvrir() throws IOException {
-		if (mediaPlayer != null)mediaPlayer.pause();
+		if (mediaPlayer != null)
+			mediaPlayer.pause();
 		Section.reset();
 		setupbtn();
 		FileChooser fileChooser = new FileChooser();
@@ -142,49 +141,64 @@ public class ApplicationController extends Main {
 		fileChooser.setTitle(Lang.OUVRIRE_FICHIER);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(Main.stage);
-		
+
 		System.out.println(Lang.CHARGE_EXO);
 		SAXBuilder saxBuilder = new SAXBuilder();
 		try {
+			ReponseEtudiant reponseEtudiantController = null;
 			Document doc = saxBuilder.build(selectedFile);
 			IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
+			if (processDescendants.hasNext() && ((Element) processDescendants.next()).getChildText("reponseEtudiant") != null) {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/ResultatEtudiant.fxml"));
+				Stage sta = new Stage();
+				BorderPane root = loader.load();
+				reponseEtudiantController = loader.getController();
+				Scene sc = new Scene(root);
+				sta.setScene(sc);
+				reponseEtudiantController.init(sta);
+			}
 			
-			
+			//je reset l'iterator car j'avais juste besoin d'une section
+			processDescendants = doc.getDescendants(new ElementFilter("section"));
+
 			titre.setText(doc.getRootElement().getChildText("titre"));
 			consigne.setText(doc.getRootElement().getChildText("consigne"));
 			String formatvideo = doc.getRootElement().getChildText("cheminVideo");
-			
+
 			sensibiliteCase.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("sensibiliteCase")));
 			aideCheckbox.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("aidestatus")));
 			motIncomplet.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("motIncomplet")));
-			
+
 			String limiteTemps = doc.getRootElement().getChildText("limiteTemps");
 			System.out.println(limiteTemps);
 			timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
 			timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
-			
+
 			sections = new ArrayList<>();
-			while(processDescendants.hasNext()) {
+			while (processDescendants.hasNext()) {
 				Element elem = (Element) processDescendants.next();
 				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
-				
-				sections.add(new Section(sectionsTabPane, sectionsTimeCodePane,
-					elem.getChild("SectionAide").getValue(),
-					new String(raw),
-					elem.getChild("SectionTimeLimitCode").getValue(),
-					elem.getChild("getTimeStart").getValue(),
-					elem.getChild("getTimeStop").getValue()));
+
+				Section s =new Section(sectionsTabPane, sectionsTimeCodePane, elem.getChild("SectionAide").getValue(),
+						new String(raw), elem.getChild("SectionTimeLimitCode").getValue(),
+						elem.getChild("getTimeStart").getValue(), elem.getChild("getTimeStop").getValue());
+				sections.add(s);
+				if(reponseEtudiantController != null) {
+					reponseEtudiantController.addTab(elem);
+				}
 			}
-			
+
 			String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
-			
+
 			chargerUneVideo(new File(cheminVideo));
 			mediaView.setVisible(videoChargee);
-			
+
+			if(reponseEtudiantController != null) {
+				reponseEtudiantController.run();
+			}
 		} catch (JDOMException | IOException e) {
 			ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
 		}
-		
 
 	}
 
@@ -192,7 +206,8 @@ public class ApplicationController extends Main {
 		sections = new ArrayList<>();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"),
-				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("*.avi", "*.avi"),new FileChooser.ExtensionFilter("All", "*"));
+				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("*.avi", "*.avi"),
+				new FileChooser.ExtensionFilter("All", "*"));
 		fileChooser.setTitle(Lang.OUVRIR_VID);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
@@ -226,33 +241,35 @@ public class ApplicationController extends Main {
 					progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100);
 				}
 			});
-			
+
 			aideCheckbox.setOnAction(new EventHandler<ActionEvent>() {
-				
+
 				@Override
 				public void handle(ActionEvent arg0) {
-					for(Section s : sections) {
-						if(!aideCheckbox.isSelected())s.disableAide();
-						else s.enableAide();
+					for (Section s : sections) {
+						if (!aideCheckbox.isSelected())
+							s.disableAide();
+						else
+							s.enableAide();
 					}
-					
+
 				}
 			});
-			
+
 			progression.setOnMouseReleased(new EventHandler<Event>() {
 				@Override
 				public void handle(Event event) {
 					double newValue = progression.getValue();
-					mediaPlayer.seek(
-							new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
+					mediaPlayer.seek(new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
 				}
 			});
 		}
 	}
 
 	public void setupbtn() {
-		if(sectionsTabPane != null)sectionsTabPane.getTabs().clear();
-		//SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
+		if (sectionsTabPane != null)
+			sectionsTabPane.getTabs().clear();
+		// SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
 	}
 
 	public void timeHandle() {
@@ -330,12 +347,13 @@ public class ApplicationController extends Main {
 				String videoformat = "";
 				final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
 				for (int i = medialength - 4; i < medialength; i++)
-					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i); 
-				// on sauvegarde que le format car on copie la video avec le fichier pour rendre le tout transportable
+					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i);
+				// on sauvegarde que le format car on copie la video avec le fichier pour rendre
+				// le tout transportable
 				JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
-						sections,aideCheckbox.isSelected() ,sensibiliteCase.isSelected(), modeApprentissage.isSelected(),
-						motIncomplet.isSelected(), affichageSolution.isSelected(), consigne.getText(), videoformat,
-						time);
+						sections, aideCheckbox.isSelected(), sensibiliteCase.isSelected(),
+						modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(),
+						consigne.getText(), videoformat, time);
 
 				try {
 					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
@@ -345,8 +363,7 @@ public class ApplicationController extends Main {
 				} catch (URISyntaxException e1) {
 					ErreurModel.erreur(Lang.URI_ERROR, Lang.FICHIER_LIEN_ERR);
 				} catch (IOException e) {
-					ErreurModel.erreur(Lang.ERR_COPY,
-							Lang.ERR_COPY_DETAIL);
+					ErreurModel.erreur(Lang.ERR_COPY, Lang.ERR_COPY_DETAIL);
 				}
 			} /*
 				 * else {
@@ -383,17 +400,19 @@ public class ApplicationController extends Main {
 		}
 	}
 
-	
-	//TODO chager exo
+	// TODO chager exo
 	public void chargerExercice() throws Exception {
 		nouvelleExercice();
-		// ouvrir(); bien sur ce n'est pas possible de les enchainer et je sais pas comment faire
-		Platform.runLater(() -> { try {
-			ouvrir();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}});
+		// ouvrir(); bien sur ce n'est pas possible de les enchainer et je sais pas
+		// comment faire
+		Platform.runLater(() -> {
+			try {
+				ouvrir();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@FXML
@@ -402,7 +421,8 @@ public class ApplicationController extends Main {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/MenuHandicap.fxml"));
 		Parent OptionRoot = loader.load();
 		Option control = loader.getController();
-		if(OptionRoot == null)System.exit(1);
+		if (OptionRoot == null)
+			System.exit(1);
 		sta.setScene(new Scene(OptionRoot));
 		sta.show();
 		control.run(sta);
@@ -411,19 +431,19 @@ public class ApplicationController extends Main {
 	public int onSelectNumber() {
 		return 0;
 	}
-	
+
 	public static void changeResolutionFromPolice(String TaillePolice) {
 		int ratio = 8;
-		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
-		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice) * ratio) - 13);
+		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice) * ratio) - 13);
 	}
 
 	public static void changePoliceSize(String size) {
-		for(Node e : Option.getFinalChildren(Main.getRoot())) {
-			e.setStyle("-fx-font: "+size+" arial;"); 
+		for (Node e : Option.getFinalChildren(Main.getRoot())) {
+			e.setStyle("-fx-font: " + size + " arial;");
 		}
 	}
-	
+
 	@FXML
 	private void runSegmentationMenu(ActionEvent event) {
 		System.out.println("chargement Section");
@@ -434,8 +454,11 @@ public class ApplicationController extends Main {
 			Scene scene = new Scene(root);
 			SectionController sController = loader.getController();
 			Platform.runLater(() -> {
-				if(sections != null)sController.run(scene,sections,(int) mediaPlayer.getTotalDuration().toSeconds(),sectionsTabPane,sectionsTimeCodePane );
-				else ErreurModel.erreur(Lang.NO_SECTION, Lang.NEED_VID_LOADED);
+				if (sections != null)
+					sController.run(scene, sections, (int) mediaPlayer.getTotalDuration().toSeconds(), sectionsTabPane,
+							sectionsTimeCodePane);
+				else
+					ErreurModel.erreur(Lang.NO_SECTION, Lang.NEED_VID_LOADED);
 			});
 		} catch (IOException e) {
 			System.err.println("ous sa a crash");
