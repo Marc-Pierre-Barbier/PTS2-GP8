@@ -183,7 +183,7 @@
          <children>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="191.0" prefWidth="292.0" GridPane.hgrow="ALWAYS">
                <children>
-                  <CheckBox fx:id="sensibiliteCase" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Sensibilite a la casse">
+                  <CheckBox fx:id="sensibiliteCase" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Sensibilité à la casse">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -193,21 +193,21 @@
                         <Insets top="5.0" />
                      </padding>
                   </RadioButton>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="253.0" VBox.vgrow="ALWAYS">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="85.0" prefWidth="294.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <CheckBox fx:id="motIncomplet" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Mot incomplet(autoriser)" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS">
+                        <CheckBox fx:id="motIncomplet" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Mots incomplet(autoriser)" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS">
                            <padding>
                               <Insets top="5.0" />
                            </padding>
                         </CheckBox>
                         <CheckBox fx:id="affichageSolution" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="26.0" prefWidth="271.0" style="-fx-text-overrun: clip;" text="Autoriser l'affichage de la solution" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS" />
-                        <CheckBox fx:id="aideCheckbox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="33.0" prefWidth="132.0" text="Ajouter une aide" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS" />
+                        <CheckBox fx:id="aideCheckbox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="34.0" prefWidth="289.0" text="Ajouter une aide" textOverrun="CLIP" wrapText="true" VBox.vgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets left="30.0" />
                      </VBox.margin>
                   </VBox>
-                  <RadioButton fx:id="modeEvaluation" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRadialE" text="Mode evaluation" VBox.vgrow="ALWAYS" />
+                  <RadioButton fx:id="modeEvaluation" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRadialE" text="Mode évaluation" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <CheckBox fx:id="checklimite" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#timeHandle" prefHeight="26.0" prefWidth="145.0" selected="true" text="Limite de temps" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.valignment="TOP" />

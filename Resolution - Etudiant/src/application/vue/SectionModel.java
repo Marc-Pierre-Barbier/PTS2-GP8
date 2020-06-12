@@ -12,7 +12,7 @@ public class SectionModel {
 	private VBox vbox;
 	private Text texte;
 	private TextArea texteVideo;
-	private TextArea aideVideo;
+	//private TextArea aideVideo;
 	
 	
 	public SectionModel(TabPane parent,String texteCache,int nbtab) {

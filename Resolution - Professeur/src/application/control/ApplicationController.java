@@ -52,6 +52,7 @@ import javafx.util.Duration;
 
 public class ApplicationController extends Main {
 
+	private static String TaillePolice;
 	private final String DEFAULT_EXTENSION = ".res";
 	private final String DEFAULT_NAME_EXTENSION = "Résolution";
 	private String time = "00:00:00";
@@ -99,11 +100,11 @@ public class ApplicationController extends Main {
 	@FXML
 	private Button chosevid;
 
-	private static final int HAUTEUR_FENETRE = 600;
+	private static final int HAUTEUR_FENETRE = 700;
 	private static final int LARGEUR_FENETRE = 1000;
 
 	public void nouvelleExercice() throws IOException {
-		// setHauteur(666);
+		//setHauteur(800);
 		// setLargeur(964);
 		super.chargerUnePage("/application/view/NouvelleExercice.fxml");
 	}
@@ -131,6 +132,7 @@ public class ApplicationController extends Main {
 
 	// TODO deplacer le gros de l'ouverture dans JSONController
 	public void ouvrir() throws IOException {
+		if(TaillePolice == null)super.setHauteur(700);
 		if (mediaPlayer != null)
 			mediaPlayer.pause();
 		Section.reset();
@@ -433,6 +435,7 @@ public class ApplicationController extends Main {
 	}
 
 	public static void changeResolutionFromPolice(String TaillePolice) {
+		ApplicationController.TaillePolice=TaillePolice;
 		int ratio = 8;
 		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice) * ratio) - 13);
 		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice) * ratio) - 13);
