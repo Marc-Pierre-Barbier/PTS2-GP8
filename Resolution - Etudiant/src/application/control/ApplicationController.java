@@ -86,12 +86,21 @@ public class ApplicationController extends Main {
 	public static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	public static boolean chronometrer = false;
 	public static boolean motincomplet = false;
+	Thread timerSectionHandle;
+	
 	
 	// TODO implementer le modeAprentissage et le mode enseignant
 	public static boolean modeAprentissage;
-	CustomTimer custom;
+	private CustomTimer custom;
 
 	public void ouvrirUnExercice() {
+		if(sections !=null) {
+			sections.clear();
+			tabPaneExo.getTabs().clear();
+			if(timerSectionHandle != null)timerSectionHandle.stop();
+			Section.reset();
+			custom.cancel();
+		}
 		sections = new ArrayList<>();
 		String cheminVideo = JsonController.jsonReader(titre, consigne, solutionBoutton, sections, tabPaneExo);
 		aideBtn.setDisable(!aideAutorisation);
@@ -118,12 +127,13 @@ public class ApplicationController extends Main {
 			}
 		});
 		
-		Thread timerSectionHandle = new Thread(new ThreadTimerControl(tabPaneExo,tempsTextSection, sections));
+		timerSectionHandle = new Thread(new ThreadTimerControl(tabPaneExo,tempsTextSection, sections));
 		if(!sections.get(0).getTimeLimiteCode().equals("00:00:00"))timerSectionHandle.start();
 		else {
 			tempsTextSection.setText(Lang.NON_CHRONOMETRER);
 		}
-		
+		//permet de quiter sans laisser le thread actif
+		tabPaneExo.getScene().getWindow().setOnCloseRequest(e ->quitter());
 		System.out.println(cheminVideo);
 
 		chargerUneVideo(new File(cheminVideo));// File(cheminModifie)

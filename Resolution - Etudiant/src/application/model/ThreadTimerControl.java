@@ -19,7 +19,7 @@ public class ThreadTimerControl implements Runnable{
 
 	@Override
 	public void run() {
-		while (tabPaneExo.getScene().getWindow().isShowing()) {
+		while (true) {
 			tempsTextSection.setText(format(sections.get(tabPaneExo.getSelectionModel().getSelectedIndex()).getTimeLeft()));
 			try {
 				Thread.sleep(1000);
@@ -31,7 +31,6 @@ public class ThreadTimerControl implements Runnable{
 		timeLeft = timeLeft/1000;
 		long h =(timeLeft-(timeLeft%3600))/3600;
 		timeLeft -= h*3600;
-		System.out.println(timeLeft);
 		long m =(timeLeft-(timeLeft%60))/60;
 		timeLeft -= m*60;
 		long s =timeLeft;
