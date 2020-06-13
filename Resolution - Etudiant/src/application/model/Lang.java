@@ -19,5 +19,8 @@ public class Lang {
 	
 	//TODO traduire en francais
 	public static final String NON_CHRONOMETRER = "pas de temps de section";
-	public static final String TEMPS_ECOULE = "esh y'a plus de temps";
+	public static final String TEMPS_ECOULE = "temps ecoulé";
+	public static final String TITRE_CONFIR_SOLUTION = "êtes vous sur";
+	public static final String TETE_CONFIRM_SOLUTION = "vous ne pourez plus coninuer l'exercice";
+	public static final String CONTENU_CONFIRM_SOLUTION = "cela va afficher la solution et mettre un terme a l'exercice";
 }

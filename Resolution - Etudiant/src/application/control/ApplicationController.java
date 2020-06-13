@@ -17,6 +17,7 @@ import application.model.JsonController;
 import application.model.Lang;
 import application.model.Section;
 import application.model.ThreadTimerControl;
+import application.vue.ErreurModel;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -93,6 +94,7 @@ public class ApplicationController extends Main {
 	public static boolean modeAprentissage;
 	private CustomTimer custom;
 
+	@SuppressWarnings("deprecation")
 	public void ouvrirUnExercice() {
 		if(sections !=null) {
 			sections.clear();
@@ -108,7 +110,11 @@ public class ApplicationController extends Main {
 			@Override
 			public void handle(ActionEvent arg0) {
 				Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
-				s.lock();
+				if(!s.islocked() && ErreurModel.confirmDialog(Lang.TITRE_CONFIR_SOLUTION, Lang.TETE_CONFIRM_SOLUTION, Lang.CONTENU_CONFIRM_SOLUTION)) {
+					s.lock();
+				}
+				//causes des freezes si ce n'est pas fait
+				System.gc();
 			}
 		});
 		proposition.setOnKeyPressed(new EventHandler<KeyEvent>() {
