@@ -128,10 +128,8 @@ public class ApplicationController extends Main {
 		});
 		
 		timerSectionHandle = new Thread(new ThreadTimerControl(tabPaneExo,tempsTextSection, sections));
-		if(!sections.get(0).getTimeLimiteCode().equals("00:00:00"))timerSectionHandle.start();
-		else {
-			tempsTextSection.setText(Lang.NON_CHRONOMETRER);
-		}
+		timerSectionHandle.start();
+		
 		//permet de quiter sans laisser le thread actif
 		tabPaneExo.getScene().getWindow().setOnCloseRequest(e ->quitter());
 		System.out.println(cheminVideo);
