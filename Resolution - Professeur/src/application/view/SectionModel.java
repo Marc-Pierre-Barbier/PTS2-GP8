@@ -1,6 +1,7 @@
 package application.view;
 
 import application.model.Lang;
+import application.model.timeCode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -10,7 +11,7 @@ import javafx.scene.text.Text;
 
 public class SectionModel {
 	
-	private final int TAILLE_CHAMP_TEXTE_TIMER = 30;
+	private static final int TAILLE_CHAMP_TEXTE_TIMER = 30;
 	private Tab section;
 	private VBox vbox;
 	private Text texte;
@@ -23,8 +24,10 @@ public class SectionModel {
 	private TextArea limiteTempsH;
 	private TextArea limiteTempsM;
 	private HBox boxtime;
+	private timeCode timecode;
 	
 	public SectionModel(TabPane parent,TabPane sectionsTimeCodePane,int nbtab) {
+		timecode = new timeCode();
 		section = new Tab(Lang.SECTION + nbtab);
 		vbox = new VBox();
 		texte = new Text(Lang.TEXTE);
@@ -40,16 +43,18 @@ public class SectionModel {
 		limiteTempsH = new TextArea("00");
 		limiteTempsH.setMinHeight(TAILLE_CHAMP_TEXTE_TIMER);
 		limiteTempsH.setMaxHeight(TAILLE_CHAMP_TEXTE_TIMER);
+		limiteTempsH.setOnKeyReleased(e -> timecode.setHours(limiteTempsH.getText()));
 		limiteTempsM = new TextArea("00");
 		limiteTempsM.setMinHeight(TAILLE_CHAMP_TEXTE_TIMER);
 		limiteTempsM.setMaxHeight(TAILLE_CHAMP_TEXTE_TIMER);
+		limiteTempsM.setOnKeyReleased(e -> timecode.setMinutes(limiteTempsM.getText()));
 		boxtime= new HBox();
 		boxtime.getChildren().addAll(new Text(Lang.LIMITE_TEMP),limiteTempsH,new Text("h"),limiteTempsM,new Text("min"));
 		limiteTempsTab.setContent(boxtime);
 		sectionsTimeCodePane.getTabs().add(limiteTempsTab);
 	}
 	
-	public void SectionLoad(String aideVideoSTR,String texteVideoSTR,String SectionTimeCode) {
+	public void sectionLoad(String aideVideoSTR,String texteVideoSTR,String SectionTimeCode) {
 		texteVideo.setText(texteVideoSTR);
 		aideVideo.setText(aideVideoSTR);
 		System.out.println(SectionTimeCode);
@@ -65,12 +70,8 @@ public class SectionModel {
 		return aideVideo.getText();
 	}
 
-	public String getlimiteTempsH() {
-		return limiteTempsH.getText();
-	}
-
-	public String getlimiteTempsM() {
-		return limiteTempsM.getText();
+	public timeCode getTimecode() {
+		return timecode;
 	}
 
 	public void setLimiteTempsH(String string) {
@@ -84,12 +85,12 @@ public class SectionModel {
 	}
 	
 	public void setStyleLimiteTempsH(String string) {
-		limiteTempsH.setText(string);
+		limiteTempsH.setStyle(string);
 		
 	}
 	
 	public void setStyleLimiteTempsM(String string) {
-		limiteTempsM.setText(string);
+		limiteTempsM.setStyle(string);
 		
 	}
 

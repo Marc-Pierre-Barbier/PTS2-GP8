@@ -20,7 +20,7 @@ public class Section {
 
 	public Section(TabPane parent, TabPane sectionsTimeCodePane,String aideVideoSTR,String texteVideoSTR,String SectionTimeCode,String timeStart,String timeStop) {
 		this(parent,sectionsTimeCodePane);
-		SecModl.SectionLoad(aideVideoSTR, texteVideoSTR, SectionTimeCode);
+		SecModl.sectionLoad(aideVideoSTR, texteVideoSTR, SectionTimeCode);
 		this.timeStart=timeStart;
 		this.timeStop=timeStop;
 	}
@@ -47,8 +47,10 @@ public class Section {
 	}
 	
 	public String getTimeLimitCode() {
-		String limiteTempsH = SecModl.getlimiteTempsH();
+		//TODO verifier quelle partie de ce code sont nessecaire a reimplementer
+		/*String limiteTempsH = SecModl.getlimiteTempsH();
 		String limiteTempsM = SecModl.getlimiteTempsM();
+		System.out.println(limiteTempsM + limiteTempsM);
 		if(limiteTempsH.length() == 1)SecModl.setLimiteTempsH("0"+limiteTempsH);
 		if(limiteTempsM.length() == 1)SecModl.setLimiteTempsM("0"+limiteTempsM);
 		if(limiteTempsH.length() == 0)SecModl.setLimiteTempsH("00");
@@ -61,14 +63,16 @@ public class Section {
 			SecModl.setStyleLimiteTempsM("-fx-text-inner-color: red;");  
 			return "ABORT";
 		}
+		System.out.println(limiteTempsM + limiteTempsM);
 		try {
 			Integer.parseInt(limiteTempsH);
 			Integer.parseInt(limiteTempsM);
 		}catch (NumberFormatException e) {
 			return "ABORT"; //le temps contien lettres / charatéres speciaux
 		}
-		
-		return "00:"+limiteTempsM + ":" + limiteTempsM;
+		System.out.println(limiteTempsM + ":" + limiteTempsM);
+		return "00:"+limiteTempsM + ":" + limiteTempsM;*/
+		return SecModl.getTimecode().toString();
 		
 	}
 

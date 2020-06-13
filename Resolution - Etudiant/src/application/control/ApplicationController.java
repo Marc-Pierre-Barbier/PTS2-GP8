@@ -16,6 +16,7 @@ import application.model.CustomTimer;
 import application.model.JsonController;
 import application.model.Lang;
 import application.model.Section;
+import application.model.ThreadTimerControl;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -73,7 +74,7 @@ public class ApplicationController extends Main {
 	@FXML
 	private Slider progression;
 	@FXML
-	private TabPane TabPaneExo;
+	private TabPane tabPaneExo;
 	@FXML
 	private Button validerbtn;
 	@FXML
@@ -90,17 +91,16 @@ public class ApplicationController extends Main {
 	public static boolean modeAprentissage;
 	CustomTimer custom;
 
-	public void ouvrirUnExercice() throws InterruptedException {
+	public void ouvrirUnExercice() {
 		sections = new ArrayList<>();
-		String cheminVideo = JsonController.JSONReader(titre, consigne, solutionBoutton, sections, TabPaneExo);
+		String cheminVideo = JsonController.jsonReader(titre, consigne, solutionBoutton, sections, tabPaneExo);
 		aideBtn.setDisable(!aideAutorisation);
 		solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
+				Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
 				s.lock();
 			}
-			
 		});
 		proposition.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
@@ -113,11 +113,17 @@ public class ApplicationController extends Main {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
+				Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
 				s.switchHelpStatus();
 			}
 		});
-
+		
+		Thread timerSectionHandle = new Thread(new ThreadTimerControl(tabPaneExo,tempsTextSection, sections));
+		if(!sections.get(0).getTimeLimiteCode().equals("00:00:00"))timerSectionHandle.start();
+		else {
+			tempsTextSection.setText(Lang.NON_CHRONOMETRER);
+		}
+		
 		System.out.println(cheminVideo);
 
 		chargerUneVideo(new File(cheminVideo));// File(cheminModifie)
@@ -233,7 +239,7 @@ public class ApplicationController extends Main {
 		}
 	}
 
-	public LocalTime Timer(LocalTime temps) {
+	public LocalTime timer(LocalTime temps) {
 		Timer time = new Timer();
 		custom = new CustomTimer(temps, tempsText);
 		time.schedule(custom, 1000, 1000);
@@ -241,7 +247,7 @@ public class ApplicationController extends Main {
 	}
 
 	public void chercherMot() {
-		Section s = sections.get(TabPaneExo.getSelectionModel().getSelectedIndex());
+		Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
 
 		if (s.islocked() || s.isHelp())return; // on le cherche pas si c'est lock ou dans l'aide
 
@@ -260,7 +266,7 @@ public class ApplicationController extends Main {
 			if (objectif.charAt(i) != ' ') {
 				mot += objectif.charAt(i);
 			} else {
-				if (mot != "") {
+				if (mot != null && !mot.equals("")) {
 					proposition.setText(mot);
 					chercherMotSplt(s);
 					mot = "";
@@ -280,13 +286,13 @@ public class ApplicationController extends Main {
 				int indexProp = index;
 				if (sensibiliteCase) {
 					for (char prop : proposition.getText().toCharArray()) {
-						if (!(prop == texteATrouver.charAt(indexProp)))
+						if (prop != texteATrouver.charAt(indexProp))
 							break;
 						indexProp++;
 					}
 				} else {
 					for (char prop : proposition.getText().toLowerCase().toCharArray()) {
-						if (!(prop == texteATrouver.toLowerCase().charAt(indexProp)))
+						if (prop != texteATrouver.toLowerCase().charAt(indexProp))
 							break;
 						indexProp++;
 					}
@@ -334,25 +340,25 @@ public class ApplicationController extends Main {
 	public void demarrerExercice() {
 		System.out.println(tempsText.getText());
 		if (chronometrer)
-			Timer(tempsTotal);
+			timer(tempsTotal);
 	}
 	
 	@FXML
 	private void option(ActionEvent event) throws IOException {
 		Stage sta = new Stage();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/vue/MenuHandicap.fxml"));
-		Parent OptionRoot = loader.load();
+		Parent optionRoot = loader.load();
 		Option control = loader.getController();
-		if(OptionRoot == null)System.exit(1);
-		sta.setScene(new Scene(OptionRoot));
+		if(optionRoot == null)System.exit(1);
+		sta.setScene(new Scene(optionRoot));
 		sta.show();
 		control.run(sta);
 	}
 	
-	public static void changeResolutionFromPolice(String TaillePolice) {
+	public static void changeResolutionFromPolice(String taillePolice) {
 		int ratio = 8;
-		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
-		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice)*ratio)-13);
+		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
+		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
 	}
 
 	public static void changePoliceSize(String size) {

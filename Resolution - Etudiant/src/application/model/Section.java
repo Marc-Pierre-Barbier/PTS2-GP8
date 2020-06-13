@@ -1,6 +1,9 @@
 package application.model;
 
+import java.time.LocalTime;
+
 import application.control.ApplicationController;
+import application.vue.ErreurModel;
 import application.vue.SectionModel;
 import javafx.scene.control.TabPane;
 
@@ -14,6 +17,7 @@ public class Section {
 	private SectionModel secMod;
 	private boolean locked = false;
 	private boolean help = false;
+	private CustomSectionPausableTime timer;
 	/**
 	 * le temps est exprimer en hh:mm:ss depuis le debut de la video
 	 * @return
@@ -26,12 +30,12 @@ public class Section {
 	private String timeStop;
 	
 	public Section(TabPane parent,String sectionAide,String sectionText,String sectionTimeCode,String timeStart,String timeStop) {
+		timer = new CustomSectionPausableTime();
 		nbtab++;
 		idTab=nbtab;
 		this.sectionTimeLimiteCode = sectionTimeCode;
 		this.sectionText=sectionText;
 		this.sectionAide=sectionAide;
-		System.out.println(sectionAide);
 		texteCache="";
         for (int i = 0; i < sectionText.length(); i++) {
         	if(!ApplicationController.CARACTERE_NON_OCULTER.contains(sectionText.charAt(i)+"")) {
@@ -41,7 +45,7 @@ public class Section {
         	}
 		}
         
-        secMod = new SectionModel(parent,texteCache, nbtab);
+        secMod = new SectionModel(parent,texteCache, nbtab,this);
         System.out.println(texteCache);
         this.timeStart=timeStart;
 		this.timeStop=timeStop;
@@ -121,5 +125,31 @@ public class Section {
 	}
 	public String getTimeStop() {
 		return timeStop;
+	}
+
+	public long getTimeLeft() {
+		LocalTime t = LocalTime.parse(sectionTimeLimiteCode);
+		//t = t.minusNanos(timer.getTimeElipsed());
+		return localTimeToMSecs(t) - timer.getTimeElipsed();
+	}
+	
+	private long localTimeToMSecs(LocalTime t) {
+		return t.getMinute()*60*1000 + t.getSecond()*1000;
+	}
+	
+	public void startTimer() {
+		try {
+			timer.start();
+		} catch (AlredyRunningExeption e) {
+			ErreurModel.erreurStack(e);
+		}
+	}
+
+	public void stopTimer() {
+		try {
+			timer.pause();
+		} catch (NotRunningExeption e) {
+			ErreurModel.erreurStack(e);
+		}
 	}
 }

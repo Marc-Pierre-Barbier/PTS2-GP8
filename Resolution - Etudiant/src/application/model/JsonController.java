@@ -90,10 +90,10 @@ public class JsonController {
 	 * @param consigne
 	 * @param solutionBoutton
 	 * @param sections
-	 * @param TabPaneExo
+	 * @param tabPaneExo
 	 * @return
 	 */
-	public static String JSONReader(Text titre,TextField consigne,Button solutionBoutton, List<Section> sections,TabPane TabPaneExo) {
+	public static String jsonReader(Text titre,TextField consigne,Button solutionBoutton, List<Section> sections,TabPane tabPaneExo) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters()
 				.addAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
@@ -134,14 +134,15 @@ public class JsonController {
 			sections.clear();
 			while(processDescendants.hasNext()) {
 				Element elem = (Element) processDescendants.next();
-				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
-
-				sections.add(new Section(TabPaneExo,
+				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());				
+				
+				sections.add(new Section(tabPaneExo,
 					elem.getChild("SectionAide").getValue(),
 					new String(raw),
 					elem.getChild("SectionTimeLimitCode").getValue(),
 					elem.getChild("getTimeStart").getValue(),
-					elem.getChild("getTimeStop").getValue()));
+					elem.getChild("getTimeStop").getValue()
+				));
 			}
 			
 			return selectedFile.getAbsolutePath().replace(".res", formatvideo);

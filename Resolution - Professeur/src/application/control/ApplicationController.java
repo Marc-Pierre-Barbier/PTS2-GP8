@@ -103,6 +103,10 @@ public class ApplicationController extends Main {
 	private static final int HAUTEUR_FENETRE = 700;
 	private static final int LARGEUR_FENETRE = 1000;
 
+	/**
+	 * recharge le fxml affin de mettre a 0 tout
+	 * @throws IOException
+	 */
 	public void nouvelleExercice() throws IOException {
 		//setHauteur(800);
 		// setLargeur(964);
@@ -132,7 +136,7 @@ public class ApplicationController extends Main {
 
 	// TODO deplacer le gros de l'ouverture dans JSONController
 	public void ouvrir() throws IOException {
-		if(TaillePolice == null)super.setHauteur(700);
+		if(TaillePolice == null)setHauteur(700);
 		if (mediaPlayer != null)
 			mediaPlayer.pause();
 		Section.reset();
@@ -162,7 +166,6 @@ public class ApplicationController extends Main {
 			
 			//je reset l'iterator car j'avais juste besoin d'une section
 			processDescendants = doc.getDescendants(new ElementFilter("section"));
-
 			titre.setText(doc.getRootElement().getChildText("titre"));
 			consigne.setText(doc.getRootElement().getChildText("consigne"));
 			String formatvideo = doc.getRootElement().getChildText("cheminVideo");
@@ -421,11 +424,11 @@ public class ApplicationController extends Main {
 	private void option(ActionEvent event) throws IOException {
 		Stage sta = new Stage();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/MenuHandicap.fxml"));
-		Parent OptionRoot = loader.load();
+		Parent optionRoot = loader.load();
 		Option control = loader.getController();
-		if (OptionRoot == null)
+		if (optionRoot == null)
 			System.exit(1);
-		sta.setScene(new Scene(OptionRoot));
+		sta.setScene(new Scene(optionRoot));
 		sta.show();
 		control.run(sta);
 	}

@@ -68,7 +68,7 @@
                         <Insets />
                      </opaqueInsets>
                   </VBox>
-                  <TabPane fx:id="TabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
+                  <TabPane fx:id="tabPaneExo" prefHeight="424.0" prefWidth="514.0" tabClosingPolicy="UNAVAILABLE" />
                </children>
                <opaqueInsets>
                   <Insets />

@@ -24,7 +24,9 @@ public class JsonController {
 			
 			section.addContent(new Element("SectionAide").setText(s.getAide()));
 			section.addContent(new Element("SectionText").setText(Base64.getEncoder().encodeToString(s.getText().getBytes())));
+			
 			section.addContent(new Element("SectionTimeLimitCode").setText(s.getTimeLimitCode()));
+			System.out.println(s.getTimeLimitCode());
 			section.addContent(new Element("getTimeStart").setText(s.getTimeStart()));
 			section.addContent(new Element("getTimeStop").setText(s.getTimeStop()));
 			doc.getRootElement().addContent(section);
