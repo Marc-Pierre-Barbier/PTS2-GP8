@@ -73,6 +73,8 @@ public class ApplicationController extends Main {
 	@FXML
 	private Text tempsTextSection;
 	@FXML
+	private Text timeDisplay;
+	@FXML
 	private Slider progression;
 	@FXML
 	private TabPane tabPaneExo;
@@ -212,25 +214,43 @@ public class ApplicationController extends Main {
 		videoChargee = true;
 
 		mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+			
+			timeDisplay.setText((long)newTime.toHours() +":"+ (long)newTime.toMinutes()%60+":"+(long)newTime.toSeconds()%60);
 			if (!progression.isValueChanging() && !progression.isPressed()) {
-				progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100);
+				int index = tabPaneExo.getSelectionModel().getSelectedIndex();
+				double debut =  sections.get(index).getTimeStartNumeric();
+				double fin = sections.get(index).getTimeStopNumeric();
+				
+				if(fin - newTime.toMillis() > 0 && newTime.toMillis() >= debut) {
+					progression.setValue((newTime.toMillis() - debut)/(fin - debut)*100);
+					System.out.println((newTime.toMillis() - debut)/(fin - debut)*100);
+				}else {
+					if(fin - newTime.toMillis() <= 0) {
+						progression.setValue(100);
+						mediaPlayer.seek(new Duration(fin));
+						mediaPlayer.pause();
+					}else {
+						progression.setValue(0);
+						mediaPlayer.seek(new Duration(debut));
+					}
+				}
 			}
 		});
 
-		/*progression.setOnMouseReleased(new EventHandler<Event>() {
-			@Override
-			public void handle(Event event) {
-				double newValue = progression.getValue();
-				mediaPlayer.seek(
-						new Duration(1000 * (double) newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
-			}
-		});*/
 		progression.setOnMouseReleased(new EventHandler<Event>() {
 			@Override
 			public void handle(Event event) {
 				double newValue = progression.getValue();
-				mediaPlayer.seek(
-						new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
+				//mediaPlayer.seek(new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
+				int index = tabPaneExo.getSelectionModel().getSelectedIndex();
+				double debut =  sections.get(index).getTimeStartNumeric();
+				double fin = sections.get(index).getTimeStopNumeric();
+				mediaPlayer.seek(new Duration((fin - debut)*newValue/100 + debut));
+				System.out.println("debug :"+debut + "\nfin :"+fin + "\n"+mediaPlayer.getCurrentTime().toMillis());
+				if(mediaPlayer.getCurrentTime().toMillis() < debut && mediaPlayer.getCurrentTime().toMillis() >= fin) {
+					mediaPlayer.seek(new Duration(debut));
+					//progression.setValue(0);
+				}
 			}
 		});
 	}

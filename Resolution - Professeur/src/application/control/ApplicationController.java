@@ -46,6 +46,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -58,7 +59,10 @@ public class ApplicationController extends Main {
 	private String time = "00:00:00";
 	private List<Section> sections;
 	private boolean videoChargee = false;
-
+	
+	
+	@FXML
+	private Text timeDisplay;
 	@FXML
 	private TextField titre;
 	@FXML
@@ -242,6 +246,7 @@ public class ApplicationController extends Main {
 			mediaView.setFitHeight(250);
 			videoChargee = true;
 			mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+				timeDisplay.setText((long)newTime.toHours() +":"+ (long)newTime.toMinutes()%60+":"+(long)newTime.toSeconds()%60);
 				if (!progression.isValueChanging() && !progression.isPressed()) {
 					progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100);
 				}
@@ -355,7 +360,7 @@ public class ApplicationController extends Main {
 					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i);
 				// on sauvegarde que le format car on copie la video avec le fichier pour rendre
 				// le tout transportable
-				JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
+				JsonController.jsonCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
 						sections, aideCheckbox.isSelected(), sensibiliteCase.isSelected(),
 						modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(),
 						consigne.getText(), videoformat, time);

@@ -25,7 +25,8 @@ public class ReponseEtudiant {
 		for(Tab t : tabs.getTabs()) {
 			rep+=((TextField)t.getContent()).getText()+" ";
 		}
-		rep.trim();
+		rep = rep.trim();
+		rep += " ";
 		int nbMot = count(rep,' ');
 		reponse.setText(countMotTrouve(rep,'*')+"/"+nbMot);
 

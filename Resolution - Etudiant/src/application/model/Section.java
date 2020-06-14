@@ -123,6 +123,15 @@ public class Section {
 	public String getTimeStart() {
 		return timeStart;
 	}
+	
+	public long getTimeStopNumeric(){
+		return localTimeToMSecs(LocalTime.parse(timeStop));
+	}
+	
+	public long getTimeStartNumeric(){
+		return localTimeToMSecs(LocalTime.parse(timeStart));
+	}
+	
 	public String getTimeStop() {
 		return timeStop;
 	}
@@ -134,7 +143,7 @@ public class Section {
 	}
 	
 	private long localTimeToMSecs(LocalTime t) {
-		return t.getMinute()*60*1000 + t.getSecond()*1000;
+		return t.getMinute()*60*1000 + t.getSecond()*1000;// + t.getNano()/1000;
 	}
 	
 	public void startTimer() {

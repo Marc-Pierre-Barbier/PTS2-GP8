@@ -12,7 +12,7 @@ import org.jdom2.output.XMLOutputter;
 
 public class JsonController {
 
-	public static void JSONCreation(String cheminEnregistrement, String title, List<Section> sections,
+	public static void jsonCreation(String cheminEnregistrement, String title, List<Section> sections,
 			boolean aidestatus, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet,
 			boolean solution, String consigne, String cheminVideo, String limiteTemps) {
 
