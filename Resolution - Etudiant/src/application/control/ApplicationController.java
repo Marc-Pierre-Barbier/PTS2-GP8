@@ -108,6 +108,7 @@ public class ApplicationController extends Main {
 		}
 		sections = new ArrayList<>();
 		String cheminVideo = JsonController.jsonReader(titre, consigne, solutionBoutton, sections, tabPaneExo);
+		if(cheminVideo == null)return;
 		aideBtn.setDisable(!aideAutorisation);
 		solutionBoutton.setDisable(solutionDroit);
 		solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {

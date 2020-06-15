@@ -1,9 +1,13 @@
 package application.model;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
@@ -60,7 +64,8 @@ public class JsonController {
 		XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
 		xmlOutput.setFormat(Format.getPrettyFormat());
 		try {
-			xmlOutput.output(doc, new FileWriter(cheminEnregistrement));
+			//l'utilisation du outputStreamer permet d'eviter des probléme d'encodage
+			xmlOutput.output(doc,new OutputStreamWriter(new FileOutputStream(cheminEnregistrement), StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -69,7 +74,10 @@ public class JsonController {
 	public String jsonReader(File selectedFile,TextField titre,TextField consigne, CheckBox sensibiliteCase, CheckBox aideCheckbox, CheckBox motIncomplet, TextField timefieldh, TextField timefieldm, List<Section> sections, TabPane sectionsTabPane, TabPane sectionsTimeCodePane) throws IOException, JDOMException {
 		SAXBuilder saxBuilder = new SAXBuilder();
 		ReponseEtudiant reponseEtudiantController = null;
-		Document doc = saxBuilder.build(selectedFile);
+		//l'utilisation du InputStreamReader permet d'eviter des probléme d'encodage
+		URL fichierURL = new URL(selectedFile.toURI().toString());
+		BufferedReader bfr = new BufferedReader(new InputStreamReader(fichierURL.openStream(), StandardCharsets.UTF_8));
+		Document doc = saxBuilder.build(bfr);
 		IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
 		if (processDescendants.hasNext()
 				&& ((Element) processDescendants.next()).getChildText("reponseEtudiant") != null) {
@@ -97,7 +105,8 @@ public class JsonController {
 		timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
 		timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
 
-		sections = new ArrayList<>();
+		//TODO SI SA CASSE C'etait ici
+		sections.clear();
 		while (processDescendants.hasNext()) {
 			Element elem = (Element) processDescendants.next();
 			byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());

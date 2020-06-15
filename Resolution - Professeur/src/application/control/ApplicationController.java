@@ -7,16 +7,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.jdom2.filter.ElementFilter;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.util.IteratorIterable;
 
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
@@ -45,7 +39,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;

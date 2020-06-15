@@ -1,8 +1,13 @@
 package application.model;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.util.Base64;
 import java.util.List;
@@ -79,7 +84,8 @@ public class JsonController {
 		XMLOutputter xmlOutput = new XMLOutputter(Format.getPrettyFormat());
 		xmlOutput.setFormat(Format.getPrettyFormat());
 		try {
-			xmlOutput.output(doc, new FileWriter(cheminEnregistrement));
+			//l'utilisation du outputStreamer permet d'eviter des probléme d'encodage (par defaut on lisait du uf8 et on enregistrais en ISO)
+			xmlOutput.output(doc, new OutputStreamWriter(new FileOutputStream(cheminEnregistrement), StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,12 +105,17 @@ public class JsonController {
 				.addAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
 		fileChooser.setTitle(Lang.CHARGER_EXO);
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		
+		
 		File selectedFile = fileChooser.showOpenDialog(Main.stage);
 		
 		System.out.println(Lang.CHARGE_EXO);
 		SAXBuilder saxBuilder = new SAXBuilder();
 		try {
-			Document doc = saxBuilder.build(selectedFile);
+			//l'utilisation du InputStreamReader permet d'eviter des probléme d'encodage
+			URL fichierURL = new URL(selectedFile.toURI().toString());
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(fichierURL.openStream(), StandardCharsets.UTF_8));
+			Document doc = saxBuilder.build(bfr);
 			
 			ApplicationController.modeAprentissage = Boolean.parseBoolean(doc.getRootElement().getChildText("modeApprentissage"));
 			//empeche de charger une sauvegarde d'un etudiant
@@ -154,6 +165,7 @@ public class JsonController {
 			return selectedFile.getAbsolutePath().replace(".res", formatvideo);
 		}catch (JDOMException | IOException e) {
 			ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
+			e.printStackTrace();
 		}
 		//si ce return est utiliser sa veut dire qu'on a euh un crash
 		return null;
