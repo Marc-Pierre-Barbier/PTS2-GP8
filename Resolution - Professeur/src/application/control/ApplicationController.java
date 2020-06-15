@@ -488,7 +488,7 @@ public class ApplicationController extends Main {
 	 */
 	public void openDocs() {
 		HostServicesDelegate hostServices = HostServicesFactory.getInstance(this);
-		hostServices.showDocument("https://www.dropbox.com/home?preview=Manuel+d%27utilisation.pdf");
+		hostServices.showDocument("https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0");
 	}
 
 }
