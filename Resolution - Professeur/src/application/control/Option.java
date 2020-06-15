@@ -46,8 +46,8 @@ public class Option {
 			@Override
 			public void handle(ActionEvent arg0) {
 				if(policeChbx.isSelected()) {
-					ApplicationController.changePoliceSize(policeSize.getSelectionModel().getSelectedItem());
-					ApplicationController.changeResolutionFromPolice(policeSize.getSelectionModel().getSelectedItem());
+					ApplicationController.changePoliceSize(Integer.parseInt(policeSize.getSelectionModel().getSelectedItem()));
+					ApplicationController.changeResolutionFromPolice(Integer.parseInt(policeSize.getSelectionModel().getSelectedItem()));
 				}
 				sta.close();
 			}

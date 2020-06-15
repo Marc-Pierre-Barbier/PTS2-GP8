@@ -10,6 +10,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
+import com.sun.javafx.application.HostServicesDelegate;
 
 import application.Main;
 import application.model.CustomTimer;
@@ -89,10 +91,9 @@ public class ApplicationController extends Main {
 	public static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	public static boolean chronometrer = false;
 	public static boolean motincomplet = false;
-	Thread timerSectionHandle;
+	public static boolean solutionDroit;
+	private Thread timerSectionHandle;
 	
-	
-	// TODO implementer le modeAprentissage et le mode enseignant
 	public static boolean modeAprentissage;
 	private CustomTimer custom;
 
@@ -103,11 +104,12 @@ public class ApplicationController extends Main {
 			tabPaneExo.getTabs().clear();
 			if(timerSectionHandle != null)timerSectionHandle.stop();
 			Section.reset();
-			custom.cancel();
+			if(custom != null)custom.cancel();
 		}
 		sections = new ArrayList<>();
 		String cheminVideo = JsonController.jsonReader(titre, consigne, solutionBoutton, sections, tabPaneExo);
 		aideBtn.setDisable(!aideAutorisation);
+		solutionBoutton.setDisable(solutionDroit);
 		solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -144,10 +146,13 @@ public class ApplicationController extends Main {
 
 		chargerUneVideo(new File(cheminVideo));// File(cheminModifie)
 
-		demarrerExercice();
+		demarrerTimerExercice();
 
 	}
 	
+	/**
+	 * ouvre un dialogue et demande ou voulez vous enregistrer
+	 */
 	public void sauvegarderUnExercice() {
 		if(!videoChargee)return;
 		final FileChooser dialog = new FileChooser();
@@ -156,24 +161,23 @@ public class ApplicationController extends Main {
 		File file = dialog.showSaveDialog(super.getStage());
 		
 		String cheminVideo = mediaView.getMediaPlayer().getMedia().getSource();
-		String format="";
 
+		StringBuilder format = new StringBuilder(4);
 		for(int i=4;i>0;i--) {
-			format += cheminVideo.charAt(cheminVideo.length()-i);
+			format.append(cheminVideo.charAt(cheminVideo.length()-i));
 		}
 		System.out.println(sections.get(0) + "    "+sections.size());
-		JsonController.JSONCreation(fixMyPath(file.toString(),".res"), titre.getText(), sections, aideAutorisation, sensibiliteCase, modeAprentissage, motincomplet, solutionBoutton.isDisabled(), consigne.getText(), format, tempsTotal.toString());
+		JsonController.jsonCreation(fixMyPath(file.toString(),".res"), titre.getText(), sections, aideAutorisation, sensibiliteCase, modeAprentissage, motincomplet, solutionBoutton.isDisabled(), consigne.getText(), format.toString(), tempsTotal.toString());
 		
 		File source;
 		try {
 			source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
-			File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), format));
+			File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), format.toString()));
 			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			//TODO AFFICHER CETTE MERDE
 		} catch (URISyntaxException e) {
-			//ERREUR URI CE N'EST PAS REGLABLE PAR L'utilisateur
+			ErreurModel.erreur(Lang.ERREUR, Lang.URI_ERROR);
 		} catch (IOException e) {
-			//ERREUR ECRITURE
+			ErreurModel.erreur(Lang.ERR_COPY, Lang.ERR_COPY_DETAIL);
 		}
 		
 	}
@@ -197,6 +201,10 @@ public class ApplicationController extends Main {
 		}
 	}
 	
+	/**
+	 * charge la video passer en paramétre
+	 * @param selectedFile fichier de la video
+	 */
 	public void chargerUneVideo(File f) {
 
 		Media media = new Media(new File(f.getAbsolutePath()).toURI().toString());
@@ -236,12 +244,11 @@ public class ApplicationController extends Main {
 				}
 			}
 		});
-
+	
 		progression.setOnMouseReleased(new EventHandler<Event>() {
 			@Override
 			public void handle(Event event) {
 				double newValue = progression.getValue();
-				//mediaPlayer.seek(new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
 				int index = tabPaneExo.getSelectionModel().getSelectedIndex();
 				double debut =  sections.get(index).getTimeStartNumeric();
 				double fin = sections.get(index).getTimeStopNumeric();
@@ -249,18 +256,23 @@ public class ApplicationController extends Main {
 				System.out.println("debug :"+debut + "\nfin :"+fin + "\n"+mediaPlayer.getCurrentTime().toMillis());
 				if(mediaPlayer.getCurrentTime().toMillis() < debut && mediaPlayer.getCurrentTime().toMillis() >= fin) {
 					mediaPlayer.seek(new Duration(debut));
-					//progression.setValue(0);
 				}
 			}
 		});
 	}
 
+	/**
+	 * l'interaction du bouton play
+	 */
 	public void stopVideo() {
 		interactionVideoBtn.setText("Jouer");
 		mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStopTime());
 		mediaView.getMediaPlayer().stop();
 	}
 
+	/**
+	 * les interactions du bouton play pause sont gére pas cette mothode
+	 */
 	public void interactionVideo() {
 		if (videoChargee) {
 			if (interactionVideoBtn.getText().equalsIgnoreCase(Lang.PAUSE)) {
@@ -280,36 +292,44 @@ public class ApplicationController extends Main {
 		return custom.getTimeObject();
 	}
 
+
+	/**
+	 * cherche si chaque mot de l'essai se trouve dans le texte
+	 */
 	public void chercherMot() {
 		Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
 
 		if (s.islocked() || s.isHelp())return; // on le cherche pas si c'est lock ou dans l'aide
 
-		System.out.println(Lang.LancementRecherche);
-		System.out.println(s.getTextATrouver().length());
-		System.out.println(s.getTextATrouver());
+		System.out.println(Lang.LANCEMENT_RECHERCHE);
 		System.out.println(proposition.getText());
+		
 		proposition.setText(proposition.getText().trim());// supprime les retour a la ligne dans la recherche car sa
 															// casse tout
 		// séparation de la fonction pour recherche mot par mots indépendament
-		String mot = "";
 		String objectif = proposition.getText() + " "; // cette variable permet de memoriser le contenu de la
 														// proposition car elle est modifié aprés
 
+		//le perf du string builder sont meilleur qu'un simple string
+		StringBuilder mot = new StringBuilder(objectif.length());
 		for (int i = 0; i < objectif.length(); i++) {
 			if (objectif.charAt(i) != ' ') {
-				mot += objectif.charAt(i);
+				mot.append(objectif.charAt(i));
 			} else {
-				if (mot != null && !mot.equals("")) {
-					proposition.setText(mot);
+				if (mot.length() != 0) {
+					proposition.setText(mot.toString());
 					chercherMotSplt(s);
-					mot = "";
+					mot = new StringBuilder(objectif.length());
 				}
 			}
 		}
 		proposition.setText("");// on suprime le champs aprés validation
 	}
 
+	/**
+	 * une portion de cherche mot qui ne cherche qu'un mots
+	 * @param s section dans la quel le mot doit être chercher
+	 */
 	public void chercherMotSplt(Section s) {
 		String texteATrouver = s.getTextATrouver();
 		String texteCache = s.getTexteCache() +" ";
@@ -358,7 +378,10 @@ public class ApplicationController extends Main {
 
 		s.setTexteCache(texteCache);
 	}
-
+	
+	/**
+	 * cette methode desactive tout l'interface
+	 */
 	public static void lockAll() {
 		for (Node parent : root.getChildren()) {
 			VBox vbox = (VBox) parent; // tout les enfant de la gridpane root sont des vbox si on change le fxml sa va
@@ -371,12 +394,23 @@ public class ApplicationController extends Main {
 		}
 	}
 
-	public void demarrerExercice() {
+	/**
+	 * demare le timer au demarage d'un exo
+	 */
+	public void demarrerTimerExercice() {
 		System.out.println(tempsText.getText());
 		if (chronometrer)
 			timer(tempsTotal);
 	}
 	
+
+	
+	/**
+	 * Cette methode fxml permet d'afficher la fenaitre des options
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML
 	private void option(ActionEvent event) throws IOException {
 		Stage sta = new Stage();
@@ -389,18 +423,38 @@ public class ApplicationController extends Main {
 		control.run(sta);
 	}
 	
+	/**
+	 * permet de redimentionner la fenaitre en fonction de la police passer en
+	 * argument
+	 * 
+	 * @param taillePolice la taille de la police
+	 */
 	public static void changeResolutionFromPolice(String taillePolice) {
 		int ratio = 8;
 		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
 		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
+		stage.setMinHeight(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
+		stage.setMinWidth(LARGEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
 	}
 
+	/**
+	 * change la taille de la police de tout les objets de l'interface
+	 * 
+	 * @param size taille de la police
+	 */
 	public static void changePoliceSize(String size) {
 		for(Node e : Option.getFinalChildren(Main.getRoot())) {
 			e.setStyle("-fx-font: "+size+" arial;"); 
 		}
 	}
 	
+	/**
+	 * ouvre un page web avec le pdf du manuelle d'utilisation
+	 */
+	public void openDocs() {
+		HostServicesDelegate hostServices = HostServicesFactory.getInstance(this);
+		hostServices.showDocument("https://www.dropbox.com/home?preview=Manuel+d%27utilisation.pdf");
+	}
 	
 	public void quitter() {
 		System.exit(0);

@@ -18,6 +18,9 @@ import org.jdom2.filter.ElementFilter;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.util.IteratorIterable;
 
+import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
+import com.sun.javafx.application.HostServicesDelegate;
+
 import application.Main;
 import application.model.JsonController;
 import application.model.Lang;
@@ -53,14 +56,15 @@ import javafx.util.Duration;
 
 public class ApplicationController extends Main {
 
-	private static String TaillePolice;
+	// integer peut être null
+	private static Integer taillePolice;
 	private final String DEFAULT_EXTENSION = ".res";
 	private final String DEFAULT_NAME_EXTENSION = "Résolution";
+	private final String ABORT = "ABORT";
 	private String time = "00:00:00";
 	private List<Section> sections;
 	private boolean videoChargee = false;
-	
-	
+
 	@FXML
 	private Text timeDisplay;
 	@FXML
@@ -108,12 +112,11 @@ public class ApplicationController extends Main {
 	private static final int LARGEUR_FENETRE = 1000;
 
 	/**
-	 * recharge le fxml affin de mettre a 0 tout
+	 * recharge le fxml affin de mettre tout a 0 
+	 * 
 	 * @throws IOException
 	 */
 	public void nouvelleExercice() throws IOException {
-		//setHauteur(800);
-		// setLargeur(964);
 		super.chargerUnePage("/application/view/NouvelleExercice.fxml");
 	}
 
@@ -131,20 +134,23 @@ public class ApplicationController extends Main {
 			Section.reset();
 			sectionsTabPane.getTabs().clear();
 			sectionsTimeCodePane.getTabs().clear();
-			setupbtn();
+			clearTab();
 			videoChargee = false;
 			aucuneVideoChargee.setVisible(true);
 		}
 
 	}
-
-	// TODO deplacer le gros de l'ouverture dans JSONController
-	public void ouvrir() throws IOException {
-		if(TaillePolice == null)setHauteur(700);
+	
+	/**
+	 * cette methode permet d'ouvir un nouveau fichier
+	 */
+	public void ouvrir(){
+		if (taillePolice == null)
+			setHauteur(700);
 		if (mediaPlayer != null)
 			mediaPlayer.pause();
 		Section.reset();
-		setupbtn();
+		clearTab();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters()
 				.addAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
@@ -153,64 +159,22 @@ public class ApplicationController extends Main {
 		File selectedFile = fileChooser.showOpenDialog(Main.stage);
 
 		System.out.println(Lang.CHARGE_EXO);
-		SAXBuilder saxBuilder = new SAXBuilder();
+		
 		try {
-			ReponseEtudiant reponseEtudiantController = null;
-			Document doc = saxBuilder.build(selectedFile);
-			IteratorIterable<?> processDescendants = doc.getDescendants(new ElementFilter("section"));
-			if (processDescendants.hasNext() && ((Element) processDescendants.next()).getChildText("reponseEtudiant") != null) {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/ResultatEtudiant.fxml"));
-				Stage sta = new Stage();
-				BorderPane root = loader.load();
-				reponseEtudiantController = loader.getController();
-				Scene sc = new Scene(root);
-				sta.setScene(sc);
-				reponseEtudiantController.init(sta);
-			}
-			
-			//je reset l'iterator car j'avais juste besoin d'une section
-			processDescendants = doc.getDescendants(new ElementFilter("section"));
-			titre.setText(doc.getRootElement().getChildText("titre"));
-			consigne.setText(doc.getRootElement().getChildText("consigne"));
-			String formatvideo = doc.getRootElement().getChildText("cheminVideo");
-
-			sensibiliteCase.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("sensibiliteCase")));
-			aideCheckbox.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("aidestatus")));
-			motIncomplet.setSelected(Boolean.parseBoolean(doc.getRootElement().getChildText("motIncomplet")));
-
-			String limiteTemps = doc.getRootElement().getChildText("limiteTemps");
-			System.out.println(limiteTemps);
-			timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
-			timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
-
-			sections = new ArrayList<>();
-			while (processDescendants.hasNext()) {
-				Element elem = (Element) processDescendants.next();
-				byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
-
-				Section s =new Section(sectionsTabPane, sectionsTimeCodePane, elem.getChild("SectionAide").getValue(),
-						new String(raw), elem.getChild("SectionTimeLimitCode").getValue(),
-						elem.getChild("getTimeStart").getValue(), elem.getChild("getTimeStop").getValue());
-				sections.add(s);
-				if(reponseEtudiantController != null) {
-					reponseEtudiantController.addTab(elem);
-				}
-			}
-
+			JsonController jcont = new JsonController();
+			String formatvideo = jcont.jsonReader(selectedFile,titre,consigne,sensibiliteCase,aideCheckbox,motIncomplet,timefieldh,timefieldm,sections,sectionsTabPane,sectionsTimeCodePane);
 			String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
-
 			chargerUneVideo(new File(cheminVideo));
 			mediaView.setVisible(videoChargee);
-
-			if(reponseEtudiantController != null) {
-				reponseEtudiantController.run();
-			}
 		} catch (JDOMException | IOException e) {
 			ErreurModel.erreur(Lang.FICHIER_DMG, Lang.FICHIER_DMG_NEW);
 		}
 
 	}
 
+	/**
+	 * gére les action du boutton changer de video
+	 */
 	public void chargerUneVideoBTN() {
 		sections = new ArrayList<>();
 		FileChooser fileChooser = new FileChooser();
@@ -221,10 +185,14 @@ public class ApplicationController extends Main {
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		chargerUneVideo(selectedFile);
-		setupbtn();
+		clearTab();
 		sections.add(new Section(sectionsTabPane, sectionsTimeCodePane));
 	}
-
+	
+	/**
+	 * charge la video passer en paramétre
+	 * @param selectedFile fichier de la video
+	 */
 	public void chargerUneVideo(File selectedFile) {
 		if (selectedFile != null) {
 			Media media = new Media(new File(selectedFile.getAbsolutePath()).toURI().toString());
@@ -246,7 +214,8 @@ public class ApplicationController extends Main {
 			mediaView.setFitHeight(250);
 			videoChargee = true;
 			mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
-				timeDisplay.setText((long)newTime.toHours() +":"+ (long)newTime.toMinutes()%60+":"+(long)newTime.toSeconds()%60);
+				timeDisplay.setText((long) newTime.toHours() + ":" + (long) newTime.toMinutes() % 60 + ":"
+						+ (long) newTime.toSeconds() % 60);
 				if (!progression.isValueChanging() && !progression.isPressed()) {
 					progression.setValue(newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100);
 				}
@@ -276,17 +245,26 @@ public class ApplicationController extends Main {
 		}
 	}
 
-	public void setupbtn() {
+	/**
+	 * sert a clear les tab
+	 */
+	public void clearTab() {
 		if (sectionsTabPane != null)
 			sectionsTabPane.getTabs().clear();
-		// SectionTab.newSectionTab(sectionsTabPane, sectionsTimeCodePane, sections);
 	}
 
+	/**
+	 * permet de blocker le chanps de la limite de temps si la case n'est pas coché
+	 */
 	public void timeHandle() {
 		timefieldh.setDisable(!checklimite.isSelected());
 		timefieldm.setDisable(!checklimite.isSelected());
 	}
 
+	
+	/**
+	 * a chaque apelle cette methode change le texte du bouton et en fonction de ce texte joue ou pause la video
+	 */
 	public void interactionVideo() {
 		if (videoChargee) {
 			if (interactionVideoBtn.getText().equalsIgnoreCase(Lang.PAUSE)) {
@@ -299,6 +277,9 @@ public class ApplicationController extends Main {
 		}
 	}
 
+	/**
+	 * cette methode est concu pour déselectionner le mode evaluation et activer les option du mode
+	 */
 	public void handleRadialA() {
 		modeApprentissage.setSelected(true);
 		modeEvaluation.setSelected(false);
@@ -307,6 +288,9 @@ public class ApplicationController extends Main {
 		aideCheckbox.setDisable(false);
 	}
 
+	/**
+	 * cette methode est concu pour deselectionner le mode apprentisage et desactiver tout les options dedié au modeEvaluation
+	 */
 	public void handleRadialE() {
 		modeApprentissage.setSelected(false);
 		modeEvaluation.setSelected(true);
@@ -314,34 +298,52 @@ public class ApplicationController extends Main {
 		affichageSolution.setDisable(true);
 		aideCheckbox.setDisable(true);
 	}
-
+	
+	/**
+	 * cette methode stope la video
+	 */
 	public void stopVideo() {
+		//play / pause est basé sur le texte du bouton
 		interactionVideoBtn.setText(Lang.PLAY);
 		mediaView.getMediaPlayer().seek(mediaView.getMediaPlayer().getStopTime());
 		mediaView.getMediaPlayer().stop();
 	}
 
+	/**
+	 * @return retourne un string au format HH:MM:SS provenant du time field
+	 * peut retourner ABORT si le contenu du time field est non valide
+	 */
+	private String timeFieldToString(){
+		if (timefieldh.getText().length() == 1)
+			timefieldh.setText("0" + timefieldh.getText());
+		if (timefieldm.getText().length() == 1)
+			timefieldm.setText("0" + timefieldm.getText());
+		if (timefieldh.getText().length() == 0)
+			timefieldh.setText("00");
+		if (timefieldm.getText().length() == 0)
+			timefieldm.setText("00");
+		if (timefieldm.getText().length() > 2) {
+			timefieldm.setStyle("-fx-text-inner-color: red;");
+			return ABORT;
+		}
+		if (timefieldh.getText().length() > 2) {
+			timefieldh.setStyle("-fx-text-inner-color: red;");
+			return ABORT;
+		}
+		return timefieldh.getText() + ":" + timefieldm.getText() + ":00";
+	}
+	
+	
+	/**
+	 * cette methode gére la sauvegarde de l'exercice
+	 * el
+	 */
 	public void sauvegarderExercice() {
 		if (!checklimite.isSelected())
 			time = "00:00:00";
 		else {
-			if (timefieldh.getText().length() == 1)
-				timefieldh.setText("0" + timefieldh.getText());
-			if (timefieldm.getText().length() == 1)
-				timefieldm.setText("0" + timefieldm.getText());
-			if (timefieldh.getText().length() == 0)
-				timefieldh.setText("00");
-			if (timefieldm.getText().length() == 0)
-				timefieldm.setText("00");
-			if (timefieldm.getText().length() > 2) {
-				timefieldm.setStyle("-fx-text-inner-color: red;");
-				return;
-			}
-			if (timefieldh.getText().length() > 2) {
-				timefieldh.setStyle("-fx-text-inner-color: red;");
-				return;
-			}
-			time = timefieldh.getText() + ":" + timefieldm.getText() + ":00";
+			time = timeFieldToString();
+			if(time.equals(ABORT))return;
 		}
 
 		if (!videoChargee) {
@@ -352,42 +354,31 @@ public class ApplicationController extends Main {
 		dialog.getExtensionFilters()
 				.setAll(new FileChooser.ExtensionFilter(Lang.FILE + DEFAULT_NAME_EXTENSION, "*" + DEFAULT_EXTENSION));
 		final File file = dialog.showSaveDialog(super.getStage());
-		if (file != null) {
-			if (videoChargee) {
-				String videoformat = "";
-				final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
-				for (int i = medialength - 4; i < medialength; i++)
-					videoformat += mediaView.getMediaPlayer().getMedia().getSource().charAt(i);
-				// on sauvegarde que le format car on copie la video avec le fichier pour rendre
-				// le tout transportable
-				JsonController.jsonCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(),
-						sections, aideCheckbox.isSelected(), sensibiliteCase.isSelected(),
-						modeApprentissage.isSelected(), motIncomplet.isSelected(), affichageSolution.isSelected(),
-						consigne.getText(), videoformat, time);
+		if (file != null && videoChargee) {
+			// un StringBuilder est recomander car les strings sont couteux en perfomance
+			StringBuilder videoformat = new StringBuilder(4);
+			final int medialength = mediaView.getMediaPlayer().getMedia().getSource().length();
+			for (int i = medialength - 4; i < medialength; i++)
+				videoformat.append(mediaView.getMediaPlayer().getMedia().getSource().charAt(i));
+			// on sauvegarde que le format car on copie la video avec le fichier pour rendre
+			// le tout transportable
+			JsonController.jsonCreation(fixMyPath(file.getAbsoluteFile().toString(), ".res"), titre.getText(), sections,
+					aideCheckbox.isSelected(), sensibiliteCase.isSelected(), modeApprentissage.isSelected(),
+					motIncomplet.isSelected(), affichageSolution.isSelected(), consigne.getText(),
+					videoformat.toString(), time);
 
-				try {
-					File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
-					File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), videoformat));
-					Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			try {
+				File source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
+				File dest = new File(fixMyPath(file.getAbsoluteFile().toString(), videoformat.toString()));
+				Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-				} catch (URISyntaxException e1) {
-					ErreurModel.erreur(Lang.URI_ERROR, Lang.FICHIER_LIEN_ERR);
-				} catch (IOException e) {
-					ErreurModel.erreur(Lang.ERR_COPY, Lang.ERR_COPY_DETAIL);
-				}
-			} /*
-				 * else {
-				 * 
-				 * //je le remplace par un msg d'erreur sa ne fait pas de sens d'enregistrer le
-				 * doc sans video et par consequent aucune section
-				 * //JsonController.JSONCreation(fixMyPath(file.getAbsoluteFile().toString(),
-				 * ".res"), titre.getText(), null, sensibiliteCase.isSelected(),
-				 * modeApprentissage.isSelected(), motIncomplet.isSelected(),
-				 * affichageSolution.isSelected(), modeEvaluation.isSelected(),
-				 * consigne.getText(), null, time); }
-				 */
-			// le msg se trouve avant le file chooser
-
+			} catch (URISyntaxException e1) {
+				ErreurModel.erreur(Lang.URI_ERROR, Lang.FICHIER_LIEN_ERR);
+			} catch (IOException e) {
+				ErreurModel.erreur(Lang.ERR_COPY, Lang.ERR_COPY_DETAIL);
+			}
+		}else {
+			ErreurModel.erreur(Lang.PAS_DE_VIDEO, Lang.PAS_DE_VIDEO_DETAIL);
 		}
 	}
 
@@ -410,21 +401,33 @@ public class ApplicationController extends Main {
 		}
 	}
 
+	// biensur ce code ne marche pas c'est un example de comment j'aurais aprécié
+	// qu'il soit implementer
 	// TODO chager exo
-	public void chargerExercice() throws Exception {
-		nouvelleExercice();
+	/**
+	 * ce methode est cencé être appeler pour ouvrir un exo mais ne fonctionne pas
+	 * 
+	 * @deprecated cette methode ne marche pas donc elle a été indiqué comme obselette
+	 */
+	public void chargerExercice() {
 		// ouvrir(); bien sur ce n'est pas possible de les enchainer et je sais pas
 		// comment faire
 		Platform.runLater(() -> {
 			try {
+				nouvelleExercice();
 				ouvrir();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		});
 	}
 
+	/**
+	 * Cette methode fxml permet d'afficher la fenaitre des options
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML
 	private void option(ActionEvent event) throws IOException {
 		Stage sta = new Stage();
@@ -438,26 +441,37 @@ public class ApplicationController extends Main {
 		control.run(sta);
 	}
 
-	public int onSelectNumber() {
-		return 0;
-	}
-
-	public static void changeResolutionFromPolice(String TaillePolice) {
-		ApplicationController.TaillePolice=TaillePolice;
+	/**
+	 * permet de redimentionner la fenaitre en fonction de la police passer en
+	 * argument
+	 * 
+	 * @param taillePolice la taille de la police
+	 */
+	public static void changeResolutionFromPolice(int taillePolice) {
+		ApplicationController.taillePolice = taillePolice;
 		int ratio = 8;
-		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(TaillePolice) * ratio) - 13);
-		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(TaillePolice) * ratio) - 13);
+		Main.setHauteur(HAUTEUR_FENETRE + (taillePolice * ratio) - 13);
+		Main.setLargeur(LARGEUR_FENETRE + (taillePolice * ratio) - 13);
+		stage.setMinHeight(HAUTEUR_FENETRE + (taillePolice*ratio)-13);
+		stage.setMinWidth(LARGEUR_FENETRE + (taillePolice*ratio)-13);
 	}
 
-	public static void changePoliceSize(String size) {
+	/**
+	 * change la taille de la police de tout les objets de l'interface
+	 * 
+	 * @param size taille de la police
+	 */
+	public static void changePoliceSize(int size) {
 		for (Node e : Option.getFinalChildren(Main.getRoot())) {
 			e.setStyle("-fx-font: " + size + " arial;");
 		}
 	}
 
+	/**
+	 * affiche le menu de segmentation du texte
+	 */
 	@FXML
-	private void runSegmentationMenu(ActionEvent event) {
-		System.out.println("chargement Section");
+	private void runSegmentationMenu() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/Section.fxml"));
 		Parent root;
 		try {
@@ -472,9 +486,16 @@ public class ApplicationController extends Main {
 					ErreurModel.erreur(Lang.NO_SECTION, Lang.NEED_VID_LOADED);
 			});
 		} catch (IOException e) {
-			System.err.println("ous sa a crash");
-			e.printStackTrace();
+			ErreurModel.erreurStack(e);
 		}
+	}
+	
+	/**
+	 * ouvre un page web avec le pdf du manuelle d'utilisation
+	 */
+	public void openDocs() {
+		HostServicesDelegate hostServices = HostServicesFactory.getInstance(this);
+		hostServices.showDocument("https://www.dropbox.com/home?preview=Manuel+d%27utilisation.pdf");
 	}
 
 }

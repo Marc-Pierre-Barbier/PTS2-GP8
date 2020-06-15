@@ -45,7 +45,7 @@ public class JsonController {
 	 * @param cheminVideo
 	 * @param limiteTemps
 	 */
-	public static void JSONCreation(String cheminEnregistrement, String title, List<Section> sections,
+	public static void jsonCreation(String cheminEnregistrement, String title, List<Section> sections,
 			boolean aidestatus, boolean sensibiliteCase, boolean modeApprentissage, boolean motIncomplet,
 			boolean solution, String consigne, String cheminVideo, String limiteTemps) {
 
@@ -143,6 +143,12 @@ public class JsonController {
 					elem.getChild("getTimeStart").getValue(),
 					elem.getChild("getTimeStop").getValue()
 				));
+			}
+			
+			if(!ApplicationController.modeAprentissage) {
+				ApplicationController.solutionDroit = false; //pas de soluce en eval personne ne doit parteger les reponses
+				ApplicationController.motincomplet  = false;
+				ApplicationController.aideAutorisation =true;
 			}
 			
 			return selectedFile.getAbsolutePath().replace(".res", formatvideo);

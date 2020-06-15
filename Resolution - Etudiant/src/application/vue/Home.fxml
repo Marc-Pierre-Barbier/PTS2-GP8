@@ -9,7 +9,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.Menu?> 
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
@@ -193,7 +193,7 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Aide">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Manuel d'utilisation" />
+                      <MenuItem mnemonicParsing="false" onAction="#openDocs" text="Manuel d'utilisation" />
                     </items>
                   </Menu>
               </menus>

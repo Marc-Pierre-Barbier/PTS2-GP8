@@ -43,6 +43,8 @@ public class Lang {
 	public static final String AIDE = "Aide";
 	public static final String LIMITE_TEMP = "Limite de temps :";
 	public static final String NEW_SECTION = "Nouvelle section";
+	public static final String PAS_DE_VIDEO_DETAIL = "il faut charger une video affin de sauvegarder un exercice";
+	public static final String PAS_DE_VIDEO = "aucune video de charger";
 	
 	
 

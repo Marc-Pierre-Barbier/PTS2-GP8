@@ -8,7 +8,7 @@
 <?import javafx.scene.media.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Button?> 
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -131,8 +131,7 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Aide">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="Manuel d'utilisation" />
-                        <MenuItem mnemonicParsing="false" text="Notre site" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDocs" text="Manuel d'utilisation" />
                      </items>
                   </Menu>
                </menus>

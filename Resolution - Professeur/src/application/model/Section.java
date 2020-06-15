@@ -47,33 +47,7 @@ public class Section {
 	}
 	
 	public String getTimeLimitCode() {
-		//TODO verifier quelle partie de ce code sont nessecaire a reimplementer
-		/*String limiteTempsH = SecModl.getlimiteTempsH();
-		String limiteTempsM = SecModl.getlimiteTempsM();
-		System.out.println(limiteTempsM + limiteTempsM);
-		if(limiteTempsH.length() == 1)SecModl.setLimiteTempsH("0"+limiteTempsH);
-		if(limiteTempsM.length() == 1)SecModl.setLimiteTempsM("0"+limiteTempsM);
-		if(limiteTempsH.length() == 0)SecModl.setLimiteTempsH("00");
-		if(limiteTempsM.length() == 0)SecModl.setLimiteTempsM("00");
-		if(limiteTempsH.length() > 2) {
-			SecModl.setStyleLimiteTempsH("-fx-text-inner-color: red;"); 
-			return "ABORT"; // une erreur est detecter correction par l'utilisateur requise
-		}
-		if(limiteTempsM.length() > 2) {
-			SecModl.setStyleLimiteTempsM("-fx-text-inner-color: red;");  
-			return "ABORT";
-		}
-		System.out.println(limiteTempsM + limiteTempsM);
-		try {
-			Integer.parseInt(limiteTempsH);
-			Integer.parseInt(limiteTempsM);
-		}catch (NumberFormatException e) {
-			return "ABORT"; //le temps contien lettres / charatéres speciaux
-		}
-		System.out.println(limiteTempsM + ":" + limiteTempsM);
-		return "00:"+limiteTempsM + ":" + limiteTempsM;*/
 		return SecModl.getTimecode().toString();
-		
 	}
 
 	public static void reset() {
