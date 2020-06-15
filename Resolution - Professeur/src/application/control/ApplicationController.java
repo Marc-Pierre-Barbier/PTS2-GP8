@@ -154,6 +154,8 @@ public class ApplicationController extends Main {
 		System.out.println(Lang.CHARGE_EXO);
 		
 		try {
+			if(sections != null)sections.clear();
+			else sections = new ArrayList<>();
 			JsonController jcont = new JsonController();
 			String formatvideo = jcont.jsonReader(selectedFile,titre,consigne,sensibiliteCase,aideCheckbox,motIncomplet,timefieldh,timefieldm,sections,sectionsTabPane,sectionsTimeCodePane);
 			String cheminVideo = selectedFile.getAbsolutePath().replace(".res", formatvideo);
@@ -169,7 +171,7 @@ public class ApplicationController extends Main {
 	 * gére les action du boutton changer de video
 	 */
 	public void chargerUneVideoBTN() {
-		sections = new ArrayList<>();
+		if(sections ==null)sections = new ArrayList<>();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.mp4", "*.mp4"),
 				new FileChooser.ExtensionFilter("*.mp3", "*.mp3"), new FileChooser.ExtensionFilter("*.avi", "*.avi"),
@@ -178,8 +180,12 @@ public class ApplicationController extends Main {
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		File selectedFile = fileChooser.showOpenDialog(super.getStage());
 		chargerUneVideo(selectedFile);
-		clearTab();
-		sections.add(new Section(sectionsTabPane, sectionsTimeCodePane));
+		
+		//si on charge la premiére video il faut crée les premiers onglets
+		if(sections.isEmpty()) {
+			clearTab();
+			sections.add(new Section(sectionsTabPane, sectionsTimeCodePane));
+		}
 	}
 	
 	/**
@@ -187,6 +193,8 @@ public class ApplicationController extends Main {
 	 * @param selectedFile fichier de la video
 	 */
 	public void chargerUneVideo(File selectedFile) {
+		boolean first = mediaView.getMediaPlayer() != null;
+		System.out.println(first);
 		if (selectedFile != null) {
 			Media media = new Media(new File(selectedFile.getAbsolutePath()).toURI().toString());
 			System.out.println(selectedFile.getAbsolutePath());

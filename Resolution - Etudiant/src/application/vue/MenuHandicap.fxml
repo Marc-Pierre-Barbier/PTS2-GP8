@@ -26,15 +26,6 @@
                   </VBox>
                </children>
             </HBox>
-            <VBox prefHeight="100.0" prefWidth="268.0">
-               <children>
-                  <CheckBox id="DaltonChbx" mnemonicParsing="false" text="Mode Daltonien (WIP)">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </CheckBox>
-               </children>
-            </VBox>
          </children>
       </VBox>
    </top>

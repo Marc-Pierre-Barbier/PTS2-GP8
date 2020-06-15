@@ -105,8 +105,7 @@ public class JsonController {
 		timefieldh.setText(limiteTemps.charAt(0) + "" + limiteTemps.charAt(1));
 		timefieldm.setText(limiteTemps.charAt(3) + "" + limiteTemps.charAt(4));
 
-		//TODO SI SA CASSE C'etait ici
-		sections.clear();
+
 		while (processDescendants.hasNext()) {
 			Element elem = (Element) processDescendants.next();
 			byte[] raw = Base64.getDecoder().decode(elem.getChild("SectionText").getValue());
@@ -123,7 +122,6 @@ public class JsonController {
 		if (reponseEtudiantController != null) {
 			reponseEtudiantController.run();
 		}
-		
 		return formatvideo;
 	}
 
