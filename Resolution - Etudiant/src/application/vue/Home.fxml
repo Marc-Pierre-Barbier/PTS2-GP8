@@ -127,7 +127,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="498.0">
                            <children>
-                              <Button fx:id="interactionVideoBtn" minWidth="43.0" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="56.0" prefWidth="72.0" text="▸ " textAlignment="CENTER" textOverrun="CLIP">
+                              <Button fx:id="interactionVideoBtn" minWidth="38.0" mnemonicParsing="false" onAction="#interactionVideo" prefHeight="49.0" prefWidth="52.0" text="▸" textAlignment="JUSTIFY" textOverrun="CLIP">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
@@ -141,26 +141,14 @@
                                     <Insets />
                                  </opaqueInsets>
                               </Button>
-                              <Slider id="progression" fx:id="progression" minWidth="232.0" prefHeight="16.0" prefWidth="232.0">
+                              <Slider id="progression" fx:id="progression" minWidth="232.0" prefHeight="16.0" prefWidth="377.0">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
                               </Slider>
-                              <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" prefHeight="32.0" prefWidth="69.0" text="■  Stop">
+                              <Button minWidth="43.0" mnemonicParsing="false" onAction="#stopVideo" prefHeight="48.0" prefWidth="53.0" text="■">
                                  <HBox.margin>
                                     <Insets />
-                                 </HBox.margin>
-                              </Button>
-                              <Button minWidth="65.0" mnemonicParsing="false" onAction="#stopVideo" text="Plein écran">
-                                 <graphic>
-                                    <ImageView fitHeight="24.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@/application/IconePleinEcran.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                                 <HBox.margin>
-                                    <Insets left="20.0" />
                                  </HBox.margin>
                               </Button>
                            </children>

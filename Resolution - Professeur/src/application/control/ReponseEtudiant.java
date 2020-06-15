@@ -52,7 +52,6 @@ public class ReponseEtudiant {
 				}
 			}
 		}
-		System.out.println("i:"+i);
 		return i;
 	}
 
