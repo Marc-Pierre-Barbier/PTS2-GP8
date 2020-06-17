@@ -491,6 +491,12 @@ public class ApplicationController extends Main {
 		}
 	}
 	
+	public void credit() {
+		ErreurModel.infoDialog(" PEAN Adrien \n MOUSSÉ Florian \n SINGLANDE Thomas \n BARBIER Marc \n BOULAY Thibault\n" + 
+				"\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés","crédits");
+	}
+	
+	
 	/**
 	 * ouvre un page web avec le pdf du manuelle d'utilisation
 	 */

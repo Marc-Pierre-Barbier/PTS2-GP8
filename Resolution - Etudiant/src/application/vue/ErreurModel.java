@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 public class ErreurModel {
@@ -68,6 +69,16 @@ public class ErreurModel {
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         return sw.toString();
+    }
+
+	public static void infoDialog(String str,String titre) {
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setTitle(titre);
+    	alert.setHeaderText(null);
+    	alert.setContentText(str);
+    	//TODO IMAGE
+    	alert.setGraphic(new ImageView());
+    	alert.showAndWait();
     }
     
     

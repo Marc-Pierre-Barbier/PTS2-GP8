@@ -457,6 +457,11 @@ public class ApplicationController extends Main {
 		hostServices.showDocument("https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0");
 	}
 	
+	public void credit() {
+		ErreurModel.infoDialog(" PEAN Adrien \n MOUSSÉ Florian \n SINGLANDE Thomas \n BARBIER Marc \n BOULAY Thibault\n" + 
+				"\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés","crédits");
+	}
+	
 	public void quitter() {
 		System.exit(0);
 	}

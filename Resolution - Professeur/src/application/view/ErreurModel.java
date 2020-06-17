@@ -56,4 +56,13 @@ public class ErreurModel {
         e.printStackTrace(pw);
         return sw.toString();
     }
+    
+    public static void infoDialog(String str,String titre) {
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setTitle(titre);
+    	alert.setHeaderText(null);
+    	alert.setContentText(str);
+
+    	alert.showAndWait();
+    }
 }
