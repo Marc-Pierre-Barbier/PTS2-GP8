@@ -1,5 +1,6 @@
 package application.control;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -10,8 +11,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
-import com.sun.javafx.application.HostServicesDelegate;
 
 import application.Main;
 import application.model.CustomTimer;
@@ -49,8 +48,8 @@ import javafx.util.Duration;
 public class ApplicationController extends Main {
 
 	/* 10/02/2019 G8 Programmation de l'application VERSION ETUDIANTE */
-	private static final int HAUTEUR_FENETRE=600;
-	private static final int LARGEUR_FENETRE=1000;
+	private static final int HAUTEUR_FENETRE = 600;
+	private static final int LARGEUR_FENETRE = 1000;
 	public static final String CARACTERE_OCULTATION = "*";
 	public static final String CARACTERE_NON_OCULTER = ";.,!? ";
 	public static boolean sensibiliteCase = false;
@@ -71,7 +70,8 @@ public class ApplicationController extends Main {
 	private Button interactionVideoBtn;
 	@FXML
 	private Text tempsText;
-	//TODO faire le temps des section chaque section contien ses time code mais on ne s'en sert pas 
+	// TODO faire le temps des section chaque section contien ses time code mais on
+	// ne s'en sert pas
 	@FXML
 	private Text tempsTextSection;
 	@FXML
@@ -86,49 +86,53 @@ public class ApplicationController extends Main {
 	private Button solutionBoutton;
 	@FXML
 	private Button aideBtn;
-	public static boolean aideAutorisation=true;
+	public static boolean aideAutorisation = true;
 	private boolean videoChargee = false;
 	public static LocalTime tempsTotal = LocalTime.parse("00:00:00");
 	public static boolean chronometrer = false;
 	public static boolean motincomplet = false;
 	public static boolean solutionDroit;
 	private Thread timerSectionHandle;
-	
+
 	public static boolean modeAprentissage;
 	private CustomTimer custom;
 
 	@SuppressWarnings("deprecation")
 	public void ouvrirUnExercice() {
-		if(sections !=null) {
+		if (sections != null) {
 			sections.clear();
 			tabPaneExo.getTabs().clear();
-			if(timerSectionHandle != null)timerSectionHandle.stop();
+			if (timerSectionHandle != null)
+				timerSectionHandle.stop();
 			Section.reset();
-			if(custom != null)custom.cancel();
+			if (custom != null)
+				custom.cancel();
 		}
 		sections = new ArrayList<>();
 		String cheminVideo = JsonController.jsonReader(titre, consigne, solutionBoutton, sections, tabPaneExo);
-		if(cheminVideo == null)return;
+		if (cheminVideo == null)
+			return;
 		aideBtn.setDisable(!aideAutorisation);
 		solutionBoutton.setDisable(solutionDroit);
 		solutionBoutton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
-				if(!s.islocked() && ErreurModel.confirmDialog(Lang.TITRE_CONFIR_SOLUTION, Lang.TETE_CONFIRM_SOLUTION, Lang.CONTENU_CONFIRM_SOLUTION)) {
+				if (!s.islocked() && ErreurModel.confirmDialog(Lang.TITRE_CONFIR_SOLUTION, Lang.TETE_CONFIRM_SOLUTION,
+						Lang.CONTENU_CONFIRM_SOLUTION)) {
 					s.lock();
 				}
-				//causes des freezes si ce n'est pas fait
+				// causes des freezes si ce n'est pas fait
 				System.gc();
 			}
 		});
 		proposition.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.ENTER) {
-                	chercherMot();
-                }
-            }
-        });
+			public void handle(KeyEvent ke) {
+				if (ke.getCode() == KeyCode.ENTER) {
+					chercherMot();
+				}
+			}
+		});
 		aideBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -137,12 +141,12 @@ public class ApplicationController extends Main {
 				s.switchHelpStatus();
 			}
 		});
-		
-		timerSectionHandle = new Thread(new ThreadTimerControl(tabPaneExo,tempsTextSection, sections));
+
+		timerSectionHandle = new Thread(new ThreadTimerControl(tabPaneExo, tempsTextSection, sections));
 		timerSectionHandle.start();
-		
-		//permet de quiter sans laisser le thread actif
-		tabPaneExo.getScene().getWindow().setOnCloseRequest(e ->quitter());
+
+		// permet de quiter sans laisser le thread actif
+		tabPaneExo.getScene().getWindow().setOnCloseRequest(e -> quitter());
 		System.out.println(cheminVideo);
 
 		chargerUneVideo(new File(cheminVideo));// File(cheminModifie)
@@ -150,26 +154,29 @@ public class ApplicationController extends Main {
 		demarrerTimerExercice();
 
 	}
-	
+
 	/**
 	 * ouvre un dialogue et demande ou voulez vous enregistrer
 	 */
 	public void sauvegarderUnExercice() {
-		if(!videoChargee)return;
+		if (!videoChargee)
+			return;
 		final FileChooser dialog = new FileChooser();
-		dialog.getExtensionFilters()
-		.setAll(new FileChooser.ExtensionFilter(Lang.FILE + JsonController.DEFAULT_NAME_EXTENSION, "*" + JsonController.DEFAULT_EXTENSION));
+		dialog.getExtensionFilters().setAll(new FileChooser.ExtensionFilter(
+				Lang.FILE + JsonController.DEFAULT_NAME_EXTENSION, "*" + JsonController.DEFAULT_EXTENSION));
 		File file = dialog.showSaveDialog(super.getStage());
-		
+
 		String cheminVideo = mediaView.getMediaPlayer().getMedia().getSource();
 
 		StringBuilder format = new StringBuilder(4);
-		for(int i=4;i>0;i--) {
-			format.append(cheminVideo.charAt(cheminVideo.length()-i));
+		for (int i = 4; i > 0; i--) {
+			format.append(cheminVideo.charAt(cheminVideo.length() - i));
 		}
-		System.out.println("nb sec" +sections.size());
-		JsonController.jsonCreation(fixMyPath(file.toString(),".res"), titre.getText(), sections, aideAutorisation, sensibiliteCase, modeAprentissage, motincomplet, solutionBoutton.isDisabled(), consigne.getText(), format.toString(), tempsTotal.toString());
-		
+		System.out.println("nb sec" + sections.size());
+		JsonController.jsonCreation(fixMyPath(file.toString(), ".res"), titre.getText(), sections, aideAutorisation,
+				sensibiliteCase, modeAprentissage, motincomplet, solutionBoutton.isDisabled(), consigne.getText(),
+				format.toString(), tempsTotal.toString());
+
 		File source;
 		try {
 			source = new File(new URI(mediaView.getMediaPlayer().getMedia().getSource()));
@@ -180,9 +187,9 @@ public class ApplicationController extends Main {
 		} catch (IOException e) {
 			ErreurModel.erreur(Lang.ERR_COPY, Lang.ERR_COPY_DETAIL);
 		}
-		
+
 	}
-	
+
 	/**
 	 * ajoute .res a la fin si il n'est pas deja present j'ai euh le probleme sur
 	 * linux ou sa enregistrais sans extention sa ne deverais pas poser probleme sur
@@ -201,9 +208,10 @@ public class ApplicationController extends Main {
 			return chemin + format;
 		}
 	}
-	
+
 	/**
 	 * charge la video passer en paramétre
+	 * 
 	 * @param selectedFile fichier de la video
 	 */
 	public void chargerUneVideo(File f) {
@@ -223,39 +231,41 @@ public class ApplicationController extends Main {
 		videoChargee = true;
 
 		mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
-			
-			timeDisplay.setText((long)newTime.toHours() +":"+ (long)newTime.toMinutes()%60+":"+(long)newTime.toSeconds()%60);
+
+			timeDisplay.setText((long) newTime.toHours() + ":" + (long) newTime.toMinutes() % 60 + ":"
+					+ (long) newTime.toSeconds() % 60);
 			if (!progression.isValueChanging() && !progression.isPressed()) {
 				int index = tabPaneExo.getSelectionModel().getSelectedIndex();
-				double debut =  sections.get(index).getTimeStartNumeric();
+				double debut = sections.get(index).getTimeStartNumeric();
 				double fin = sections.get(index).getTimeStopNumeric();
-				
-				if(fin - newTime.toMillis() > 0 && newTime.toMillis() >= debut) {
-					progression.setValue((newTime.toMillis() - debut)/(fin - debut)*100);
-					System.out.println((newTime.toMillis() - debut)/(fin - debut)*100);
-				}else {
-					if(fin - newTime.toMillis() <= 0) {
+
+				if (fin - newTime.toMillis() > 0 && newTime.toMillis() >= debut) {
+					progression.setValue((newTime.toMillis() - debut) / (fin - debut) * 100);
+					System.out.println((newTime.toMillis() - debut) / (fin - debut) * 100);
+				} else {
+					if (fin - newTime.toMillis() <= 0) {
 						progression.setValue(100);
 						mediaPlayer.seek(new Duration(fin));
 						mediaPlayer.pause();
-					}else {
+					} else {
 						progression.setValue(0);
 						mediaPlayer.seek(new Duration(debut));
 					}
 				}
 			}
 		});
-	
+
 		progression.setOnMouseReleased(new EventHandler<Event>() {
 			@Override
 			public void handle(Event event) {
 				double newValue = progression.getValue();
 				int index = tabPaneExo.getSelectionModel().getSelectedIndex();
-				double debut =  sections.get(index).getTimeStartNumeric();
+				double debut = sections.get(index).getTimeStartNumeric();
 				double fin = sections.get(index).getTimeStopNumeric();
-				mediaPlayer.seek(new Duration((fin - debut)*newValue/100 + debut));
-				System.out.println("debug :"+debut + "\nfin :"+fin + "\n"+mediaPlayer.getCurrentTime().toMillis());
-				if(mediaPlayer.getCurrentTime().toMillis() < debut && mediaPlayer.getCurrentTime().toMillis() >= fin) {
+				mediaPlayer.seek(new Duration((fin - debut) * newValue / 100 + debut));
+				System.out
+						.println("debug :" + debut + "\nfin :" + fin + "\n" + mediaPlayer.getCurrentTime().toMillis());
+				if (mediaPlayer.getCurrentTime().toMillis() < debut && mediaPlayer.getCurrentTime().toMillis() >= fin) {
 					mediaPlayer.seek(new Duration(debut));
 				}
 			}
@@ -293,25 +303,25 @@ public class ApplicationController extends Main {
 		return custom.getTimeObject();
 	}
 
-
 	/**
 	 * cherche si chaque mot de l'essai se trouve dans le texte
 	 */
 	public void chercherMot() {
 		Section s = sections.get(tabPaneExo.getSelectionModel().getSelectedIndex());
 
-		if (s.islocked() || s.isHelp())return; // on le cherche pas si c'est lock ou dans l'aide
+		if (s.islocked() || s.isHelp())
+			return; // on le cherche pas si c'est lock ou dans l'aide
 
 		System.out.println(Lang.LANCEMENT_RECHERCHE);
 		System.out.println(proposition.getText());
-		
+
 		proposition.setText(proposition.getText().trim());// supprime les retour a la ligne dans la recherche car sa
 															// casse tout
 		// séparation de la fonction pour recherche mot par mots indépendament
 		String objectif = proposition.getText() + " "; // cette variable permet de memoriser le contenu de la
 														// proposition car elle est modifié aprés
 
-		//le perf du string builder sont meilleur qu'un simple string
+		// le perf du string builder sont meilleur qu'un simple string
 		StringBuilder mot = new StringBuilder(objectif.length());
 		for (int i = 0; i < objectif.length(); i++) {
 			if (objectif.charAt(i) != ' ') {
@@ -329,11 +339,12 @@ public class ApplicationController extends Main {
 
 	/**
 	 * une portion de cherche mot qui ne cherche qu'un mots
+	 * 
 	 * @param s section dans la quel le mot doit être chercher
 	 */
 	public void chercherMotSplt(Section s) {
 		String texteATrouver = s.getTextATrouver();
-		String texteCache = s.getTexteCache() +" ";
+		String texteCache = s.getTexteCache() + " ";
 		int index = 0;
 		for (char c : texteATrouver.toCharArray()) {
 			if (proposition.getText().charAt(0) == c
@@ -379,7 +390,7 @@ public class ApplicationController extends Main {
 
 		s.setTexteCache(texteCache);
 	}
-	
+
 	/**
 	 * cette methode desactive tout l'interface
 	 */
@@ -403,9 +414,7 @@ public class ApplicationController extends Main {
 		if (chronometrer)
 			timer(tempsTotal);
 	}
-	
 
-	
 	/**
 	 * Cette methode fxml permet d'afficher la fenaitre des options
 	 * 
@@ -418,12 +427,13 @@ public class ApplicationController extends Main {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/vue/MenuHandicap.fxml"));
 		Parent optionRoot = loader.load();
 		Option control = loader.getController();
-		if(optionRoot == null)System.exit(1);
+		if (optionRoot == null)
+			System.exit(1);
 		sta.setScene(new Scene(optionRoot));
 		sta.show();
 		control.run(sta);
 	}
-	
+
 	/**
 	 * permet de redimentionner la fenaitre en fonction de la police passer en
 	 * argument
@@ -432,10 +442,10 @@ public class ApplicationController extends Main {
 	 */
 	public static void changeResolutionFromPolice(String taillePolice) {
 		int ratio = 8;
-		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
-		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
-		stage.setMinHeight(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
-		stage.setMinWidth(LARGEUR_FENETRE + (Integer.parseInt(taillePolice)*ratio)-13);
+		Main.setHauteur(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice) * ratio) - 13);
+		Main.setLargeur(LARGEUR_FENETRE + (Integer.parseInt(taillePolice) * ratio) - 13);
+		stage.setMinHeight(HAUTEUR_FENETRE + (Integer.parseInt(taillePolice) * ratio) - 13);
+		stage.setMinWidth(LARGEUR_FENETRE + (Integer.parseInt(taillePolice) * ratio) - 13);
 	}
 
 	/**
@@ -444,24 +454,42 @@ public class ApplicationController extends Main {
 	 * @param size taille de la police
 	 */
 	public static void changePoliceSize(String size) {
-		for(Node e : Option.getFinalChildren(Main.getRoot())) {
-			e.setStyle("-fx-font: "+size+" arial;"); 
+		for (Node e : Option.getFinalChildren(Main.getRoot())) {
+			e.setStyle("-fx-font: " + size + " arial;");
 		}
 	}
-	
+
 	/**
 	 * ouvre un page web avec le pdf du manuelle d'utilisation
+	 * nessecite xdg sur linux
+	 * @throws URISyntaxException 
+	 * @throws IOException 
 	 */
-	public void openDocs() {
-		HostServicesDelegate hostServices = HostServicesFactory.getInstance(this);
-		hostServices.showDocument("https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0");
+	public void openDocs() throws IOException, URISyntaxException {
+		String url = "https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0";
+		String os = System.getProperty("os.name").toLowerCase();
+		Runtime runtime = Runtime.getRuntime();
+		//ce systeme est essenciel pour supporter openjdk
+		if (os.indexOf("win") >= 0 && Desktop.isDesktopSupported()) {
+			// Windows
+			runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
+		} else {
+			// mac os
+			if(os.indexOf("mac") >= 0) {
+				runtime.exec("open " + url);
+			//linux
+			}else {
+				runtime.exec("xdg-open " + url);
+			}
+			
+		}
 	}
-	
+
 	public void credit() {
-		ErreurModel.infoDialog(" PEAN Adrien \n MOUSSÉ Florian \n SINGLANDE Thomas \n BARBIER Marc \n BOULAY Thibault\n" + 
-				"\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés","crédits");
+		ErreurModel.infoDialog(" PEAN Adrien \n MOUSSÉ Florian \n SINGLANDE Thomas \n BARBIER Marc \n BOULAY Thibault\n"
+				+ "\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés", "crédits");
 	}
-	
+
 	public void quitter() {
 		System.exit(0);
 	}

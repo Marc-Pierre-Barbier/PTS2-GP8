@@ -1,5 +1,6 @@
 package application.control;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -11,9 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jdom2.JDOMException;
-
-import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
-import com.sun.javafx.application.HostServicesDelegate;
 
 import application.Main;
 import application.model.JsonController;
@@ -500,9 +498,24 @@ public class ApplicationController extends Main {
 	/**
 	 * ouvre un page web avec le pdf du manuelle d'utilisation
 	 */
-	public void openDocs() {
-		HostServicesDelegate hostServices = HostServicesFactory.getInstance(this);
-		hostServices.showDocument("https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0");
+	public void openDocs() throws IOException, URISyntaxException {
+		String url = "https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0";
+		String os = System.getProperty("os.name").toLowerCase();
+		Runtime runtime = Runtime.getRuntime();
+		//ce systeme est essenciel pour supporter openjdk
+		if (os.indexOf("win") >= 0 && Desktop.isDesktopSupported()) {
+			// Windows
+			runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
+		} else {
+			// mac os
+			if(os.indexOf("mac") >= 0) {
+				runtime.exec("open " + url);
+			//linux
+			}else {
+				runtime.exec("xdg-open " + url);
+			}
+			
+		}
 	}
 
 }
