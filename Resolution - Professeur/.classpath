@@ -2,10 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-8-openjdk"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/home/marc/Documents/cours/PTS2 WORKSPACE/PTS2-GP8/LIBS/jdom-2.0.6.jar" sourcepath="/home/marc/Documents/cours/PTUT/PTS2-GP8/LIBS/jdom-2.0.6-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/home/marc/Documents/cours/PTUT/PTS2-GP8/LIBS/jdom-2.0.6-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="/home/marc/Documents/cours/PTUT/PTS2-GP8/LIBS/jdom-2.0.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -18,7 +18,7 @@ import application.model.JsonController;
 import application.model.Lang;
 import application.model.Section;
 import application.model.ThreadTimerControl;
-import application.vue.ErreurModel;
+import application.view.ErreurModel;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -424,7 +424,7 @@ public class ApplicationController extends Main {
 	@FXML
 	private void option(ActionEvent event) throws IOException {
 		Stage sta = new Stage();
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/vue/MenuHandicap.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/application/view/MenuHandicap.fxml"));
 		Parent optionRoot = loader.load();
 		Option control = loader.getController();
 		if (optionRoot == null)

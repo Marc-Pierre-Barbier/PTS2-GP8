@@ -1,4 +1,4 @@
-package application.vue;
+package application.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

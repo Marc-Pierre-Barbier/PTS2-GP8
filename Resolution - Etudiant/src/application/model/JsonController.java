@@ -23,7 +23,7 @@ import org.jdom2.util.IteratorIterable;
 
 import application.Main;
 import application.control.ApplicationController;
-import application.vue.ErreurModel;
+import application.view.ErreurModel;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;

@@ -34,13 +34,14 @@ public class ThreadTimerControl implements Runnable {
 				} else {
 					tempsTextSection.setText(format(sections.get(tabid).getTimeLeft()));
 				}
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-				}
 			}else {
 				tempsTextSection.setText(Lang.NON_CHRONOMETRER);
 			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			
 		}
 	}
 

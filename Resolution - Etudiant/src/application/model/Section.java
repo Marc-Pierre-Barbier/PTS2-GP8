@@ -3,8 +3,8 @@ package application.model;
 import java.time.LocalTime;
 
 import application.control.ApplicationController;
-import application.vue.ErreurModel;
-import application.vue.SectionModel;
+import application.view.ErreurModel;
+import application.view.SectionModel;
 import javafx.scene.control.TabPane;
 
 public class Section {

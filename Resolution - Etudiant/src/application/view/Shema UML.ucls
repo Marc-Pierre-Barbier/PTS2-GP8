@@ -16,8 +16,8 @@
     <position height="490" width="245" x="486" y="48"/>    
     <display autosize="false" stereotype="false" sort-features="false" accessors="true"/>  
   </package>  
-  <package id="4" language="java" name="application.vue" project="Resolution - Etudiant" 
-    file="/Resolution - Etudiant/src/application/vue" binary="false" corner="BOTTOM_RIGHT">    
+  <package id="4" language="java" name="application.view" project="Resolution - Etudiant" 
+    file="/Resolution - Etudiant/src/application/view" binary="false" corner="BOTTOM_RIGHT">    
     <position height="500" width="240" x="220" y="42"/>    
     <display autosize="false" stereotype="false" sort-features="false" accessors="true"/>  
   </package>  
@@ -67,8 +67,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="application.vue.SectionModel" project="Resolution - Etudiant" 
-    file="/Resolution - Etudiant/src/application/vue/SectionModel.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="10" language="java" name="application.view.SectionModel" project="Resolution - Etudiant" 
+    file="/Resolution - Etudiant/src/application/view/SectionModel.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="159" width="88" x="555" y="150"/>    
     <display autosize="false" stereotype="false" package="false" initial-value="false" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
@@ -77,27 +77,27 @@
     </display>  
   </class>  
   <association id="11">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="12" name="secMod">        
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="12" name="custom">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="13" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="14">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="15" name="custom">        
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="15" name="secMod">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="16" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="17">    
@@ -105,11 +105,19 @@
     <end type="TARGET" refId="9"/>  
   </generalization>  
   <association id="18">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="19" name="section"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="21">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="19" name="sections">        
+      <attribute id="22" name="sections">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="20" minimum="0" maximum="2147483647">        
+      <multiplicity id="23" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    

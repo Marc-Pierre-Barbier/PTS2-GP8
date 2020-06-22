@@ -20,7 +20,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			root = FXMLLoader.load(getClass().getResource("/application/vue/Home.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/application/view/Home.fxml"));
 			Scene scene = new Scene(root, 1142, 660);
 			pagePrincipale=root;
 			primaryStage.setTitle(Lang.TITRE);

@@ -1,4 +1,4 @@
-package application.vue;
+package application.view;
 
 import application.model.Lang;
 import application.model.Section;
