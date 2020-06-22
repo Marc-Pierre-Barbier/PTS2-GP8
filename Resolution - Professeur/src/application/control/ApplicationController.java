@@ -37,6 +37,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -491,15 +493,17 @@ public class ApplicationController extends Main {
 	}
 	
 	public void credit() {
+		Image imgfile = new Image(getClass().getResourceAsStream("/application/view/IUTLOGO.png"));
+		ImageView img = new ImageView(imgfile); 
 		ErreurModel.infoDialog(" PEAN Adrien \n MOUSSÉ Florian \n SINGLANDE Thomas \n BARBIER Marc \n BOULAY Thibault\n" + 
-				"\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés","crédits");
+				"\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés","crédits",img);
 	}
 	
 	
 	/**
 	 * ouvre un page web avec le pdf du manuelle d'utilisation
 	 */
-	public void openDocs() throws IOException, URISyntaxException {
+	public void openDocs() throws IOException {
 		String url = "https://www.dropbox.com/s/zrm6wrn3ipqmly7/Manuel%20d%27utilisation.pdf?dl=0";
 		String os = System.getProperty("os.name").toLowerCase();
 		Runtime runtime = Runtime.getRuntime();

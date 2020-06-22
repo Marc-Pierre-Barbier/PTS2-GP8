@@ -4,10 +4,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import application.model.Lang;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 public class ErreurModel {
@@ -57,12 +59,12 @@ public class ErreurModel {
         return sw.toString();
     }
     
-    public static void infoDialog(String str,String titre) {
+    public static void infoDialog(String str,String titre,ImageView graphic) {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle(titre);
-    	alert.setHeaderText(null);
+    	alert.setHeaderText("IUT de laval");
     	alert.setContentText(str);
-
+    	alert.getDialogPane().setGraphic(graphic);
     	alert.showAndWait();
     }
 }
