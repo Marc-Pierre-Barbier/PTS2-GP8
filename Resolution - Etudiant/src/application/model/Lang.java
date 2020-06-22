@@ -5,7 +5,7 @@ public class Lang {
 	public static final String LANCEMENT_RECHERCHE = "Lancement de la recherche";
 	public static final String FICHIER_RES = "Ouvrir un fichier audio/vidéo";
 	public static final String CHARGER_EXO = "Chargement de l'exercice";
-	public static final String TITRE = "Résolution V1.0 G8 - Etudiant";
+	public static final String TITRE = "Résolution V2.0 G8 - Etudiant";
 	public static final String SECTION = "Section ";
 	public static final String PAUSE = "‖";
 	public static final String PLAY = "▸";
@@ -21,8 +21,8 @@ public class Lang {
 	public static final String ERR_COPY_DETAIL = "Une erreur est survenue dans la copie de votre fichier. Veuillez vérifier si vous avez le droit de déposer votre fichier dans le dossier de destination et si vous avez suffisamment d'espace libre (le poids de votre vidéo défini la place nécessaire)";
 	//TODO traduire en francais
 	public static final String NON_CHRONOMETRER = "pas de temps de section";
-	public static final String TEMPS_ECOULE = "temps ecoulé";
-	public static final String TITRE_CONFIR_SOLUTION = "êtes vous sur";
-	public static final String TETE_CONFIRM_SOLUTION = "vous ne pourez plus coninuer l'exercice";
+	public static final String TEMPS_ECOULE = "temps écoulé";
+	public static final String TITRE_CONFIR_SOLUTION = "Êtes-vous sur ?";
+	public static final String TETE_CONFIRM_SOLUTION = "vous ne pourrez plus continuer l'exercice";
 	public static final String CONTENU_CONFIRM_SOLUTION = "cela va afficher la solution et mettre un terme a l'exercice";
 }

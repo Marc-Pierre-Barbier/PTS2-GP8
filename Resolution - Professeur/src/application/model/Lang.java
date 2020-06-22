@@ -13,7 +13,7 @@ public class Lang {
 	public static final String TITRE_SECTION = "Nouvelle Section";
 	public static final String NOUV_SECTION = "Ajouter une nouvelle section";
 	public static final String ENTRER_TITRE_SECTION = "Entrer le titre de la section : ";
-	public static final String TITRE_FENETRE = "Résolution V1.0 G8 - Professeur";
+	public static final String TITRE_FENETRE = "Résolution V2.0 G8 - Professeur";
 	public static final String WARN_NEW_EXO = "/!\\ La création ou l'ouverture d'un nouvel exercice va entraîner la suppression de toutes données non sauvegardées";
 	public static final String CONFIRMATION = "Confirmation";
 	public static final String OK_TO_CONTINUE = "Cliquer sur ok pour continuer";
