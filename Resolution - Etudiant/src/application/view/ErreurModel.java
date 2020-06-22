@@ -71,13 +71,12 @@ public class ErreurModel {
         return sw.toString();
     }
 
-	public static void infoDialog(String str,String titre) {
+    public static void infoDialog(String str,String titre,ImageView graphic) {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle(titre);
-    	alert.setHeaderText(null);
+    	alert.setHeaderText("IUT de laval");
     	alert.setContentText(str);
-    	//TODO IMAGE
-    	alert.setGraphic(new ImageView());
+    	alert.getDialogPane().setGraphic(graphic);
     	alert.showAndWait();
     }
     

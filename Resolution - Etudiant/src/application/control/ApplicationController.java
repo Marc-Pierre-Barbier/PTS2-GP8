@@ -34,6 +34,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -70,8 +72,6 @@ public class ApplicationController extends Main {
 	private Button interactionVideoBtn;
 	@FXML
 	private Text tempsText;
-	// TODO faire le temps des section chaque section contien ses time code mais on
-	// ne s'en sert pas
 	@FXML
 	private Text tempsTextSection;
 	@FXML
@@ -486,8 +486,10 @@ public class ApplicationController extends Main {
 	}
 
 	public void credit() {
+		Image imgfile = new Image(getClass().getResourceAsStream("/application/view/IUTLOGO.png"));
+		ImageView img = new ImageView(imgfile); 
 		ErreurModel.infoDialog(" PEAN Adrien \n MOUSSÉ Florian \n SINGLANDE Thomas \n BARBIER Marc \n BOULAY Thibault\n"
-				+ "\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés", "crédits");
+				+ "\n\nCopyright © 2020 IUT de LAVAL \nTout droits réservés", "crédits",img);
 	}
 
 	public void quitter() {

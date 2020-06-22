@@ -37,7 +37,6 @@ public class JsonController {
 	
 	/**
 	 * directement porté de la version prof
-	 *  TODO : faire en sorte que sauvegarder en etudiant peut être ouver par un prof et non pas un eleve si le mode examen est actif
 	 * @param cheminEnregistrement
 	 * @param title
 	 * @param sections

@@ -52,11 +52,6 @@ public class Section {
         
 	}
 
-	/*public Section(TabPane parent,String sectionText,String sectionTimeCode) {
-		//this(parent,"",sectionText,sectionTimeCode);
-		//TODO a faire correctement
-	}*/
-
 	public static void reset() {
 		nbtab=0;
 	}
