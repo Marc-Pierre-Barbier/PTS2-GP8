@@ -241,6 +241,7 @@ public class ApplicationController extends Main {
 					mediaPlayer.seek(new Duration(1000 * newValue / 100 * mediaPlayer.getTotalDuration().toSeconds()));
 				}
 			});
+			
 		}
 	}
 
